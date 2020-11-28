@@ -1,0 +1,45 @@
+<div class="mod-debate-topic-container container">
+    <div class="row">
+        <div class="col-12">
+            <div class="mod-debate-topic p-3 mod-debate-border-style">
+                {{debate}}
+            </div>
+            {{#debateformat}}
+                <div class="mod-debate-description p-3 mod-debate-border-style">
+                    {{{intro}}}
+                </div>
+            {{/debateformat}}
+            <div class="mod-debate-response-container container">
+                <div class="row">
+                    <div class="col-12 col-sm-6 mod-debate-no-padding">
+                        <div class="mod-debate-positive p-3 mod-debate-border-style">
+                            {{#str}} pros_user_count, mod_debate{{/str}}
+                        </div>
+                        <div class="mod-debate-positive-response-counter p-3 mod-debate-border-style">
+                            {{positive}}
+                        </div>
+                    </div>
+                    <div class="col-12 col-sm-6 mod-debate-no-padding">
+                        <div class="mod-debate-negative p-3 mod-debate-border-style">
+                            {{#str}} cons_user_count, mod_debate{{/str}}
+                        </div>
+                        <div class="mod-debate-negative-response-counter p-3 mod-debate-border-style">
+                            {{negative}}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="container mt-2">
+                <div class="row">
+                    <div class="col-6 text-center mt-2">
+                        <a href="{{managepositiveurl}}" class="btn btn-primary">{{#str}} manage_positive_team, mod_debate{{/str}}</a>
+                    </div>
+                    <div class="col-6 text-center mt-2">
+                        <a href="{{managenegativeurl}}" class="btn btn-primary">{{#str}} manage_negative_team, mod_debate{{/str}}</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+

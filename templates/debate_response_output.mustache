@@ -1,0 +1,25 @@
+<div class="p-3 mod-debate-border-style" id="{{elementidcontainer}}">
+    <div class="mod-debate-response-text" id="{{elementid}}">
+        {{response}}
+    </div>
+    <div class="mod-debate-user-info mt-3">
+        <img src="{{user_profile_image}}" class="mod-debate-user-image mr-1">
+        {{user_full_name}}
+        {{#user_capability}}
+            <div class="float-right dropleft">
+                <i class="fa fa-ellipsis-h" type="icon" data-toggle="dropdown"
+                   aria-haspopup="true" aria-expanded="false"></i>
+                <div class="dropdown-menu">
+                    {{#user_edit_capability}}
+                    <a class="dropdown-item {{editid}}"
+                       data-id="{{id}}">{{#str}} edit, mod_debate{{/str}}</a>
+                    {{/user_edit_capability}}
+                    {{#user_delete_capability}}
+                    <a class="dropdown-item {{deleteid}}"
+                       data-id="{{id}}">{{#str}} delete, mod_debate{{/str}}</a>
+                    {{/user_delete_capability}}
+                </div>
+            </div>
+        {{/user_capability}}
+    </div>
+</div>

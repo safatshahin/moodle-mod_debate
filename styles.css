@@ -1,0 +1,81 @@
+.mod-debate-border-style {
+    background-color: #f9f9f9f9;
+    border: 1px solid white;
+}
+
+.mod-debate-no-padding {
+    padding: 0 !important;
+}
+
+.mod-debate-button {
+    width: 100%;
+}
+
+.mod-debate-negative,
+.mod-debate-negative-response-counter {
+    color: red;
+    font-weight: bold;
+}
+
+.mod-debate-positive,
+.mod-debate-positive-response-counter {
+    color: green;
+    font-weight: bold;
+}
+
+.mod-debate-negative-icon {
+    color: red;
+}
+
+.mod-debate-positive-icon {
+    color: green;
+}
+
+.mod-debate-topic {
+    font-weight: bold;
+}
+
+.mod-debate-user-image {
+    height: 1.5em;
+    width: 1.5em;
+    border-radius: 1em;
+}
+
+.mod-debate-user-info {
+    font-size: 0.8em;
+}
+
+.mod-debate-response-text {
+    min-height: 4.5em;
+}
+
+#mod-debate-negative-response-input,
+#mod-debate-positive-response-input {
+    border: 1px solid rgba(0, 0, 0, .125);
+    outline: 0;
+    width: 100%;
+    height: 100%;
+}
+
+#mod-debate-insert-postive-response,
+#mod-debate-insert-negative-response {
+    display: none;
+}
+
+.mod-debate-find-response-element {
+    background-color: #f9f9f9;
+}
+
+.mod-debate-find-response-text {
+    border: 1px solid lightgray;
+    border-radius: .2em;
+    padding: .5em;
+}
+
+.mod-debate-find-response-container {
+    border: 1px solid lightgray;
+}
+
+.debate-view-buttons {
+    min-width: 10em;
+}

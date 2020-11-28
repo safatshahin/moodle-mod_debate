@@ -1,0 +1,136 @@
+<div class="mod-debate-topic-container container">
+    <div class="row">
+        <div class="col-12">
+            <div class="mod-debate-topic p-3 mod-debate-border-style">
+                <a>{{debate}}</a>
+            </div>
+            {{#debateformat}}
+                <div class="mod-debate-description p-3 mod-debate-border-style">
+                    {{{intro}}}
+                </div>
+            {{/debateformat}}
+            <div class="mod-debate-response-container container">
+                <div class="row">
+                    <div class="col-12 col-sm-6 mod-debate-no-padding">
+                        <div class="mod-debate-positive p-3 mod-debate-border-style" id="mod-debate-pos-side">
+                            {{#str}} pros, mod_debate{{/str}}
+                            <i class="fa fa-plus-square fa-2x float-right mod-debate-positive-icon"></i>
+                        </div>
+                        <div class="p-3 mod-debate-border-style" id="mod-debate-insert-postive-response">
+                            <div class="mod-debate-response-text">
+                                <textarea id="mod-debate-positive-response-input" class="mod-debate-response-input"
+                                          type="text"></textarea>
+                            </div>
+                            <div class="mod-debate-user-info mt-3">
+                                <img src="{{current_user_profile_image}}" class="mod-debate-user-image mr-1">
+                                {{current_user_full_name}}
+                            </div>
+                            <div class="mod-debate-response-buttons">
+                                <div class="container">
+                                    <div class="row">
+                                        <div class="col-12 col-sm-6 mt-3">
+                                            <div class="btn btn-primary mod-debate-button"
+                                                 id="mod-debate-cancel-respose">{{#str}}
+                                                cancel, mod_debate{{/str}}</div>
+                                        </div>
+                                        <div class="col-12 col-sm-6 mt-3">
+                                            <div class="btn btn-primary mod-debate-button"
+                                                 id="mod-debate-update-response">{{#str}} save, mod_debate{{/str}}</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        {{#positive}}
+                            <div class="p-3 mod-debate-border-style" id="{{elementidcontainer}}">
+                                <div class="mod-debate-response-text" id="{{elementid}}">
+                                    {{response}}
+                                </div>
+                                <div class="mod-debate-user-info mt-3">
+                                    <img src="{{user_profile_image}}" class="mod-debate-user-image mr-1">
+                                    {{user_full_name}}
+                                    {{#user_capability}}
+                                        <div class="float-right dropleft">
+                                            <i class="fa fa-ellipsis-h" type="icon" data-toggle="dropdown"
+                                               aria-haspopup="true" aria-expanded="false"></i>
+                                            <div class="dropdown-menu">
+                                                {{#user_edit_capability}}
+                                                <a class="dropdown-item mod-debate-positive-edit"
+                                                   data-id="{{id}}">{{#str}} edit, mod_debate{{/str}}</a>
+                                                {{/user_edit_capability}}
+                                                {{#user_delete_capability}}
+                                                <a class="dropdown-item mod-debate-positive-delete"
+                                                   data-id="{{id}}">{{#str}} delete, mod_debate{{/str}}</a>
+                                                {{/user_delete_capability}}
+                                            </div>
+                                        </div>
+                                    {{/user_capability}}
+                                </div>
+
+                            </div>
+                        {{/positive}}
+                    </div>
+                    <div class="col-12 col-sm-6 mod-debate-no-padding">
+                        <div class="mod-debate-negative p-3 mod-debate-border-style" id="mod-debate-neg-side">
+                            {{#str}} cons, mod_debate{{/str}}
+                            <i class="fa fa-plus-square fa-2x float-right mod-debate-negative-icon"></i>
+                        </div>
+                        <div class="p-3 mod-debate-border-style" id="mod-debate-insert-negative-response">
+                            <div class="mod-debate-response-text">
+                                <textarea id="mod-debate-negative-response-input" class="mod-debate-response-input"
+                                          type="text"></textarea>
+                            </div>
+                            <div class="mod-debate-user-info mt-3">
+                                <img src="{{current_user_profile_image}}" class="mod-debate-user-image mr-1">
+                                {{current_user_full_name}}
+                            </div>
+                            <div class="mod-debate-response-buttons mt-2">
+                                <div class="container">
+                                    <div class="row">
+                                        <div class="col-12 col-sm-6 text-left">
+                                            <div class="btn btn-primary mod-debate-button"
+                                                 id="mod-debate-cancel-respose">{{#str}}
+                                                cancel, mod_debate{{/str}}</div>
+                                        </div>
+                                        <div class="col-12 col-sm-6 text-right">
+                                            <div class="btn btn-primary mod-debate-button"
+                                                 id="mod-debate-update-response">{{#str}} save, mod_debate{{/str}}</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        {{#negative}}
+                            <div class="p-3 mod-debate-border-style" id="{{elementidcontainer}}">
+                                <div class="mod-debate-response-text" id="{{elementid}}">
+                                    {{response}}
+                                </div>
+                                <div class="mod-debate-user-info mt-3">
+                                    <img src="{{user_profile_image}}" class="mod-debate-user-image mr-1">
+                                    {{user_full_name}}
+                                    {{#user_capability}}
+                                        <div class="float-right dropleft">
+                                            <i class="fa fa-ellipsis-h" type="icon" data-toggle="dropdown"
+                                               aria-haspopup="true" aria-expanded="false"></i>
+                                            <div class="dropdown-menu">
+                                                {{#user_edit_capability}}
+                                                <a class="dropdown-item mod-debate-negative-edit"
+                                                   data-id="{{id}}">{{#str}} edit, mod_debate{{/str}}</a>
+                                                {{/user_edit_capability}}
+                                                {{#user_delete_capability}}
+                                                <a class="dropdown-item mod-debate-negative-delete"
+                                                   data-id="{{id}}">{{#str}} delete, mod_debate{{/str}}</a>
+                                                {{/user_delete_capability}}
+                                            </div>
+                                        </div>
+                                    {{/user_capability}}
+                                </div>
+                            </div>
+                        {{/negative}}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
