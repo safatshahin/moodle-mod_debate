@@ -41,18 +41,54 @@ function debate_supports($feature) {
 //    }
 
     switch($feature) {
-        case FEATURE_MOD_ARCHETYPE:           return MOD_ARCHETYPE_RESOURCE;
-        case FEATURE_GROUPS:                  return false;
-        case FEATURE_GROUPINGS:               return false;
         case FEATURE_MOD_INTRO:               return true;
         case FEATURE_COMPLETION_TRACKS_VIEWS: return true;
-        case FEATURE_GRADE_HAS_GRADE:         return false;
-        case FEATURE_GRADE_OUTCOMES:          return false;
         case FEATURE_BACKUP_MOODLE2:          return true;
         case FEATURE_SHOW_DESCRIPTION:        return true;
 
         default: return null;
     }
+}
+
+/**
+ * This function is used by the reset_course_userdata function in moodlelib.
+ * @param $data the data submitted from the reset course.
+ * @return array status array
+ */
+function debate_reset_userdata($data) {
+
+    // Any changes to the list of dates that needs to be rolled should be same during course restore and course reset.
+    // See MDL-9367.
+
+    return array();
+}
+
+/**
+ * List the actions that correspond to a view of this module.
+ * This is used by the participation report.
+ *
+ * Note: This is not used by new logging system. Event with
+ *       crud = 'r' and edulevel = LEVEL_PARTICIPATING will
+ *       be considered as view action.
+ *
+ * @return array
+ */
+function debate_get_view_actions() {
+    return array('view','view all');
+}
+
+/**
+ * List the actions that correspond to a post of this module.
+ * This is used by the participation report.
+ *
+ * Note: This is not used by new logging system. Event with
+ *       crud = ('c' || 'u' || 'd') and edulevel = LEVEL_PARTICIPATING
+ *       will be considered as post action.
+ *
+ * @return array
+ */
+function debate_get_post_actions() {
+    return array('update', 'add');
 }
 
 /**
@@ -73,21 +109,22 @@ function debate_add_instance($moduleinstance, $mform = null) {
     $cmid = $moduleinstance->coursemodule;
 
     $moduleinstance->timecreated = time();
-    if($mform) {
-        $moduleinstance->topicformat = $moduleinstance->topic['format'];
-        $moduleinstance->topic = $moduleinstance->topic['text'];
-    }
+//    if($mform) {
+//        $moduleinstance->debateformat = $moduleinstance->debate['format'];
+//        $moduleinstance->debate = $moduleinstance->debate['text'];
+//    }
 
     $id = $DB->insert_record('debate', $moduleinstance);
+    $moduleinstance->id = $id;
 
     $DB->set_field('course_modules', 'instance', $id, array('id'=>$cmid));
-    $context = context_module::instance($cmid);
+//    $context = context_module::instance($cmid);
 
-    if ($mform and !empty($moduleinstance->topic['itemid'])) {
-        $draftitemid = $moduleinstance->topic['itemid'];
-        $moduleinstance->topic = file_save_draft_area_files($draftitemid, $context->id, 'mod_debate', 'topic', 0, page_get_editor_options($context), $moduleinstance->topic);
-        $DB->update_record('debate', $moduleinstance);
-    }
+//    if ($mform and !empty($moduleinstance->debate['itemid'])) {
+//        $draftitemid = $moduleinstance->debate['itemid'];
+//        $moduleinstance->debate = file_save_draft_area_files($draftitemid, $context->id, 'mod_debate', 'topic', 0, page_get_editor_options($context), $moduleinstance->debate);
+//        $DB->update_record('debate', $moduleinstance);
+//    }
 
     $completiontimeexpected = !empty($moduleinstance->completionexpected) ? $moduleinstance->completionexpected : null;
     \core_completion\api::update_completion_date_event($cmid, 'debate', $id, $completiontimeexpected);
@@ -110,20 +147,20 @@ function debate_update_instance($moduleinstance, $mform = null) {
     require_once("$CFG->libdir/resourcelib.php");
 
     $cmid        = $moduleinstance->coursemodule;
-    $draftitemid = $moduleinstance->topic['itemid'];
+//    $draftitemid = $moduleinstance->debate['itemid'];
 
     $moduleinstance->timemodified = time();
     $moduleinstance->id = $moduleinstance->instance;
-    $moduleinstance->topic = $moduleinstance->topic['text'];
-    $moduleinstance->topicformat = $moduleinstance->topic['format'];
+//    $moduleinstance->debateformat = $moduleinstance->debate['format'];
+//    $moduleinstance->debate = $moduleinstance->debate['text'];
 
     $DB->update_record('debate', $moduleinstance);
 
-    $context = context_module::instance($cmid);
-    if ($draftitemid) {
-        $moduleinstance->topic = file_save_draft_area_files($draftitemid, $context->id, 'mod_debate', 'topic', 0, page_get_editor_options($context), $moduleinstance->topic);
-        $DB->update_record('debate', $moduleinstance);
-    }
+//    $context = context_module::instance($cmid);
+//    if ($draftitemid) {
+//        $moduleinstance->debate = file_save_draft_area_files($draftitemid, $context->id, 'mod_debate', 'topic', 0, page_get_editor_options($context), $moduleinstance->debate);
+//        $DB->update_record('debate', $moduleinstance);
+//    }
 
     $completiontimeexpected = !empty($moduleinstance->completionexpected) ? $moduleinstance->completionexpected : null;
     \core_completion\api::update_completion_date_event($cmid, 'debate', $moduleinstance->id, $completiontimeexpected);
@@ -144,9 +181,6 @@ function debate_delete_instance($id) {
     if (!$exists) {
         return false;
     }
-
-    $cm = get_coursemodule_from_instance('debate', $id);
-    \core_completion\api::update_completion_date_event($cm->id, 'debate', $id, null);
 
     $DB->delete_records('debate', array('id' => $id));
 
@@ -318,4 +352,69 @@ function debate_pluginfile($course, $cm, $context, $filearea, $args, $forcedownl
 
     require_login($course, true, $cm);
     send_file_not_found();
+
+//    global $CFG, $DB;
+//    require_once("$CFG->libdir/resourcelib.php");
+//
+//    if ($context->contextlevel != CONTEXT_MODULE) {
+//        return false;
+//    }
+//
+//    require_course_login($course, true, $cm);
+//    if (!has_capability('mod/debate:view', $context)) {
+//        return false;
+//    }
+//
+//    if ($filearea !== 'topic') {
+//        // intro is handled automatically in pluginfile.php
+//        return false;
+//    }
+//
+//    // $arg could be revision number or index.html
+//    $arg = array_shift($args);
+//    if ($arg == 'index.html' || $arg == 'index.htm') {
+//        // serve page content
+//        $filename = $arg;
+//
+//        if (!$page = $DB->get_record('debate', array('id'=>$cm->instance), '*', MUST_EXIST)) {
+//            return false;
+//        }
+//
+//        // We need to rewrite the pluginfile URLs so the media filters can work.
+//        $content = file_rewrite_pluginfile_urls($page->content, 'webservice/pluginfile.php', $context->id, 'mod_debate', 'topic',
+//            $page->revision);
+//        $formatoptions = new stdClass;
+//        $formatoptions->noclean = true;
+//        $formatoptions->overflowdiv = true;
+//        $formatoptions->context = $context;
+//        $content = format_text($content, $page->contentformat, $formatoptions);
+//
+//        // Remove @@PLUGINFILE@@/.
+//        $options = array('reverse' => true);
+//        $content = file_rewrite_pluginfile_urls($content, 'webservice/pluginfile.php', $context->id, 'mod_debate', 'topic',
+//            $page->revision, $options);
+//        $content = str_replace('@@PLUGINFILE@@/', '', $content);
+//
+//        send_file($content, $filename, 0, 0, true, true);
+//    } else {
+//        $fs = get_file_storage();
+//        $relativepath = implode('/', $args);
+//        $fullpath = "/$context->id/mod_debate/$filearea/0/$relativepath";
+//        if (!$file = $fs->get_file_by_hash(sha1($fullpath)) or $file->is_directory()) {
+//            $page = $DB->get_record('debate', array('id'=>$cm->instance), 'id, legacyfiles', MUST_EXIST);
+//            if ($page->legacyfiles != RESOURCELIB_LEGACYFILES_ACTIVE) {
+//                return false;
+//            }
+//            if (!$file = resourcelib_try_file_migration('/'.$relativepath, $cm->id, $cm->course, 'mod_debate', 'topic', 0)) {
+//                return false;
+//            }
+//            //file migrate - update flag
+//            $page->legacyfileslast = time();
+//            $DB->update_record('debate', $page);
+//        }
+//
+//        // finally send the file
+//        send_stored_file($file, null, 0, $forcedownload, $options);
+//    }
 }
+
