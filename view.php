@@ -44,7 +44,6 @@ if ($id) {
 }
 
 require_login($course, true, $cm);
-
 $modulecontext = context_module::instance($cm->id);
 
 //$event = \mod_debate\event\course_module_viewed::create(array(
@@ -60,6 +59,16 @@ $PAGE->set_title(format_string($moduleinstance->name));
 $PAGE->set_heading(format_string($course->fullname));
 $PAGE->set_context($modulecontext);
 
+$content = file_rewrite_pluginfile_urls($moduleinstance->intro, 'pluginfile.php', $modulecontext->id, 'mod_debate', 'intro', null);
+$formatoptions = new stdClass;
+$formatoptions->noclean = true;
+$formatoptions->overflowdiv = true;
+$formatoptions->context = $modulecontext;
+$content = format_text($content, $moduleinstance->introformat, $formatoptions);
+$moduleinstance->intro = $content;
 echo $OUTPUT->header();
+
+$output = $PAGE->get_renderer('mod_debate');
+echo $output->render_debate_view($moduleinstance);
 
 echo $OUTPUT->footer();

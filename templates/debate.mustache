@@ -1,0 +1,30 @@
+<div class="mod-debate-container container">
+    <div class="mod-debate-topic-container row">
+        <div class="col-12">
+            <div class="mod-debate-topic">
+                {{debate}}
+            </div>
+            {{#debateformat}}
+                <div class="mod-debate-description">
+                    {{{intro}}}
+                </div>
+            {{/debateformat}}
+        </div>
+        <div class="mod-debate-response-container row">
+            <div class="col-12 col-sm-6">
+                {{#positive}}
+                    <div class="mod-debate-positive-response">
+                        {{positive_response}}
+                    </div>
+                {{/positive}}
+            </div>
+            <div class="col-12 col-sm-6">
+                {{#negative}}
+                    <div class="mod-debate-negative-response">
+                        {{negative_response}}
+                    </div>
+                {{/negative}}
+            </div>
+        </div>
+    </div>
+</div>
