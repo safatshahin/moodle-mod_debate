@@ -40,3 +40,7 @@ $string['showinmodule_help'] = 'Show the description in the view module page aft
 //access
 $string['debate:addinstance'] = 'Add a new debate instance';
 $string['debate:view'] = 'View debate content';
+
+//view
+$string['pros'] = 'Pros';
+$string['cons'] = 'Cons';
