@@ -1,12 +1,8 @@
-.no-left-pad {
-    padding-left: 0 !important;
-}
-
-.no-right-pad {
-    padding-right: 0 !important;
-}
-
 .border-style {
     border: 1px solid rgba(0,0,0,.125);
+}
+
+.no-padding {
+    padding: 0 !important;
 }
 

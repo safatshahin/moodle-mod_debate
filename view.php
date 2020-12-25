@@ -35,24 +35,6 @@ if ($id) {
     $cm             = get_coursemodule_from_id('debate', $id, 0, false, MUST_EXIST);
     $course         = $DB->get_record('course', array('id' => $cm->course), '*', MUST_EXIST);
     $moduleinstance = $DB->get_record('debate', array('id' => $cm->instance), '*', MUST_EXIST);
-//    $positive_response = $DB->get_records_sql('SELECT * FROM {debate_response}
-//                                                    WHERE courseid = :courseid
-//                                                    AND debateid =:debateid
-//                                                    AND cmid =:cmid
-//                                                    AND responsetype = :responsetype',
-//                                                    array('courseid' => $course->id,
-//                                                          'debateid' => $moduleinstance->id,
-//                                                          'cmid' => $cm->id,
-//                                                          'responsetype' => 1));
-//    $negative_response = $DB->get_records_sql('SELECT * FROM {debate_response}
-//                                                    WHERE courseid = :courseid
-//                                                    AND debateid =:debateid
-//                                                    AND cmid =:cmid
-//                                                    AND responsetype = :responsetype',
-//                                                    array('courseid' => $course->id,
-//                                                        'debateid' => $moduleinstance->id,
-//                                                        'cmid' => $cm->id,
-//                                                        'responsetype' => 0));
     $positive_response = $DB->get_records('debate_response', array('courseid' => $course->id, 'debateid' => $moduleinstance->id, 'cmid' => $cm->id, 'responsetype' => 1), '', '*');
     $negative_response = $DB->get_records('debate_response', array('courseid' => $course->id, 'debateid' => $moduleinstance->id, 'cmid' => $cm->id, 'responsetype' => 0), '', '*');
 } else if ($d) {
@@ -98,7 +80,6 @@ foreach ($negative_response as $neg) {
 }
 $moduleinstance->positive = $positive;
 $moduleinstance->negative = $negative;
-//var_dump($moduleinstance);die;
 echo $OUTPUT->header();
 
 $output = $PAGE->get_renderer('mod_debate');

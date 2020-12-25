@@ -1,6 +1,6 @@
-<div class="mod-debate-container container">
-    <div class="mod-debate-topic-container row">
-        <div class="col-12 no-left-pad no-right-pad">
+<div class="mod-debate-topic-container container">
+    <div class="row">
+        <div class="col-12">
             <div class="mod-debate-topic p-3 border-style">
                 {{debate}}
             </div>
@@ -9,30 +9,33 @@
                     {{{intro}}}
                 </div>
             {{/debateformat}}
-        </div>
-    </div>
-    <div class="mod-debate-response-container row">
-        <div class="col-12 col-sm-6 no-right-pad">
-            <div class="mod-debate-positive p-3 border-style">
-                {{#str}} pros, mod_debate{{/str}}
-                <i class="fa fa-plus-square float-right"></i>
-            </div>
-            {{#positive}}
-                <div class="mod-debate-positive-response p-3 border-style">
-                    {{response}}
+            <div class="mod-debate-response-container container">
+                <div class="row">
+                    <div class="col-12 col-sm-6 no-padding">
+                        <div class="mod-debate-positive p-3 border-style">
+                            {{#str}} pros, mod_debate{{/str}}
+                            <i class="fa fa-plus-square float-right"></i>
+                        </div>
+                        {{#positive}}
+                            <div class="mod-debate-positive-response p-3 border-style">
+                                {{response}}
+                            </div>
+                        {{/positive}}
+                    </div>
+                    <div class="col-12 col-sm-6 no-padding">
+                        <div class="mod-debate-negative p-3 border-style">
+                            {{#str}} cons, mod_debate{{/str}}
+                            <i class="fa fa-plus-square float-right"></i>
+                        </div>
+                        {{#negative}}
+                            <div class="mod-debate-negative-response p-3 border-style">
+                                {{response}}
+                            </div>
+                        {{/negative}}
+                    </div>
                 </div>
-            {{/positive}}
-        </div>
-        <div class="col-12 col-sm-6 no-left-pad">
-            <div class="mod-debate-negative p-3 border-style">
-                {{#str}} cons, mod_debate{{/str}}
-                <i class="fa fa-plus-square float-right"></i>
             </div>
-            {{#negative}}
-                <div class="mod-debate-negative-response p-3 border-style">
-                    {{response}}
-                </div>
-            {{/negative}}
         </div>
     </div>
 </div>
+

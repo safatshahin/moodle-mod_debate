@@ -15,17 +15,31 @@
 // along with Moodle.  If not, see <https://www.gnu.org/licenses/>.
 
 /**
- * Plugin version and other meta-data are defined here.
+ * webservices for mod_debate.
  *
  * @package     mod_debate
  * @copyright   2020 Safat Shahin <safatshahin@gmail.com>
  * @license     https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-defined('MOODLE_INTERNAL') || die();
+$functions = array(
+    'mod_debate_add_debate_respose' => array(
+        'classname'   => 'mod_debate\webservice\debate_data',
+        'methodname'  => 'add_debate_respose',
+        'classpath'   => 'mod/debate/classes/webservice/debate_data.php',
+        'description' => 'Add debate response',
+        'type'        => 'write',
+        'ajax'        => true
+    ),
+);
 
-$plugin->component = 'mod_debate';
-$plugin->release = '1.1.0';
-$plugin->version = 2020122500;
-$plugin->requires = 2019052000;
-$plugin->maturity = MATURITY_STABLE;
+// We define the services to install as pre-build services. A pre-build service is not editable by administrator.
+$services = array(
+    'mod_debate' => array(
+        'functions' => array(
+            'mod_debate_add_debate_respose',
+        ),
+        'restrictedusers' => 0,
+        'enabled'=>1
+    )
+);
