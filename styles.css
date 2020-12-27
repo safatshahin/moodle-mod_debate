@@ -9,3 +9,25 @@
 .mod-debate-button {
     width: 10em;
 }
+
+.mod-debate-negative, .mod-debate-negative-response-counter {
+    color: red;
+    font-weight: bold;
+}
+
+.mod-debate-positive, .mod-debate-positive-response-counter {
+    color: green;
+    font-weight: bold;
+}
+
+.mod-debate-negative-icon {
+    color: red;
+}
+
+.mod-debate-positive-icon {
+    color: green;
+}
+
+.mod-debate-topic {
+    font-weight: bold;
+}
