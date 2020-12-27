@@ -15,37 +15,21 @@
 // along with Moodle.  If not, see <https://www.gnu.org/licenses/>.
 
 /**
- * Renderer for mod_debate.
+ * Grading page for mod_debate.
  *
  * @package     mod_debate
  * @copyright   2020 Safat Shahin <safatshahin@gmail.com>
  * @license     https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-namespace mod_debate\output;
+require(__DIR__.'/../../config.php');
+require_once(__DIR__.'/lib.php');
 
-defined('MOODLE_INTERNAL') || die;
+// Course_module ID, or
+$id = optional_param('id', 0, PARAM_INT);
 
-use mod_debate;
+$userid = optional_param('userid', 0, PARAM_INT);
 
-class renderer extends \plugin_renderer_base {
-    /**
-     * Throws in a call to the JS for AJAX etc.
-     *
-     * @return string html for the page
-     */
-    public function __construct()
-    {
-        global $PAGE;
-        parent::__construct($PAGE, RENDERER_TARGET_GENERAL);
-    }
 
-    public function render_debate_view($moduleinstance) {
-        return parent::render_from_template('mod_debate/view', $moduleinstance);
-    }
-
-    public function render_debate_page($moduleinstance) {
-        return parent::render_from_template('mod_debate/debate', $moduleinstance);
-    }
-
-}
+var_dump($id);
+var_dump($userid);die;

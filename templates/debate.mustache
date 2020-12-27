@@ -1,34 +1,34 @@
 <div class="mod-debate-topic-container container">
     <div class="row">
         <div class="col-12">
-            <div class="mod-debate-topic p-3 border-style">
+            <div class="mod-debate-topic p-3 mod-debate-border-style">
                 {{debate}}
             </div>
             {{#debateformat}}
-                <div class="mod-debate-description p-3 border-style">
+                <div class="mod-debate-description p-3 mod-debate-border-style">
                     {{{intro}}}
                 </div>
             {{/debateformat}}
             <div class="mod-debate-response-container container">
                 <div class="row">
-                    <div class="col-12 col-sm-6 no-padding">
-                        <div class="mod-debate-positive p-3 border-style">
+                    <div class="col-12 col-sm-6 mod-debate-no-padding">
+                        <div class="mod-debate-positive p-3 mod-debate-border-style">
                             {{#str}} pros, mod_debate{{/str}}
                             <i class="fa fa-plus-square float-right"></i>
                         </div>
                         {{#positive}}
-                            <div class="mod-debate-positive-response p-3 border-style">
+                            <div class="mod-debate-positive-response p-3 mod-debate-border-style">
                                 {{response}}
                             </div>
                         {{/positive}}
                     </div>
-                    <div class="col-12 col-sm-6 no-padding">
-                        <div class="mod-debate-negative p-3 border-style">
+                    <div class="col-12 col-sm-6 mod-debate-no-padding">
+                        <div class="mod-debate-negative p-3 mod-debate-border-style">
                             {{#str}} cons, mod_debate{{/str}}
                             <i class="fa fa-plus-square float-right"></i>
                         </div>
                         {{#negative}}
-                            <div class="mod-debate-negative-response p-3 border-style">
+                            <div class="mod-debate-negative-response p-3 mod-debate-border-style">
                                 {{response}}
                             </div>
                         {{/negative}}

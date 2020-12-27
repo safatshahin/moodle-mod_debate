@@ -25,8 +25,6 @@
 require(__DIR__.'/../../config.php');
 require_once(__DIR__.'/lib.php');
 
-global $USER;
-
 // Course_module ID, or
 $id = optional_param('id', 0, PARAM_INT);
 
@@ -59,7 +57,7 @@ $modulecontext = context_module::instance($cm->id);
 //$event->add_record_snapshot('debate', $moduleinstance);
 //$event->trigger();
 
-$PAGE->set_url('/mod/debate/view.php', array('id' => $cm->id));
+$PAGE->set_url('/mod/debate/debate.php', array('id' => $cm->id));
 $PAGE->set_title(format_string($moduleinstance->name));
 $PAGE->set_heading(format_string($course->fullname));
 $PAGE->set_context($modulecontext);
@@ -72,27 +70,19 @@ $formatoptions->context = $modulecontext;
 $content = format_text($content, $moduleinstance->introformat, $formatoptions);
 $moduleinstance->intro = $content;
 
-$moduleinstance->grade_capability = false;
-$usercontext = context_system::instance();
-if (has_capability('mod/debate:addinstance', $usercontext)) {
-    $moduleinstance->grade_capability = true;
-    $moduleinstance->gradeurl = 'debate_grade.php?id='.$cm->id.'&userid='.$USER->id;
-}
-
-$positive = 0;
+$positive = array();
 foreach ($positive_response as $pos) {
-    $positive++;
+    $positive[] = (array)$pos;
 }
-$negative = 0;
+$negative = array();
 foreach ($negative_response as $neg) {
-    $negative++;
+    $negative[] = (array)$neg;
 }
 $moduleinstance->positive = $positive;
 $moduleinstance->negative = $negative;
-$moduleinstance->debateurl = 'debate.php?id='.$cm->id;
 echo $OUTPUT->header();
 
 $output = $PAGE->get_renderer('mod_debate');
-echo $output->render_debate_view($moduleinstance);
+echo $output->render_debate_page($moduleinstance);
 
 echo $OUTPUT->footer();

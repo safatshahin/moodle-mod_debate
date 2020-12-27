@@ -1,8 +1,11 @@
-.border-style {
+.mod-debate-border-style {
     border: 1px solid rgba(0,0,0,.125);
 }
 
-.no-padding {
+.mod-debate-no-padding {
     padding: 0 !important;
 }
 
+.mod-debate-button {
+    width: 10em;
+}

@@ -91,6 +91,4 @@ class debate_data extends external_api {
         return $result;
     }
 
-
-
 }
