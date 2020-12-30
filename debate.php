@@ -102,7 +102,7 @@ $moduleinstance->negative = $negative;
 $user_full_name = $USER->firstname . ' ' . $USER->lastname;
 $user_image = new user_picture($USER);
 $user_image_url = $user_image->get_url($PAGE)->out(false);
-$PAGE->requires->js_call_amd('mod_debate/debate_view', 'init', [$user_full_name, $user_image_url, $USER->id]);
+$PAGE->requires->js_call_amd('mod_debate/debate_view', 'init', [$user_full_name, $user_image_url, $USER->id, $course->id, $moduleinstance->id, $cm->id]);
 echo $OUTPUT->header();
 
 $output = $PAGE->get_renderer('mod_debate');

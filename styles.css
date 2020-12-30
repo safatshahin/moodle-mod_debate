@@ -42,7 +42,7 @@
     font-size: 0.8em;
 }
 
-.mod-debate-positive-response-text, .mod-debate-negative-response-text {
+.mod-debate-response-text{
     /*overflow-y: auto;*/
     height: 4.5em;
 }
