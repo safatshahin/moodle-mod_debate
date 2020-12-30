@@ -1,0 +1,21 @@
+<div class="{{response_class}} p-3 mod-debate-border-style" id="{{userid}}">
+    <div class="mod-debate-negative-response-text">
+        <textarea id="mod-debate-response-input" type="text"/></textarea>
+    </div>
+    <div class="mod-debate-user-info mt-3">
+        <img src="{{user_profile_image}}" class="mod-debate-user-image mr-1">
+        {{user_full_name}}
+    </div>
+    <div class="mod-debate-response-buttons mt-2">
+        <div class="container">
+            <div class="row">
+                <div class="col-12 col-sm-6 text-left">
+                    <div class="btn btn-primary mod-debate-button" id="mod-debate-cancel-respose">{{#str}} cancel, mod_debate{{/str}}</div>
+                </div>
+                <div class="col-12 col-sm-6 text-right">
+                    <div class="btn btn-primary mod-debate-button" id="mod-debate-update-response">{{#str}} update, mod_debate{{/str}}</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

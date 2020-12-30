@@ -31,3 +31,25 @@
 .mod-debate-topic {
     font-weight: bold;
 }
+
+.mod-debate-user-image {
+    height: 1.5em;
+    width: 1.5em;
+    border-radius: 1em;
+}
+
+.mod-debate-user-info {
+    font-size: 0.8em;
+}
+
+.mod-debate-positive-response-text, .mod-debate-negative-response-text {
+    /*overflow-y: auto;*/
+    height: 4.5em;
+}
+
+#mod-debate-response-input {
+    border: 1px solid rgba(0,0,0,.125);
+    outline: 0;
+    width: 100%;
+    height: 100%;
+}

@@ -42,9 +42,13 @@ $string['debate:addinstance'] = 'Add a new debate instance';
 $string['debate:view'] = 'View debate content';
 
 //view
-$string['pros'] = 'Pros';
-$string['cons'] = 'Cons';
-$string['pros_response_count'] = 'Pros response count';
-$string['cons_response_count'] = 'Cons response count';
+$string['pros'] = 'Positive';
+$string['cons'] = 'Negative';
+$string['pros_response_count'] = 'Positive response count';
+$string['cons_response_count'] = 'Negative response count';
 $string['join_debate'] = 'Join/View debate';
 $string['grade_debater'] = 'Grade debaters';
+
+//debate
+$string['update'] = 'Update';
+$string['cancel'] = 'Cancel';

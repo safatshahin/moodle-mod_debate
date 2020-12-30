@@ -24,6 +24,9 @@
 
 require(__DIR__.'/../../config.php');
 require_once(__DIR__.'/lib.php');
+require_once (__DIR__.'/../../lib/outputcomponents.php');
+
+global $DB, $USER;
 
 // Course_module ID, or
 $id = optional_param('id', 0, PARAM_INT);
@@ -78,14 +81,28 @@ $moduleinstance->intro = $content;
 
 $positive = array();
 foreach ($positive_response as $pos) {
+    $user = $DB->get_record('user', array('id' => (int)$pos->userid), '*', MUST_EXIST);
+    $pos->user_full_name = $user->firstname . ' ' . $user->lastname;
+    $userpicture = new user_picture($user);
+    $pos->user_profile_image = $userpicture->get_url($PAGE)->out(false);
     $positive[] = (array)$pos;
 }
 $negative = array();
 foreach ($negative_response as $neg) {
+    $user = $DB->get_record('user', array('id' => (int)$pos->userid), '*', MUST_EXIST);
+    $neg->user_full_name = $user->firstname . ' ' . $user->lastname;
+    $userpicture = new user_picture($user);
+    $neg->user_profile_image = $userpicture->get_url($PAGE)->out(false);
     $negative[] = (array)$neg;
 }
 $moduleinstance->positive = $positive;
 $moduleinstance->negative = $negative;
+//js call
+//var_dump($USER);die;
+$user_full_name = $USER->firstname . ' ' . $USER->lastname;
+$user_image = new user_picture($USER);
+$user_image_url = $user_image->get_url($PAGE)->out(false);
+$PAGE->requires->js_call_amd('mod_debate/debate_view', 'init', [$user_full_name, $user_image_url, $USER->id]);
 echo $OUTPUT->header();
 
 $output = $PAGE->get_renderer('mod_debate');
