@@ -36,6 +36,10 @@ $string['topicheader'] = 'Topic';
 $string['debate_topic'] = 'Debate topic';
 $string['showinmodule'] = 'Show description in the module page';
 $string['showinmodule_help'] = 'Show the description in the view module page after the debate topic';
+$string['unlimited_response'] = 'Allow unlimited response';
+$string['one_response'] = 'Allow one response in any one side';
+$string['two_response'] = 'Allow one response in each side';
+$string['user_response'] = 'User response type';
 
 //access
 $string['debate:addinstance'] = 'Add a new debate instance';

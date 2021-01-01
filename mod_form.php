@@ -50,6 +50,15 @@ class mod_debate_mod_form extends moodleform_mod {
         $this->standard_intro_elements();
         $mform->addElement('advcheckbox', 'debateformat', get_string('showinmodule', 'mod_debate'));
 
+        $response_type = array(
+            '0' => get_string('unlimited_response', 'mod_debate'),
+            '1' => get_string('one_response', 'mod_debate'),
+            '2' => get_string('two_response', 'mod_debate')
+        );
+        $mform->addElement('select', 'responsetype', get_string('user_response', 'mod_debate'), $response_type);
+        $mform->setDefault('responsetype', 0);
+
+
         $this->standard_grading_coursemodule_elements();
 
         $this->standard_coursemodule_elements();

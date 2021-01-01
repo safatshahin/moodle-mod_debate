@@ -109,22 +109,11 @@ function debate_add_instance($moduleinstance, $mform = null) {
     $cmid = $moduleinstance->coursemodule;
 
     $moduleinstance->timecreated = time();
-//    if($mform) {
-//        $moduleinstance->debateformat = $moduleinstance->debate['format'];
-//        $moduleinstance->debate = $moduleinstance->debate['text'];
-//    }
 
     $id = $DB->insert_record('debate', $moduleinstance);
     $moduleinstance->id = $id;
 
     $DB->set_field('course_modules', 'instance', $id, array('id'=>$cmid));
-//    $context = context_module::instance($cmid);
-
-//    if ($mform and !empty($moduleinstance->debate['itemid'])) {
-//        $draftitemid = $moduleinstance->debate['itemid'];
-//        $moduleinstance->debate = file_save_draft_area_files($draftitemid, $context->id, 'mod_debate', 'topic', 0, page_get_editor_options($context), $moduleinstance->debate);
-//        $DB->update_record('debate', $moduleinstance);
-//    }
 
     $completiontimeexpected = !empty($moduleinstance->completionexpected) ? $moduleinstance->completionexpected : null;
     \core_completion\api::update_completion_date_event($cmid, 'debate', $id, $completiontimeexpected);
@@ -147,20 +136,10 @@ function debate_update_instance($moduleinstance, $mform = null) {
     require_once("$CFG->libdir/resourcelib.php");
 
     $cmid        = $moduleinstance->coursemodule;
-//    $draftitemid = $moduleinstance->debate['itemid'];
-
     $moduleinstance->timemodified = time();
     $moduleinstance->id = $moduleinstance->instance;
-//    $moduleinstance->debateformat = $moduleinstance->debate['format'];
-//    $moduleinstance->debate = $moduleinstance->debate['text'];
 
     $DB->update_record('debate', $moduleinstance);
-
-//    $context = context_module::instance($cmid);
-//    if ($draftitemid) {
-//        $moduleinstance->debate = file_save_draft_area_files($draftitemid, $context->id, 'mod_debate', 'topic', 0, page_get_editor_options($context), $moduleinstance->debate);
-//        $DB->update_record('debate', $moduleinstance);
-//    }
 
     $completiontimeexpected = !empty($moduleinstance->completionexpected) ? $moduleinstance->completionexpected : null;
     \core_completion\api::update_completion_date_event($cmid, 'debate', $moduleinstance->id, $completiontimeexpected);

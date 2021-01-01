@@ -7,13 +7,41 @@
  */
 
 define(['jquery', 'core/ajax', 'core/str', 'core/config', 'core/notification', 'core/templates'],
-    function($, AJAX, str, mdlcfg, notification, templates) {
+    function($, AJAX, str,
+             mdlcfg, notification, templates) {
         var debateView = {
-            init: function(userFullName, userImageURL, userID, courseID, debateID, cmID) {
+            init: function(userFullName, userImageURL, userID, courseID, debateID, cmID,
+                           responseAllowed, positiveResponse, negativeResponse) {
                 var responseType = 0;
                 var responseId = '';
+                $.getAllocation = function(attr) {
+                    var result = true;
+                    switch (responseAllowed) {
+                        case '0':
+                            // UNLIMITED RESPONSE
+                            break;
+                        case '1':
+                            // ONE RESPONSE IN ANY ONE SIDE
+                            if (positiveResponse > 0 || negativeResponse > 0) {
+                                result = false;
+                            }
+                            break;
+                        case '2':
+                            // ONE RESPONSE IN EACH SIDE
+                            if (positiveResponse > 0 && negativeResponse > 0) {
+                                result = false;
+                            } else if (attr === 'positive' && positiveResponse > 0) {
+                                result = false;
+                            } else if (attr === 'negative' && negativeResponse > 0) {
+                                result = false;
+                            }
+                            break;
+                    }
+                    return result;
+                };
                 $(document).on('click', '.mod-debate-positive-icon', function() {
-                    if ($("#mod-debate-response-input").length === 0) {
+                    var result = $.getAllocation('positive');
+                    if ($("#mod-debate-response-input").length === 0 && result) {
                         responseType = 1;
                         responseId = '#mod-debate-pos-side';
                         debateView.debateResponse(userFullName, userImageURL,
@@ -22,7 +50,8 @@ define(['jquery', 'core/ajax', 'core/str', 'core/config', 'core/notification', '
                     }
                 });
                 $(document).on('click', '.mod-debate-negative-icon', function() {
-                    if ($("#mod-debate-response-input").length === 0) {
+                    var result = $.getAllocation('negative');
+                    if ($("#mod-debate-response-input").length === 0 && result) {
                         responseType = 0;
                         responseId = '#mod-debate-neg-side';
                         debateView.debateResponse(userFullName, userImageURL,
@@ -47,6 +76,11 @@ define(['jquery', 'core/ajax', 'core/str', 'core/config', 'core/notification', '
                     }]);
                     responseCall[0].done(function(result) {
                         if (result) {
+                            if (responseType === 0) {
+                                negativeResponse++;
+                            } else {
+                                positiveResponse++;
+                            }
                             $('#' + userID + '-mod-debate').remove();
                             var outputContext = {
                                 user_profile_image: userImageURL,
