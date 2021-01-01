@@ -94,4 +94,95 @@ class debate_data extends external_api {
         return $result;
     }
 
+    public static function find_debate_respose_parameters() {
+        return new external_function_parameters(
+            array(
+                'courseid' => new external_value(PARAM_INT, '', 1),
+                'debateid' => new external_value(PARAM_INT, '', 1),
+                'cmid' => new external_value(PARAM_INT, '', 1),
+                'response' => new external_value(PARAM_TEXT, '', 1),
+                'responsetype' => new external_value(PARAM_INT, '', 1)
+            )
+        );
+    }
+
+    public static function find_debate_respose_is_allowed_from_ajax() {
+        return true;
+    }
+
+    public static function find_debate_respose_returns() {
+        return new external_single_structure(
+            array(
+                'result' => new external_value(PARAM_BOOL, 'Status true or false'),
+                'data' =>new external_value(PARAM_TEXT, 'Matching data')
+            )
+        );
+    }
+
+    public static function find_debate_respose($courseid, $debateid, $cmid, $response, $responsetype) {
+        global $DB;
+        $params = self::validate_parameters(
+            self::find_debate_respose_parameters(),
+            array(
+                'courseid' => $courseid,
+                'debateid' => $debateid,
+                'cmid' => $cmid,
+                'response' => $response,
+                'responsetype' => $responsetype
+            )
+        );
+        $result = array(
+            'result' => false,
+            'data' => null
+        );
+
+        $datas = $DB->get_records('debate_response', array('courseid' => $params['courseid'],
+            'debateid' => $params['debateid'], 'cmid' => $params['cmid'],
+            'responsetype' => $params['responsetype']), '', 'response');
+
+
+        $blacklist_words = array('i','a','about','an','and','are','as','at','be','by','com','de','en','for',
+            'from','how','in','is','it','la','of','on','or','that','the','this','to','was','what','when','where',
+            'who','will','with','und','the','www', "such", "have", "then");
+
+        $clean_response = preg_replace('/\s\s+/i', '', $response);
+        $clean_response = trim($clean_response);
+        $clean_response = preg_replace('/[^a-zA-Z0-9 -]/', '', $clean_response);
+        $clean_response = strtolower($clean_response);
+
+        //all the words from typed response
+        preg_match_all('/\b.*?\b/i', $clean_response, $response_words);
+        $response_words = $response_words[0];
+
+        //remove invalid words
+        foreach ($response_words as $key => $word) {
+            if ( $word == '' || in_array(strtolower($word), $blacklist_words) || strlen($word) <= 2 ) {
+                unset($response_words[$key]);
+            }
+        }
+
+        $response_word_counter = count($response_words);
+        if (!empty($datas)) {
+            foreach ($datas as $key => $data) {
+                $data_counter = 0;
+                foreach ($response_words as $response_word) {
+                    if (strpos($data->response, $response_word) == false) {
+                        $data_counter++;
+                    }
+                }
+                if ($data_counter == $response_word_counter) {
+                    unset($datas[$key]);
+                }
+            }
+        }
+        $final_data = array();
+        foreach ($datas as $dt) {
+            $final_data[] = $dt;
+        }
+        $result['result'] = true;
+        $result['data'] = json_encode($final_data);
+        return $result;
+    }
+
+
 }

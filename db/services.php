@@ -31,6 +31,14 @@ $functions = array(
         'type'        => 'write',
         'ajax'        => true
     ),
+    'mod_debate_find_debate_respose' => array(
+        'classname'   => 'mod_debate\webservice\debate_data',
+        'methodname'  => 'find_debate_respose',
+        'classpath'   => 'mod/debate/classes/webservice/debate_data.php',
+        'description' => 'Find debate response',
+        'type'        => 'read',
+        'ajax'        => true
+    ),
 );
 
 // We define the services to install as pre-build services. A pre-build service is not editable by administrator.
@@ -38,6 +46,7 @@ $services = array(
     'mod_debate' => array(
         'functions' => array(
             'mod_debate_add_debate_respose',
+            'mod_debate_find_debate_respose'
         ),
         'restrictedusers' => 0,
         'enabled'=>1

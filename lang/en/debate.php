@@ -56,3 +56,5 @@ $string['grade_debater'] = 'Grade debaters';
 //debate
 $string['update'] = 'Update';
 $string['cancel'] = 'Cancel';
+$string['possible_match'] = 'Possible matching responses';
+$string['no_possible_match'] = 'No matching responses';

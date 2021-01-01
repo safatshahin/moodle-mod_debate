@@ -27,6 +27,11 @@ require_once(__DIR__.'/lib.php');
 require_once(__DIR__.'/classes/debate_constants.php');
 require_once (__DIR__.'/../../lib/outputcomponents.php');
 
+//test data
+//require_once(__DIR__.'/classes/webservice/debate_data.php');
+//\mod_debate\webservice\debate_data::find_debate_respose(2, 1, 3, 'neg neg', 0);die;
+//end
+
 global $DB, $USER;
 
 // Course_module ID, or
@@ -65,6 +70,7 @@ $PAGE->set_url('/mod/debate/debate.php', array('id' => $cm->id));
 $PAGE->set_title(format_string($moduleinstance->name));
 $PAGE->set_heading(format_string($course->fullname));
 $PAGE->set_context($modulecontext);
+$PAGE->navbar->add('Join Debate', new moodle_url('/mod/debate/debate.php', array('id' => $cm->id)));
 //$PAGE->set_pagelayout('incourse');
 //$PAGE->set_pagetype('mod-debate-debate');
 //$node = $PAGE->settingsnav->find('mod-debate-debate', navigation_node::TYPE_SETTING);

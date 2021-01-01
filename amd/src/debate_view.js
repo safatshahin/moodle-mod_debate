@@ -61,6 +61,7 @@ define(['jquery', 'core/ajax', 'core/str', 'core/config', 'core/notification', '
                 });
                 $(document).on('click', '#mod-debate-cancel-respose', function() {
                     $('#' + userID + '-mod-debate').remove();
+                    $("div").remove(".mod-debate-find-response");
                 });
                 $(document).on('click', '#mod-debate-update-response', function() {
                     var userResponse = $("#mod-debate-response-input").val();
@@ -82,6 +83,7 @@ define(['jquery', 'core/ajax', 'core/str', 'core/config', 'core/notification', '
                                 positiveResponse++;
                             }
                             $('#' + userID + '-mod-debate').remove();
+                            $("div").remove(".mod-debate-find-response");
                             var outputContext = {
                                 user_profile_image: userImageURL,
                                 user_full_name: userFullName,
@@ -98,16 +100,21 @@ define(['jquery', 'core/ajax', 'core/str', 'core/config', 'core/notification', '
                 });
             },
             debateResponse: function(userFullName, userImageURL, responseClass,
-                                     responseId, userID) {
+                                     responseId, userID, courseID, debateID, cmID, responseType) {
                 var context = {
                     response_class: responseClass,
                     user_profile_image: userImageURL,
                     user_full_name: userFullName,
-                    userid: userID + '-mod-debate'
+                    userid: userID + '-mod-debate',
+                    courseid: courseID,
+                    debateid: debateID,
+                    cmid: cmID,
+                    responsetype: responseType
                 };
                 templates.render('mod_debate/debate_response', context).then(function (html, js) {
                     var debateResponse = $(responseId);
                     debateResponse.after(html);
+                    templates.runTemplateJS(js);
                 }).fail(notification.exception);
             }
         };
