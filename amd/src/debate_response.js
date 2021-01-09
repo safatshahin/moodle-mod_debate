@@ -20,6 +20,7 @@ $("#mod-debate-response-input").keyup(function() {
         var cmID = parseInt($("#mod-debate-response-input").attr('data-cm'));
         var responseType = parseInt($("#mod-debate-response-input").attr('data-responsetype'));
         var dataUserID = $("#mod-debate-response-input").attr('data-userid');
+        console.log('donno what is wrong');
         var responseAjax = AJAX.call([{
             methodname: 'mod_debate_find_debate_respose',
             args: {
