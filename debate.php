@@ -109,6 +109,8 @@ $moduleinstance->negative = $negative;
 $user_full_name = $USER->firstname . ' ' . $USER->lastname;
 $user_image = new user_picture($USER);
 $user_image_url = $user_image->get_url($PAGE)->out(false);
+$moduleinstance->current_user_profile_image = $user_image_url;
+$moduleinstance->current_user_full_name = $user_full_name;
 //response type
 $response_allowed = $moduleinstance->responsetype;
 $positive_response_count = count($positive_response);

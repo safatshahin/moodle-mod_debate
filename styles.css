@@ -1,5 +1,5 @@
 .mod-debate-border-style {
-    border: 1px solid rgba(0,0,0,.125);
+    border: 1px solid rgba(0, 0, 0, .125);
 }
 
 .mod-debate-no-padding {
@@ -10,12 +10,14 @@
     width: 10em;
 }
 
-.mod-debate-negative, .mod-debate-negative-response-counter {
+.mod-debate-negative,
+.mod-debate-negative-response-counter {
     color: red;
     font-weight: bold;
 }
 
-.mod-debate-positive, .mod-debate-positive-response-counter {
+.mod-debate-positive,
+.mod-debate-positive-response-counter {
     color: green;
     font-weight: bold;
 }
@@ -42,14 +44,20 @@
     font-size: 0.8em;
 }
 
-.mod-debate-response-text{
+.mod-debate-response-text {
     /*overflow-y: auto;*/
     height: 4.5em;
 }
 
-#mod-debate-response-input {
-    border: 1px solid rgba(0,0,0,.125);
+#mod-debate-negative-response-input,
+#mod-debate-positive-response-input {
+    border: 1px solid rgba(0, 0, 0, .125);
     outline: 0;
     width: 100%;
     height: 100%;
+}
+
+#mod-debate-insert-postive-response,
+#mod-debate-insert-negative-response {
+    display: none;
 }
