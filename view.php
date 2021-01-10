@@ -25,6 +25,7 @@
 require(__DIR__.'/../../config.php');
 require_once(__DIR__.'/lib.php');
 require_once(__DIR__.'/classes/debate_constants.php');
+require_once($CFG->libdir.'/completionlib.php');
 
 global $USER;
 
@@ -52,13 +53,10 @@ if ($id) {
 require_login($course, true, $cm);
 $modulecontext = context_module::instance($cm->id);
 
-//$event = \mod_debate\event\course_module_viewed::create(array(
-//    'objectid' => $moduleinstance->id,
-//    'context' => $modulecontext
-//));
-//$event->add_record_snapshot('course', $course);
-//$event->add_record_snapshot('debate', $moduleinstance);
-//$event->trigger();
+require_capability('mod/debate:view', $modulecontext);
+
+// Completion and trigger events.
+debate_view($moduleinstance, $course, $cm, $modulecontext);
 
 $PAGE->set_url('/mod/debate/view.php', array('id' => $cm->id));
 $PAGE->set_title(format_string($moduleinstance->name));
@@ -73,12 +71,7 @@ $formatoptions->context = $modulecontext;
 $content = format_text($content, $moduleinstance->introformat, $formatoptions);
 $moduleinstance->intro = $content;
 
-$moduleinstance->grade_capability = false;
 $usercontext = context_system::instance();
-if (has_capability('mod/debate:addinstance', $usercontext)) {
-    $moduleinstance->grade_capability = true;
-    $moduleinstance->gradeurl = 'debate_grade.php?id='.$cm->id.'&userid='.$USER->id;
-}
 
 $positive = 0;
 foreach ($positive_response as $pos) {

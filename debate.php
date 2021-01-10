@@ -27,11 +27,6 @@ require_once(__DIR__.'/lib.php');
 require_once(__DIR__.'/classes/debate_constants.php');
 require_once (__DIR__.'/../../lib/outputcomponents.php');
 
-//test data
-//require_once(__DIR__.'/classes/webservice/debate_data.php');
-//\mod_debate\webservice\debate_data::find_debate_respose(2, 1, 3, 'neg neg', 0);die;
-//end
-
 global $DB, $USER;
 
 // Course_module ID, or
@@ -58,25 +53,11 @@ if ($id) {
 require_login($course, true, $cm);
 $modulecontext = context_module::instance($cm->id);
 
-//$event = \mod_debate\event\course_module_viewed::create(array(
-//    'objectid' => $moduleinstance->id,
-//    'context' => $modulecontext
-//));
-//$event->add_record_snapshot('course', $course);
-//$event->add_record_snapshot('debate', $moduleinstance);
-//$event->trigger();
-
 $PAGE->set_url('/mod/debate/debate.php', array('id' => $cm->id));
 $PAGE->set_title(format_string($moduleinstance->name));
 $PAGE->set_heading(format_string($course->fullname));
 $PAGE->set_context($modulecontext);
 $PAGE->navbar->add('Join Debate', new moodle_url('/mod/debate/debate.php', array('id' => $cm->id)));
-//$PAGE->set_pagelayout('incourse');
-//$PAGE->set_pagetype('mod-debate-debate');
-//$node = $PAGE->settingsnav->find('mod-debate-debate', navigation_node::TYPE_SETTING);
-//if ($node) {
-//    $node->make_active();
-//}
 
 $content = file_rewrite_pluginfile_urls($moduleinstance->intro, 'pluginfile.php', $modulecontext->id, 'mod_debate', 'intro', null);
 $formatoptions = new stdClass;
@@ -102,6 +83,7 @@ foreach ($negative_response as $neg) {
     $neg->user_profile_image = $userpicture->get_url($PAGE)->out(false);
     $negative[] = (array)$neg;
 }
+
 $moduleinstance->positive = $positive;
 $moduleinstance->negative = $negative;
 

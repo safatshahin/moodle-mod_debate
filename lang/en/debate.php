@@ -40,6 +40,7 @@ $string['unlimited_response'] = 'Allow unlimited response';
 $string['one_response'] = 'Allow one response in any one side';
 $string['two_response'] = 'Allow one response in each side';
 $string['user_response'] = 'User response type';
+$string['reset_debate_attempts'] = 'Delete debate responses';
 
 //access
 $string['debate:addinstance'] = 'Add a new debate instance';
@@ -58,3 +59,6 @@ $string['update'] = 'Update';
 $string['cancel'] = 'Cancel';
 $string['possible_match'] = 'Possible matching responses';
 $string['no_possible_match'] = 'No matching responses';
+
+//reset
+$string['attemptsdeleted'] = 'Debate responses deleted';
