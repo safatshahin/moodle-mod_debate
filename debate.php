@@ -77,7 +77,7 @@ foreach ($positive_response as $pos) {
 }
 $negative = array();
 foreach ($negative_response as $neg) {
-    $user = $DB->get_record('user', array('id' => (int)$pos->userid), '*', MUST_EXIST);
+    $user = $DB->get_record('user', array('id' => (int)$neg->userid), '*', MUST_EXIST);
     $neg->user_full_name = $user->firstname . ' ' . $user->lastname;
     $userpicture = new user_picture($user);
     $neg->user_profile_image = $userpicture->get_url($PAGE)->out(false);

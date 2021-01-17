@@ -1,5 +1,5 @@
 /**
- * js for debate page.
+ * Js for debate page.
  *
  * @package     mod_debate
  * @copyright   2020 Safat Shahin <safatshahin@gmail.com>
@@ -104,7 +104,7 @@ define(['jquery', 'core/ajax', 'core/str', 'core/config', 'core/notification', '
                 $(document).on('click', '#mod-debate-update-response', function() {
                     $("div").remove(".mod-debate-find-response");
                     var userResponse = $(responseTextID).val();
-                    if(userResponse.length > 0) {
+                    if (userResponse.length > 0) {
                         var responseCall = AJAX.call([{
                             methodname: 'mod_debate_add_debate_respose',
                             args: {
