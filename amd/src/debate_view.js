@@ -10,7 +10,7 @@ define(['jquery', 'core/ajax', 'core/str', 'core/config', 'core/notification', '
     function($, AJAX, str,
              mdlcfg, notification, templates) {
         var debateView = {
-            init: function(userFullName, userImageURL, userID, courseID, debateID, cmID,
+            init: function(userFullName, userImageURL, userID, courseID, debateID,
                            responseAllowed, positiveResponse, negativeResponse) {
                 var responseType = 0;
                 var responseId = '';
@@ -57,7 +57,6 @@ define(['jquery', 'core/ajax', 'core/str', 'core/config', 'core/notification', '
                                 args: {
                                     courseid: courseID,
                                     debateid: debateID,
-                                    cmid: cmID,
                                     response: userResponsetext,
                                     responsetype: responseType
                                 }
@@ -110,7 +109,6 @@ define(['jquery', 'core/ajax', 'core/str', 'core/config', 'core/notification', '
                             args: {
                                 courseid: courseID,
                                 debateid: debateID,
-                                cmid: cmID,
                                 response: userResponse,
                                 responsetype: responseType
                             }

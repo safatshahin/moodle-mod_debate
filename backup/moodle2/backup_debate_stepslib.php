@@ -45,9 +45,9 @@ class backup_debate_activity_structure_step extends backup_activity_structure_st
                                                     'introformat',
                                                     'timecreated',
                                                     'timemodified'));
-        $debate->set_source_table('debate', array('id' => backup::VAR_ACTIVITYID));
 
-        $debateresponse = new backup_nested_element('debate_response', array('id'),
+        $debate_responses = new backup_nested_element('debate_responses');
+        $debate_response = new backup_nested_element('debate_response', array('id'),
                                                         array('courseid',
                                                             'debateid',
                                                             'cmid',
@@ -57,15 +57,17 @@ class backup_debate_activity_structure_step extends backup_activity_structure_st
                                                             'timecreated',
                                                             'timemodified'));
         // All the rest of elements only happen if we are including user info.
-        $debate->add_child($debateresponse);
+        $debate->add_child($debate_responses);
+        $debate_responses->add_child($debate_response);
+        $debate->set_source_table('debate', array('id' => backup::VAR_ACTIVITYID));
 
         // All the rest of elements only happen if we are including user info.
         if ($userinfo) {
-            $debateresponse->set_source_table('debate_response', array('debateid' => backup::VAR_PARENTID));
+            $debate_response->set_source_table('debate_response', array('debateid' => '../../id'));
         }
 
         // Define id annotations.
-        $debateresponse->annotate_ids('user', 'userid');
+        $debate_response->annotate_ids('user', 'userid');
 
         // Define file annotations
         $debate->annotate_files('mod_debate', 'intro', null); // This file areas haven't itemid.

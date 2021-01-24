@@ -43,7 +43,6 @@ class debate_data extends external_api {
             array(
                 'courseid' => new external_value(PARAM_INT, '', 1),
                 'debateid' => new external_value(PARAM_INT, '', 1),
-                'cmid' => new external_value(PARAM_INT, '', 1),
                 'response' => new external_value(PARAM_TEXT, '', 1),
                 'responsetype' => new external_value(PARAM_INT, '', 1)
             )
@@ -62,14 +61,13 @@ class debate_data extends external_api {
         );
     }
 
-    public static function add_debate_respose($courseid, $debateid, $cmid, $response, $responsetype) {
+    public static function add_debate_respose($courseid, $debateid, $response, $responsetype) {
         global $DB, $USER;
         $params = self::validate_parameters(
             self::add_debate_respose_parameters(),
             array(
                 'courseid' => $courseid,
                 'debateid' => $debateid,
-                'cmid' => $cmid,
                 'response' => $response,
                 'responsetype' => $responsetype
             )
@@ -81,7 +79,6 @@ class debate_data extends external_api {
         $debate_response = new stdClass();
         $debate_response->courseid = $params['courseid'];
         $debate_response->debateid = $params['debateid'];
-        $debate_response->cmid = $params['cmid'];
         $debate_response->response = $params['response'];
         $debate_response->responsetype = $params['responsetype'];
         $debate_response->userid = $USER->id;
@@ -99,7 +96,6 @@ class debate_data extends external_api {
             array(
                 'courseid' => new external_value(PARAM_INT, '', 1),
                 'debateid' => new external_value(PARAM_INT, '', 1),
-                'cmid' => new external_value(PARAM_INT, '', 1),
                 'response' => new external_value(PARAM_TEXT, '', 1),
                 'responsetype' => new external_value(PARAM_INT, '', 1)
             )
@@ -119,14 +115,13 @@ class debate_data extends external_api {
         );
     }
 
-    public static function find_debate_respose($courseid, $debateid, $cmid, $response, $responsetype) {
+    public static function find_debate_respose($courseid, $debateid, $response, $responsetype) {
         global $DB;
         $params = self::validate_parameters(
             self::find_debate_respose_parameters(),
             array(
                 'courseid' => $courseid,
                 'debateid' => $debateid,
-                'cmid' => $cmid,
                 'response' => $response,
                 'responsetype' => $responsetype
             )
@@ -137,8 +132,7 @@ class debate_data extends external_api {
         );
 
         $datas = $DB->get_records('debate_response', array('courseid' => $params['courseid'],
-            'debateid' => $params['debateid'], 'cmid' => $params['cmid'],
-            'responsetype' => $params['responsetype']), '', 'response');
+            'debateid' => $params['debateid'], 'responsetype' => $params['responsetype']), '', 'response');
 
 
         $blacklist_words = array('i','a','about','an','and','are','as','at','be','by','com','de','en','for',
