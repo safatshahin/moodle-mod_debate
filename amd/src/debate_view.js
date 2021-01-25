@@ -15,6 +15,11 @@ define(['jquery', 'core/ajax', 'core/str', 'core/config', 'core/notification', '
                 var responseType = 0;
                 var responseId = '';
                 var responseTextID = '';
+                var id = null;
+                var elementid = '';
+                var elementidContainer = '';
+                var editID = '';
+                var deleteID = '';
                 var delay = (function() {
                     var timer = 0;
                     return function(callback, ms) {
@@ -76,6 +81,48 @@ define(['jquery', 'core/ajax', 'core/str', 'core/config', 'core/notification', '
                         }
                     }, 700);
                 });
+                $(document).on('click', '#mod-debate-negative-edit', function() {
+                    id = $(this).attr("data-id");
+                    elementid = '#element' + id;
+                    elementidContainer = '#element' + id + 'container';
+                    var result = $.getAllocation('negative');
+                    if (result && $('#mod-debate-insert-postive-response').is(":hidden")
+                    && $('#mod-debate-insert-negative-response').is(":hidden")) {
+                        var text = $(elementid).text().trim();
+                        responseType = 0;
+                        responseId = '#mod-debate-insert-negative-response';
+                        responseTextID = '#mod-debate-negative-response-input';
+                        editID = 'mod-debate-negative-edit';
+                        deleteID = 'mod-debate-negative-delete';
+                        $(responseTextID).html(text);
+                        $(elementidContainer).css('display', 'none');
+                        $(responseId).css('display', 'block');
+                        $('html, body').animate({
+                            scrollTop: $("#mod-debate-neg-side").offset().top
+                        }, 2000);
+                    }
+                });
+                $(document).on('click', '#mod-debate-positive-edit', function() {
+                    id = $(this).attr("data-id");
+                    elementid = '#element' + id;
+                    elementidContainer = '#element' + id + 'container';
+                    var result = $.getAllocation('positive');
+                    if (result && $('#mod-debate-insert-negative-response').is(":hidden")
+                        && $('#mod-debate-insert-postive-response').is(":hidden")) {
+                        var text = $(elementid).text().trim();
+                        responseType = 1;
+                        responseId = '#mod-debate-insert-postive-response';
+                        responseTextID = '#mod-debate-positive-response-input';
+                        editID = 'mod-debate-positive-edit';
+                        deleteID = 'mod-debate-positive-delete';
+                        $(responseTextID).html(text);
+                        $(elementidContainer).css('display', 'none');
+                        $(responseId).css('display', 'block');
+                        $('html, body').animate({
+                            scrollTop: $("#mod-debate-pos-side").offset().top
+                        }, 2000);
+                    }
+                });
                 $(document).on('click', '.mod-debate-positive-icon', function() {
                     var result = $.getAllocation('positive');
                     if (result && $('#mod-debate-insert-negative-response').is(":hidden")) {
@@ -98,6 +145,7 @@ define(['jquery', 'core/ajax', 'core/str', 'core/config', 'core/notification', '
                 });
                 $(document).on('click', '#mod-debate-cancel-respose', function() {
                     $(responseId).css('display', 'none');
+                    $(elementidContainer).css('display', 'block');
                     $("div").remove(".mod-debate-find-response");
                 });
                 $(document).on('click', '#mod-debate-update-response', function() {
@@ -110,11 +158,12 @@ define(['jquery', 'core/ajax', 'core/str', 'core/config', 'core/notification', '
                                 courseid: courseID,
                                 debateid: debateID,
                                 response: userResponse,
-                                responsetype: responseType
+                                responsetype: responseType,
+                                id: id
                             }
                         }]);
-                        responseCall[0].done(function(result) {
-                            if (result) {
+                        responseCall[0].done(function(output) {
+                            if (output.result) {
                                 if (responseType === 0) {
                                     negativeResponse++;
                                 } else {
@@ -122,14 +171,22 @@ define(['jquery', 'core/ajax', 'core/str', 'core/config', 'core/notification', '
                                 }
                                 $(responseId).css('display', 'none');
                                 $("div").remove(".mod-debate-find-response");
+                                $(elementidContainer).remove();
                                 var outputContext = {
                                     user_profile_image: userImageURL,
                                     user_full_name: userFullName,
-                                    response: userResponse
+                                    response: userResponse,
+                                    elementidcontainer: 'element' + output.id + 'container',
+                                    elementid: 'element' + output.id,
+                                    user_capability: true,
+                                    id: id,
+                                    editid: editID,
+                                    deleteid: deleteID
                                 };
                                 templates.render('mod_debate/debate_response_output', outputContext).then(function (html, js) {
                                     var outputResponse = $(responseId);
                                     outputResponse.after(html);
+                                    id = null;
                                 }).fail(notification.exception);
                             } else {
                                 //error checking

@@ -73,6 +73,12 @@ foreach ($positive_response as $pos) {
     $pos->user_full_name = $user->firstname . ' ' . $user->lastname;
     $userpicture = new user_picture($user);
     $pos->user_profile_image = $userpicture->get_url($PAGE)->out(false);
+    $pos->user_capability = false;
+    if ((int)$pos->userid == $USER->id) {
+        $pos->user_capability = true;
+    }
+    $pos->elementid = 'element'.$pos->id;
+    $pos->elementidcontainer = 'element'.$pos->id.'container';
     $positive[] = (array)$pos;
 }
 $negative = array();
@@ -81,6 +87,12 @@ foreach ($negative_response as $neg) {
     $neg->user_full_name = $user->firstname . ' ' . $user->lastname;
     $userpicture = new user_picture($user);
     $neg->user_profile_image = $userpicture->get_url($PAGE)->out(false);
+    $neg->user_capability = false;
+    if ((int)$neg->userid == $USER->id) {
+        $neg->user_capability = true;
+    }
+    $neg->elementid = 'element'.$neg->id;
+    $neg->elementidcontainer = 'element'.$neg->id.'container';
     $negative[] = (array)$neg;
 }
 

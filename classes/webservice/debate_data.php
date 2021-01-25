@@ -44,7 +44,8 @@ class debate_data extends external_api {
                 'courseid' => new external_value(PARAM_INT, '', 1),
                 'debateid' => new external_value(PARAM_INT, '', 1),
                 'response' => new external_value(PARAM_TEXT, '', 1),
-                'responsetype' => new external_value(PARAM_INT, '', 1)
+                'responsetype' => new external_value(PARAM_INT, '', 1),
+                'id' => new external_value(PARAM_INT, '', 0)
             )
         );
     }
@@ -56,12 +57,13 @@ class debate_data extends external_api {
     public static function add_debate_respose_returns() {
         return new external_single_structure(
             array(
-                'result' => new external_value(PARAM_BOOL, 'Status true or false')
+                'result' => new external_value(PARAM_BOOL, 'Status true or false'),
+                'id' => new external_value(PARAM_TEXT, 'id of the insert')
             )
         );
     }
 
-    public static function add_debate_respose($courseid, $debateid, $response, $responsetype) {
+    public static function add_debate_respose($courseid, $debateid, $response, $responsetype, $id = null) {
         global $DB, $USER;
         $params = self::validate_parameters(
             self::add_debate_respose_parameters(),
@@ -69,25 +71,47 @@ class debate_data extends external_api {
                 'courseid' => $courseid,
                 'debateid' => $debateid,
                 'response' => $response,
-                'responsetype' => $responsetype
+                'responsetype' => $responsetype,
+                'id' => $id
             )
         );
         $result = array(
             'result' => false,
+            'id' => null
         );
 
-        $debate_response = new stdClass();
-        $debate_response->courseid = $params['courseid'];
-        $debate_response->debateid = $params['debateid'];
-        $debate_response->response = $params['response'];
-        $debate_response->responsetype = $params['responsetype'];
-        $debate_response->userid = $USER->id;
-        $debate_response->timecreated = time();
-        $debate_response->timemodified = time();
+        if (empty($params['id'])) {
+            $debate_response = new stdClass();
+            $debate_response->courseid = $params['courseid'];
+            $debate_response->debateid = $params['debateid'];
+            $debate_response->response = $params['response'];
+            $debate_response->responsetype = $params['responsetype'];
+            $debate_response->userid = $USER->id;
+            $debate_response->timecreated = time();
+            $debate_response->timemodified = time();
 
-        if ($DB->insert_record('debate_response', $debate_response)) {
-            $result['result'] = true;
+            $add_response = $DB->insert_record('debate_response', $debate_response, true);
+            if ($add_response) {
+                $result['result'] = true;
+                $result['id'] = $add_response;
+            }
+        } else {
+            $debate_response = new stdClass();
+            $debate_response->id = $params['id'];
+            $debate_response->courseid = $params['courseid'];
+            $debate_response->debateid = $params['debateid'];
+            $debate_response->response = $params['response'];
+            $debate_response->responsetype = $params['responsetype'];
+            $debate_response->userid = $USER->id;
+            $debate_response->timemodified = time();
+
+            $update_response = $DB->update_record('debate_response', $debate_response, true);
+            if ($update_response) {
+                $result['result'] = true;
+                $result['id'] = $update_response;
+            }
         }
+
         return $result;
     }
 

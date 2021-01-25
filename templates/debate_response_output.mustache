@@ -1,9 +1,21 @@
-<div class="p-3 mod-debate-border-style">
-    <div class="mod-debate-response-text">
+<div class="p-3 mod-debate-border-style" id="{{elementidcontainer}}">
+    <div class="mod-debate-response-text" id="{{elementid}}">
         {{response}}
     </div>
     <div class="mod-debate-user-info mt-3">
         <img src="{{user_profile_image}}" class="mod-debate-user-image mr-1">
         {{user_full_name}}
+        {{#user_capability}}
+            <div class="float-right dropleft">
+                <i class="fa fa-ellipsis-h" type="icon" data-toggle="dropdown"
+                   aria-haspopup="true" aria-expanded="false"></i>
+                <div class="dropdown-menu">
+                    <a class="dropdown-item" id="{{editid}}"
+                       data-id="{{id}}">Edit</a>
+                    <a class="dropdown-item" id="{{deleteid}}"
+                       data-id="{{id}}">delete</a>
+                </div>
+            </div>
+        {{/user_capability}}
     </div>
 </div>
