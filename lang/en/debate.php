@@ -62,3 +62,13 @@ $string['no_possible_match'] = 'No matching responses';
 
 //reset
 $string['attemptsdeleted'] = 'Debate responses deleted';
+
+//privacy
+$string['privacy:metadata:debate_response:courseid'] = 'The ID of the debate course';
+$string['privacy:metadata:debate_response:debateid'] = 'The ID of the debate instance';
+$string['privacy:metadata:debate_response:userid'] = 'The ID of the debate response user';
+$string['privacy:metadata:debate_response:response'] = 'The response of the user for the debate activity';
+$string['privacy:metadata:debate_response:responsetype'] = 'The response type for debate activity from the user';
+$string['privacy:metadata:debate_response:timecreated'] = 'The timestamp indicating when a user first recorded an interaction with the debate Course';
+$string['privacy:metadata:debate_response:timemodified'] = 'The timestamp indicating when a user last recorded an interaction with the debate Course';
+$string['privacy:metadata:debate_response'] = 'Information about the response of the debate topic for a debate Course';
