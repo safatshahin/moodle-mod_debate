@@ -55,6 +55,7 @@ $string['join_debate'] = 'Join/View debate';
 $string['grade_debater'] = 'Grade debaters';
 
 //debate
+$string['save'] = 'Save';
 $string['update'] = 'Update';
 $string['cancel'] = 'Cancel';
 $string['possible_match'] = 'Possible matching responses';

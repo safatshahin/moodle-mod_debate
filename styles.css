@@ -1,5 +1,6 @@
 .mod-debate-border-style {
-    border: 1px solid rgba(0, 0, 0, .125);
+    background-color: #f9f9f9f9;
+    border: 1px solid white;
 }
 
 .mod-debate-no-padding {
@@ -7,7 +8,7 @@
 }
 
 .mod-debate-button {
-    width: 10em;
+    width: 100%;
 }
 
 .mod-debate-negative,
@@ -45,7 +46,7 @@
 }
 
 .mod-debate-response-text {
-    height: 4.5em;
+    min-height: 4.5em;
 }
 
 #mod-debate-negative-response-input,
@@ -59,4 +60,18 @@
 #mod-debate-insert-postive-response,
 #mod-debate-insert-negative-response {
     display: none;
+}
+
+.mod-debate-find-response-element {
+    background-color: #f9f9f9;
+}
+
+.mod-debate-find-response-text {
+    border: 1px solid lightgray;
+    border-radius: .2em;
+    padding: .5em;
+}
+
+.mod-debate-find-response-container {
+    border: 1px solid lightgray;
 }

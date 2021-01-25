@@ -2,7 +2,7 @@
     <div class="row">
         <div class="col-12">
             <div class="mod-debate-topic p-3 mod-debate-border-style">
-                {{debate}}
+                <a>{{debate}}</a>
             </div>
             {{#debateformat}}
                 <div class="mod-debate-description p-3 mod-debate-border-style">
@@ -18,20 +18,24 @@
                         </div>
                         <div class="p-3 mod-debate-border-style" id="mod-debate-insert-postive-response">
                             <div class="mod-debate-response-text">
-                                <textarea id="mod-debate-positive-response-input" class="mod-debate-response-input" type="text"></textarea>
+                                <textarea id="mod-debate-positive-response-input" class="mod-debate-response-input"
+                                          type="text"></textarea>
                             </div>
                             <div class="mod-debate-user-info mt-3">
                                 <img src="{{current_user_profile_image}}" class="mod-debate-user-image mr-1">
                                 {{current_user_full_name}}
                             </div>
-                            <div class="mod-debate-response-buttons mt-2">
+                            <div class="mod-debate-response-buttons">
                                 <div class="container">
                                     <div class="row">
-                                        <div class="col-12 col-sm-6 text-left">
-                                            <div class="btn btn-primary mod-debate-button" id="mod-debate-cancel-respose">{{#str}} cancel, mod_debate{{/str}}</div>
+                                        <div class="col-12 col-sm-6 mt-3">
+                                            <div class="btn btn-primary mod-debate-button"
+                                                 id="mod-debate-cancel-respose">{{#str}}
+                                                cancel, mod_debate{{/str}}</div>
                                         </div>
-                                        <div class="col-12 col-sm-6 text-right">
-                                            <div class="btn btn-primary mod-debate-button" id="mod-debate-update-response">{{#str}} update, mod_debate{{/str}}</div>
+                                        <div class="col-12 col-sm-6 mt-3">
+                                            <div class="btn btn-primary mod-debate-button"
+                                                 id="mod-debate-update-response">{{#str}} save, mod_debate{{/str}}</div>
                                         </div>
                                     </div>
                                 </div>
@@ -56,7 +60,8 @@
                         </div>
                         <div class="p-3 mod-debate-border-style" id="mod-debate-insert-negative-response">
                             <div class="mod-debate-response-text">
-                                <textarea id="mod-debate-negative-response-input" class="mod-debate-response-input" type="text"></textarea>
+                                <textarea id="mod-debate-negative-response-input" class="mod-debate-response-input"
+                                          type="text"></textarea>
                             </div>
                             <div class="mod-debate-user-info mt-3">
                                 <img src="{{current_user_profile_image}}" class="mod-debate-user-image mr-1">
@@ -66,10 +71,13 @@
                                 <div class="container">
                                     <div class="row">
                                         <div class="col-12 col-sm-6 text-left">
-                                            <div class="btn btn-primary mod-debate-button" id="mod-debate-cancel-respose">{{#str}} cancel, mod_debate{{/str}}</div>
+                                            <div class="btn btn-primary mod-debate-button"
+                                                 id="mod-debate-cancel-respose">{{#str}}
+                                                cancel, mod_debate{{/str}}</div>
                                         </div>
                                         <div class="col-12 col-sm-6 text-right">
-                                            <div class="btn btn-primary mod-debate-button" id="mod-debate-update-response">{{#str}} update, mod_debate{{/str}}</div>
+                                            <div class="btn btn-primary mod-debate-button"
+                                                 id="mod-debate-update-response">{{#str}} save, mod_debate{{/str}}</div>
                                         </div>
                                     </div>
                                 </div>
