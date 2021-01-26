@@ -115,6 +115,48 @@ class debate_data extends external_api {
         return $result;
     }
 
+    public static function delete_debate_respose_parameters() {
+        return new external_function_parameters(
+            array(
+                'courseid' => new external_value(PARAM_INT, '', 1),
+                'debateid' => new external_value(PARAM_INT, '', 1),
+                'id' => new external_value(PARAM_INT, '', 1)
+            )
+        );
+    }
+
+    public static function delete_debate_respose_is_allowed_from_ajax() {
+        return true;
+    }
+
+    public static function delete_debate_respose_returns() {
+        return new external_single_structure(
+            array(
+                'result' => new external_value(PARAM_BOOL, 'Status true or false')
+            )
+        );
+    }
+
+    public static function delete_debate_respose($courseid, $debateid, $id) {
+        global $DB;
+        $params = self::validate_parameters(
+            self::delete_debate_respose_parameters(),
+            array(
+                'courseid' => $courseid,
+                'debateid' => $debateid,
+                'id' => $id
+            )
+        );
+        $result = array(
+            'result' => false
+        );
+
+        $result['result'] = $DB->delete_records('debate_response',
+                array('courseid' => $params['courseid'], 'debateid' => $params['debateid'], 'id' => $params['id']));
+
+        return $result;
+    }
+
     public static function find_debate_respose_parameters() {
         return new external_function_parameters(
             array(

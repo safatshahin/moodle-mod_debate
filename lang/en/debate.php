@@ -60,6 +60,11 @@ $string['update'] = 'Update';
 $string['cancel'] = 'Cancel';
 $string['possible_match'] = 'Possible matching responses';
 $string['no_possible_match'] = 'No matching responses';
+$string['confirm_delete'] = 'Are you sure you want to delete this response?';
+$string['edit_mode_active'] = 'Edit mode active, can not add another response, please finish typing the current response.';
+$string['empty_response'] = 'Cannot save empty response';
+$string['error_add'] = 'Error updating response, please check database for more info';
+$string['error_delete'] = 'Error deleting response, please check database for more info';
 
 //reset
 $string['attemptsdeleted'] = 'Debate responses deleted';

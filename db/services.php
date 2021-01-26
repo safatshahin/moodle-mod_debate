@@ -39,6 +39,14 @@ $functions = array(
         'type'        => 'read',
         'ajax'        => true
     ),
+    'mod_debate_delete_debate_respose' => array(
+        'classname'   => 'mod_debate\webservice\debate_data',
+        'methodname'  => 'delete_debate_respose',
+        'classpath'   => 'mod/debate/classes/webservice/debate_data.php',
+        'description' => 'Delete debate response',
+        'type'        => 'write',
+        'ajax'        => true
+    ),
 );
 
 // We define the services to install as pre-build services. A pre-build service is not editable by administrator.
@@ -46,7 +54,8 @@ $services = array(
     'mod_debate' => array(
         'functions' => array(
             'mod_debate_add_debate_respose',
-            'mod_debate_find_debate_respose'
+            'mod_debate_find_debate_respose',
+            'mod_debate_delete_debate_respose'
         ),
         'restrictedusers' => 0,
         'enabled'=>1
