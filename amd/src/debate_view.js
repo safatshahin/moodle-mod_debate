@@ -72,10 +72,13 @@ define(['jquery', 'core/ajax', 'core/str', 'core/config', 'core/notification', '
                                     var context = {
                                         found_response: getResponses
                                     };
-                                    templates.render('mod_debate/debate_find_response', context).then(function(html, js) {
-                                        var debateResponse = $(responseId);
-                                        debateResponse.after(html);
-                                    }).fail(notification.exception);
+                                    if ($('#mod-debate-insert-postive-response').is(":visible")
+                                        || $('#mod-debate-insert-negative-response').is(":visible")) {
+                                        templates.render('mod_debate/debate_find_response', context).then(function(html, js) {
+                                            var debateResponse = $(responseId);
+                                            debateResponse.after(html);
+                                        }).fail(notification.exception);
+                                    }
                                 }
                             }).fail(notification.exception);
                         }
@@ -94,6 +97,7 @@ define(['jquery', 'core/ajax', 'core/str', 'core/config', 'core/notification', '
                         responseTextID = '#mod-debate-negative-response-input';
                         editID = 'mod-debate-negative-edit';
                         deleteID = 'mod-debate-negative-delete';
+                        $(responseTextID).val(text);
                         $(responseTextID).html(text);
                         $(elementidContainer).css('display', 'none');
                         $(responseId).css('display', 'block');
@@ -115,6 +119,7 @@ define(['jquery', 'core/ajax', 'core/str', 'core/config', 'core/notification', '
                         responseTextID = '#mod-debate-positive-response-input';
                         editID = 'mod-debate-positive-edit';
                         deleteID = 'mod-debate-positive-delete';
+                        $(responseTextID).val(text);
                         $(responseTextID).html(text);
                         $(elementidContainer).css('display', 'none');
                         $(responseId).css('display', 'block');
@@ -125,20 +130,26 @@ define(['jquery', 'core/ajax', 'core/str', 'core/config', 'core/notification', '
                 });
                 $(document).on('click', '.mod-debate-positive-icon', function() {
                     var result = $.getAllocation('positive');
-                    if (result && $('#mod-debate-insert-negative-response').is(":hidden")) {
+                    if (result && $('#mod-debate-insert-negative-response').is(":hidden")
+                        && $('#mod-debate-insert-postive-response').is(":hidden")) {
                         responseType = 1;
                         responseId = '#mod-debate-insert-postive-response';
                         responseTextID = '#mod-debate-positive-response-input';
+                        editID = 'mod-debate-positive-edit';
+                        deleteID = 'mod-debate-positive-delete';
                         $(responseTextID).val('');
                         $(responseId).css('display', 'block');
                     }
                 });
                 $(document).on('click', '.mod-debate-negative-icon', function() {
                     var result = $.getAllocation('negative');
-                    if (result && $('#mod-debate-insert-postive-response').is(":hidden")) {
+                    if (result && $('#mod-debate-insert-postive-response').is(":hidden")
+                        && $('#mod-debate-insert-negative-response').is(":hidden")) {
                         responseType = 0;
                         responseId = '#mod-debate-insert-negative-response';
                         responseTextID = '#mod-debate-negative-response-input';
+                        editID = 'mod-debate-negative-edit';
+                        deleteID = 'mod-debate-negative-delete';
                         $(responseTextID).val('');
                         $(responseId).css('display', 'block');
                     }
@@ -172,12 +183,15 @@ define(['jquery', 'core/ajax', 'core/str', 'core/config', 'core/notification', '
                                 $(responseId).css('display', 'none');
                                 $("div").remove(".mod-debate-find-response");
                                 $(elementidContainer).remove();
+                                if (id === null && $.isNumeric(output.id)) {
+                                    id = output.id;
+                                }
                                 var outputContext = {
                                     user_profile_image: userImageURL,
                                     user_full_name: userFullName,
                                     response: userResponse,
-                                    elementidcontainer: 'element' + output.id + 'container',
-                                    elementid: 'element' + output.id,
+                                    elementidcontainer: 'element' + id + 'container',
+                                    elementid: 'element' + id,
                                     user_capability: true,
                                     id: id,
                                     editid: editID,
@@ -187,10 +201,14 @@ define(['jquery', 'core/ajax', 'core/str', 'core/config', 'core/notification', '
                                     var outputResponse = $(responseId);
                                     outputResponse.after(html);
                                     id = null;
+                                    $("div").remove(".mod-debate-find-response");
+                                    elementidContainer = '';
+                                    elementid = '';
                                 }).fail(notification.exception);
                             } else {
                                 //error checking
                             }
+                            $("div").remove(".mod-debate-find-response");
                         }).fail(notification.exception);
                     }
                 });
