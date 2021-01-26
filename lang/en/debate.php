@@ -19,7 +19,7 @@
  *
  * @package     mod_debate
  * @category    string
- * @copyright   2020 Safat Shahin <safatshahin@gmail.com>
+ * @copyright   2021 Safat Shahin <safatshahin@gmail.com>
  * @license     https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 

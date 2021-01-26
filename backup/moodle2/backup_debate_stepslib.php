@@ -18,7 +18,7 @@
  * Define all the backup steps that will be used by the backup_debate_activity_task.
  *
  * @package     mod_debate
- * @copyright   2020 Safat Shahin <safatshahin@gmail.com>
+ * @copyright   2021 Safat Shahin <safatshahin@gmail.com>
  * @license     https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
