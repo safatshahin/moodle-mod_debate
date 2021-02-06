@@ -63,7 +63,7 @@ $string['no_possible_match'] = 'No matching responses';
 $string['confirm_delete'] = 'Are you sure you want to delete this response?';
 $string['edit_mode_active'] = 'Either the edit mode is active or no more response is allowed.';
 $string['empty_response'] = 'Cannot save empty response';
-$string['error_add'] = 'Error updating response, please check database for more info';
+$string['error_add'] = 'Error updating response, please check the typed response, it can only accept text';
 $string['error_delete'] = 'Error deleting response, please check database for more info';
 
 //reset

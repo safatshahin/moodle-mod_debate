@@ -24,25 +24,25 @@
 
 $functions = array(
     'mod_debate_add_debate_respose' => array(
-        'classname'   => 'mod_debate\webservice\debate_data',
+        'classname'   => 'mod_debate\external\debate_data',
         'methodname'  => 'add_debate_respose',
-        'classpath'   => 'mod/debate/classes/webservice/debate_data.php',
+        'classpath'   => 'mod/debate/classes/external/debate_data.php',
         'description' => 'Add debate response',
         'type'        => 'write',
         'ajax'        => true
     ),
     'mod_debate_find_debate_respose' => array(
-        'classname'   => 'mod_debate\webservice\debate_data',
+        'classname'   => 'mod_debate\external\debate_data',
         'methodname'  => 'find_debate_respose',
-        'classpath'   => 'mod/debate/classes/webservice/debate_data.php',
+        'classpath'   => 'mod/debate/classes/external/debate_data.php',
         'description' => 'Find debate response',
         'type'        => 'read',
         'ajax'        => true
     ),
     'mod_debate_delete_debate_respose' => array(
-        'classname'   => 'mod_debate\webservice\debate_data',
+        'classname'   => 'mod_debate\external\debate_data',
         'methodname'  => 'delete_debate_respose',
-        'classpath'   => 'mod/debate/classes/webservice/debate_data.php',
+        'classpath'   => 'mod/debate/classes/external/debate_data.php',
         'description' => 'Delete debate response',
         'type'        => 'write',
         'ajax'        => true

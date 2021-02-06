@@ -22,7 +22,7 @@
  * @license     https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-namespace mod_debate\webservice;
+namespace mod_debate\external;
 defined('MOODLE_INTERNAL') || die;
 
 global $CFG;
@@ -33,7 +33,6 @@ use external_api;
 use external_function_parameters;
 use external_value;
 use external_single_structure;
-use context_system;
 use stdClass;
 
 class debate_data extends external_api {
@@ -43,7 +42,7 @@ class debate_data extends external_api {
             array(
                 'courseid' => new external_value(PARAM_INT, '', 1),
                 'debateid' => new external_value(PARAM_INT, '', 1),
-                'response' => new external_value(PARAM_TEXT, '', 1),
+                'response' => new external_value(PARAM_RAW, '', 1),
                 'responsetype' => new external_value(PARAM_INT, '', 1),
                 'id' => new external_value(PARAM_INT, '', 0)
             )
@@ -162,7 +161,7 @@ class debate_data extends external_api {
             array(
                 'courseid' => new external_value(PARAM_INT, '', 1),
                 'debateid' => new external_value(PARAM_INT, '', 1),
-                'response' => new external_value(PARAM_TEXT, '', 1),
+                'response' => new external_value(PARAM_RAW, '', 1),
                 'responsetype' => new external_value(PARAM_INT, '', 1)
             )
         );
