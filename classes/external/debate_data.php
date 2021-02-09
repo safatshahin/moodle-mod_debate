@@ -28,6 +28,7 @@ defined('MOODLE_INTERNAL') || die;
 global $CFG;
 require_once("$CFG->libdir/externallib.php");
 require_once("$CFG->dirroot/webservice/externallib.php");
+require_once("$CFG->dirroot/lib/completionlib.php");
 
 use external_api;
 use external_function_parameters;
@@ -111,6 +112,20 @@ class debate_data extends external_api {
             }
         }
 
+        // Completion.
+        $debate = $DB->get_record('debate', array('id' => (int)$params['debateid']), '*', MUST_EXIST);
+        $course = $DB->get_record('course', array('id' => $debate->course), '*', MUST_EXIST);
+        $course_module = get_coursemodule_from_instance('debate', $debate->id, $course->id, false, MUST_EXIST);
+        $user_response_count = $DB->count_records_select('debate_response',
+            'debateid = :debateid AND courseid = :courseid AND userid = :userid',
+            array('debateid' => (int)$debate->id, 'courseid' => (int)$course->id, 'userid' => $USER->id), 'COUNT("id")');
+        $completion = new \completion_info($course);
+        if ($completion->is_enabled($course_module) == COMPLETION_TRACKING_AUTOMATIC
+            && (int)$debate->debateresponsecomcount > 0 &&
+            $user_response_count == (int)$debate->debateresponsecomcount) {
+            $completion->update_state($course_module, COMPLETION_COMPLETE, $USER->id);
+        }
+
         return $result;
     }
 
@@ -137,7 +152,7 @@ class debate_data extends external_api {
     }
 
     public static function delete_debate_respose($courseid, $debateid, $id) {
-        global $DB;
+        global $DB, $USER;
         $params = self::validate_parameters(
             self::delete_debate_respose_parameters(),
             array(
@@ -152,6 +167,23 @@ class debate_data extends external_api {
 
         $result['result'] = $DB->delete_records('debate_response',
                 array('courseid' => $params['courseid'], 'debateid' => $params['debateid'], 'id' => $params['id']));
+
+        // Completion.
+        $debate = $DB->get_record('debate', array('id' => (int)$params['debateid']), '*', MUST_EXIST);
+        $course = $DB->get_record('course', array('id' => (int)$params['courseid']), '*', MUST_EXIST);
+        $course_module = get_coursemodule_from_instance('debate', $debate->id, $course->id, false, MUST_EXIST);
+        $completion = new \completion_info($course);
+        $user_response_count = $DB->count_records_select('debate_response', 'debateid = :debateid AND courseid = :courseid AND userid = :userid',
+            array('debateid' => (int)$debate->id, 'courseid' => (int)$course->id, 'userid' => $USER->id), 'COUNT("id")');
+        if ($completion->is_enabled($course_module) == COMPLETION_TRACKING_AUTOMATIC &&
+            (int)$debate->debateresponsecomcount > 0 &&
+            ($user_response_count != (int)$debate->debateresponsecomcount)) {
+            $current = $completion->get_data($course_module, false, $USER->id);
+            $current->completionstate = COMPLETION_INCOMPLETE;
+            $current->timemodified    = time();
+            $current->overrideby      = null;
+            $completion->internal_set_data($course_module, $current);
+        }
 
         return $result;
     }
@@ -199,7 +231,7 @@ class debate_data extends external_api {
         $datas = $DB->get_records('debate_response', array('courseid' => $params['courseid'],
             'debateid' => $params['debateid'], 'responsetype' => $params['responsetype']), '', 'response');
 
-
+        //change it to string in a later version
         $blacklist_words = array('i','a','about','an','and','are','as','at','be','by','com','de','en','for',
             'from','how','in','is','it','la','of','on','or','that','the','this','to','was','what','when','where',
             'who','will','with','und','the','www', "such", "have", "then");
