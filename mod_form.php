@@ -65,4 +65,54 @@ class mod_debate_mod_form extends moodleform_mod {
 
         $this->add_action_buttons();
     }
+
+    function data_preprocessing(&$default_values) {
+        parent::data_preprocessing($default_values);
+        $default_values['debateresponsecom']=
+            !empty($default_values['debateresponsecomcount']) ? 1 : 0;
+        if (empty($default_values['debateresponsecomcount'])) {
+            $default_values['debateresponsecomcount']=1;
+        }
+    }
+
+    /**
+     * Add custom completion rules.
+     *
+     * @return array Array of string IDs of added items, empty array if none
+     */
+    public function add_completion_rules() {
+        $mform =& $this->_form;
+
+        $group=array();
+        $group[] =& $mform->createElement('checkbox', 'debateresponsecom', '', get_string('debateresponsecom','mod_debate'));
+        $group[] =& $mform->createElement('text', 'debateresponsecomcount', '', array('size'=>3));
+        $mform->setType('debateresponsecomcount',PARAM_INT);
+        $mform->addGroup($group, 'debateresponsecomgroup', get_string('debateresponsecomgroup','mod_debate'), array(' '), false);
+        $mform->disabledIf('debateresponsecomcount','debateresponsecom','notchecked');
+        return array('debateresponsecomgroup');
+    }
+
+    function completion_rule_enabled($data) {
+        return (!empty($data['debateresponsecom']) && $data['debateresponsecomcount']!=0);
+    }
+
+    /**
+     * Allows module to modify the data returned by form get_data().
+     * This method is also called in the bulk activity completion form.
+     *
+     * Only available on moodleform_mod.
+     *
+     * @param stdClass $data the form data to be modified.
+     */
+    public function data_postprocessing($data) {
+        parent::data_postprocessing($data);
+        // Turn off completion settings if the checkboxes aren't ticked
+        if (!empty($data->completionunlocked)) {
+            $autocompletion = !empty($data->completion) && $data->completion==COMPLETION_TRACKING_AUTOMATIC;
+            if (empty($data->debateresponsecom) || !$autocompletion) {
+                $data->debateresponsecomcount = 0;
+            }
+        }
+    }
+
 }

@@ -56,7 +56,7 @@ $modulecontext = context_module::instance($cm->id);
 require_capability('mod/debate:view', $modulecontext);
 
 // Completion and trigger events.
-debate_view($moduleinstance, $course, $cm, $modulecontext);
+//debate_view($moduleinstance, $course, $cm, $modulecontext);
 
 $PAGE->set_url('/mod/debate/view.php', array('id' => $cm->id));
 $PAGE->set_title(format_string($moduleinstance->name));

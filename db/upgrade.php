@@ -35,13 +35,20 @@ function xmldb_debate_upgrade($oldversion) {
     global $DB;
 
     $dbman = $DB->get_manager();
+    if ($oldversion < 2021020802) {
+        $table = new xmldb_table('debate');
+        $field = new xmldb_field('debateresponsecomcount',
+            XMLDB_TYPE_INTEGER,
+            '4',
+            null,
+            true,
+            false,
+            '0');
 
-    // For further information please read the Upgrade API documentation:
-    // https://docs.moodle.org/dev/Upgrade_API
-    //
-    // You will also have to create the db/install.xml file by using the XMLDB Editor.
-    // Documentation for the XMLDB Editor can be found at:
-    // https://docs.moodle.org/dev/XMLDB_editor
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
+    }
 
     return true;
 }

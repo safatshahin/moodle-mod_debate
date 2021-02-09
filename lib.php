@@ -175,11 +175,25 @@ function debate_update_instance($moduleinstance, $mform = null) {
 function debate_delete_instance($id) {
     global $DB;
 
-    $exists = $DB->get_record('debate', array('id' => $id));
-    if (!$exists) {
+    if (!$debate = $DB->get_record('debate', array('id'=>$id))) {
+        return false;
+    }
+    if (!$cm = get_coursemodule_from_instance('debate', $debate->id)) {
+        return false;
+    }
+    if (!$course = $DB->get_record('course', array('id'=>$cm->course))) {
         return false;
     }
 
+    $context = context_module::instance($cm->id);
+
+    // now get rid of all files
+    $fs = get_file_storage();
+    $fs->delete_area_files($context->id);
+
+    \core_completion\api::update_completion_date_event($cm->id, 'debate', $debate->id, null);
+
+    $DB->delete_records('debate_response', array('debateid' => $id));
     $DB->delete_records('debate', array('id' => $id));
 
     return true;
@@ -259,7 +273,7 @@ function debate_pluginfile($course, $cm, $context, $filearea, $args, $forcedownl
  * @since Moodle 3.0
  */
 function debate_view($debate, $course, $cm, $context) {
-
+    global $DB, $USER;
     // Trigger course_module_viewed event.
     $params = array(
         'context' => $context,
@@ -275,5 +289,17 @@ function debate_view($debate, $course, $cm, $context) {
     // Completion.
     $completion = new completion_info($course);
     $completion->set_module_viewed($cm);
+    $user_response_count = $DB->count_records_select('debate_response', 'debateid = :debateid AND courseid = :courseid AND userid = :userid',
+        array('debateid' => (int)$debate->id, 'courseid' => (int)$course->id, 'userid' => $USER->id), 'COUNT("id")');
+    if ($user_response_count == (int)$debate->debateresponsecomcount) {
+        $completion->update_state($cm, COMPLETION_COMPLETE, $USER->id);
+    } else {
+        $current = $completion->get_data($cm, false, $USER->id);
+        $current->completionstate = COMPLETION_INCOMPLETE;
+        $current->timemodified    = time();
+        $current->overrideby      = null;
+        $completion->internal_set_data($cm, $current);
+    }
+
 }
 

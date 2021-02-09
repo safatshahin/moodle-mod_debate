@@ -41,6 +41,8 @@ $string['one_response'] = 'Allow one response in any one side';
 $string['two_response'] = 'Allow one response in each side';
 $string['user_response'] = 'User response type';
 $string['reset_debate_attempts'] = 'Delete debate responses';
+$string['debateresponsecom'] = 'Students must post responses';
+$string['debateresponsecomgroup'] = 'Require response';
 
 //access
 $string['debate:addinstance'] = 'Add a new debate instance';
