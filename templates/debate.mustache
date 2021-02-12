@@ -54,10 +54,14 @@
                                             <i class="fa fa-ellipsis-h" type="icon" data-toggle="dropdown"
                                                aria-haspopup="true" aria-expanded="false"></i>
                                             <div class="dropdown-menu">
+                                                {{#user_edit_capability}}
                                                 <a class="dropdown-item mod-debate-positive-edit"
-                                                   data-id="{{id}}">Edit</a>
+                                                   data-id="{{id}}">{{#str}} edit, mod_debate{{/str}}</a>
+                                                {{/user_edit_capability}}
+                                                {{#user_delete_capability}}
                                                 <a class="dropdown-item mod-debate-positive-delete"
-                                                   data-id="{{id}}">delete</a>
+                                                   data-id="{{id}}">{{#str}} delete, mod_debate{{/str}}</a>
+                                                {{/user_delete_capability}}
                                             </div>
                                         </div>
                                     {{/user_capability}}
@@ -109,10 +113,14 @@
                                             <i class="fa fa-ellipsis-h" type="icon" data-toggle="dropdown"
                                                aria-haspopup="true" aria-expanded="false"></i>
                                             <div class="dropdown-menu">
+                                                {{#user_edit_capability}}
                                                 <a class="dropdown-item mod-debate-negative-edit"
-                                                   data-id="{{id}}">Edit</a>
+                                                   data-id="{{id}}">{{#str}} edit, mod_debate{{/str}}</a>
+                                                {{/user_edit_capability}}
+                                                {{#user_delete_capability}}
                                                 <a class="dropdown-item mod-debate-negative-delete"
-                                                   data-id="{{id}}">delete</a>
+                                                   data-id="{{id}}">{{#str}} delete, mod_debate{{/str}}</a>
+                                                {{/user_delete_capability}}
                                             </div>
                                         </div>
                                     {{/user_capability}}

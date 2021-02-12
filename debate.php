@@ -78,8 +78,18 @@ foreach ($positive_response as $pos) {
     $pos->user_full_name = $user->firstname . ' ' . $user->lastname;
     $userpicture = new user_picture($user);
     $pos->user_profile_image = $userpicture->get_url($PAGE)->out(false);
+    //capability in mustache
     $pos->user_capability = false;
-    if ((int)$pos->userid == $USER->id) {
+    $pos->user_edit_capability = false;
+    $pos->user_delete_capability = false;
+    if ((int)$pos->userid == $USER->id && has_capability('mod/debate:updateownresponse', $modulecontext)) {
+        $pos->user_edit_capability = true;
+    }
+    if (((int)$pos->userid == $USER->id && has_capability('mod/debate:deleteownresponse', $modulecontext)) ||
+        has_capability('mod/debate:deleteanyresponse', $modulecontext)) {
+        $pos->user_delete_capability = true;
+    }
+    if ($pos->user_edit_capability || $pos->user_delete_capability) {
         $pos->user_capability = true;
     }
     $pos->elementid = 'element'.$pos->id;
@@ -92,8 +102,18 @@ foreach ($negative_response as $neg) {
     $neg->user_full_name = $user->firstname . ' ' . $user->lastname;
     $userpicture = new user_picture($user);
     $neg->user_profile_image = $userpicture->get_url($PAGE)->out(false);
+    //capability in mustache
     $neg->user_capability = false;
-    if ((int)$neg->userid == $USER->id) {
+    $neg->user_edit_capability = false;
+    $neg->user_delete_capability = false;
+    if ((int)$neg->userid == $USER->id && has_capability('mod/debate:updateownresponse', $modulecontext)) {
+        $neg->user_edit_capability = true;
+    }
+    if (((int)$neg->userid == $USER->id && has_capability('mod/debate:deleteownresponse', $modulecontext)) ||
+        has_capability('mod/debate:deleteanyresponse', $modulecontext)) {
+        $neg->user_delete_capability = true;
+    }
+    if ($neg->user_edit_capability || $neg->user_delete_capability) {
         $neg->user_capability = true;
     }
     $neg->elementid = 'element'.$neg->id;
@@ -114,9 +134,17 @@ $moduleinstance->current_user_full_name = $user_full_name;
 $response_allowed = $moduleinstance->responsetype;
 $positive_response_count = count($positive_response);
 $negative_response_count = count($negative_response);
+//capability in js
+$user_edit_capability = has_capability('mod/debate:updateownresponse', $modulecontext);
+$user_delete_capability = has_capability('mod/debate:deleteownresponse', $modulecontext);
+$user_capability = false;
+if ($user_edit_capability || $user_delete_capability) {
+    $user_capability = true;
+}
 $PAGE->requires->js_call_amd('mod_debate/debate_view', 'init', [$user_full_name, $user_image_url,
     $USER->id, $course->id, $moduleinstance->id, $response_allowed,
-    $positive_response_count, $negative_response_count]);
+    $positive_response_count, $negative_response_count,
+    $user_capability, $user_edit_capability, $user_delete_capability]);
 echo $OUTPUT->header();
 
 $output = $PAGE->get_renderer('mod_debate');

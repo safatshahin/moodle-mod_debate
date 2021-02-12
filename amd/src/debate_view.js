@@ -11,7 +11,8 @@ define(['jquery', 'core/ajax', 'core/str', 'core/config', 'core/notification', '
               mdlcfg, notification, templates) {
         var debateView = {
             init: function (userFullName, userImageURL, userID, courseID, debateID,
-                            responseAllowed, positiveResponse, negativeResponse) {
+                            responseAllowed, positiveResponse, negativeResponse, userCapability,
+                            userEditCapability, userDeleteCapability) {
                 // VARIABLES TO MAINTAIN THE FRONTEND FEATURES
                 var responseType = 0;
                 var responseId = '';
@@ -219,7 +220,9 @@ define(['jquery', 'core/ajax', 'core/str', 'core/config', 'core/notification', '
                                     response: userResponse,
                                     elementidcontainer: 'element' + id + 'container',
                                     elementid: 'element' + id,
-                                    user_capability: true,
+                                    user_capability: userCapability,
+                                    user_edit_capability: userEditCapability,
+                                    user_delete_capability: userDeleteCapability,
                                     id: id,
                                     editid: editID,
                                     deleteid: deleteID
