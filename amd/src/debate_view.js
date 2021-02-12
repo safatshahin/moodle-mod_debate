@@ -98,11 +98,13 @@ define(['jquery', 'core/ajax', 'core/str', 'core/config', 'core/notification', '
                 // DELETE RESPONSE
                 $(document).on('click', '.mod-debate-negative-delete', function () {
                     id = $(this).attr("data-id");
-                    debateView.deleteResponse(courseID, debateID, id);
+                    var deleteUserID = $(this).attr("data-user");
+                    debateView.deleteResponse(courseID, debateID, id, deleteUserID);
                 });
                 $(document).on('click', '.mod-debate-positive-delete', function () {
                     id = $(this).attr("data-id");
-                    debateView.deleteResponse(courseID, debateID, id);
+                    var deleteUserID = $(this).attr("data-user");
+                    debateView.deleteResponse(courseID, debateID, id, deleteUserID);
                 });
                 // EDIT RESPONSE
                 $(document).on('click', '.mod-debate-negative-edit', function () {
@@ -225,7 +227,8 @@ define(['jquery', 'core/ajax', 'core/str', 'core/config', 'core/notification', '
                                     user_delete_capability: userDeleteCapability,
                                     id: id,
                                     editid: editID,
-                                    deleteid: deleteID
+                                    deleteid: deleteID,
+                                    userid: userID
                                 };
                                 templates.render('mod_debate/debate_response_output', outputContext).then(function (html, js) {
                                     var outputResponse = $(responseId);
@@ -245,7 +248,7 @@ define(['jquery', 'core/ajax', 'core/str', 'core/config', 'core/notification', '
                     }
                 });
             },
-            deleteResponse: function (courseID, debateID, id) {
+            deleteResponse: function (courseID, debateID, id, deleteUserID) {
                 str.get_strings([
                     {'key': 'confirm_delete', component: 'mod_debate'}
                 ]).done(function (s) {
@@ -256,7 +259,8 @@ define(['jquery', 'core/ajax', 'core/str', 'core/config', 'core/notification', '
                             args: {
                                 courseid: courseID,
                                 debateid: debateID,
-                                id: id
+                                id: id,
+                                deleteuserid: deleteUserID
                             }
                         }]);
                         responseAjax[0].done(function (deleted) {

@@ -85,3 +85,9 @@ $string['privacy:metadata:debate_response:responsetype'] = 'The response type fo
 $string['privacy:metadata:debate_response:timecreated'] = 'The timestamp indicating when a user first recorded an interaction with the debate Course';
 $string['privacy:metadata:debate_response:timemodified'] = 'The timestamp indicating when a user last recorded an interaction with the debate Course';
 $string['privacy:metadata:debate_response'] = 'Information about the response of the debate topic for a debate Course';
+
+//event
+$string['event_response_added'] = 'Debate response added';
+$string['event_response_updated'] = 'Debate response updated';
+$string['event_response_error'] = 'Error from debate response';
+$string['event_response_deleted'] = 'Debate response deleted';

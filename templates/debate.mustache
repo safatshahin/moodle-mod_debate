@@ -56,11 +56,11 @@
                                             <div class="dropdown-menu">
                                                 {{#user_edit_capability}}
                                                 <a class="dropdown-item mod-debate-positive-edit"
-                                                   data-id="{{id}}">{{#str}} edit, mod_debate{{/str}}</a>
+                                                   data-id="{{id}}" data-user="{{userid}}">{{#str}} edit, mod_debate{{/str}}</a>
                                                 {{/user_edit_capability}}
                                                 {{#user_delete_capability}}
                                                 <a class="dropdown-item mod-debate-positive-delete"
-                                                   data-id="{{id}}">{{#str}} delete, mod_debate{{/str}}</a>
+                                                   data-id="{{id}}" data-user="{{userid}}">{{#str}} delete, mod_debate{{/str}}</a>
                                                 {{/user_delete_capability}}
                                             </div>
                                         </div>
@@ -115,11 +115,11 @@
                                             <div class="dropdown-menu">
                                                 {{#user_edit_capability}}
                                                 <a class="dropdown-item mod-debate-negative-edit"
-                                                   data-id="{{id}}">{{#str}} edit, mod_debate{{/str}}</a>
+                                                   data-id="{{id}}" data-user="{{userid}}">{{#str}} edit, mod_debate{{/str}}</a>
                                                 {{/user_edit_capability}}
                                                 {{#user_delete_capability}}
                                                 <a class="dropdown-item mod-debate-negative-delete"
-                                                   data-id="{{id}}">{{#str}} delete, mod_debate{{/str}}</a>
+                                                   data-id="{{id}}" data-user="{{userid}}">{{#str}} delete, mod_debate{{/str}}</a>
                                                 {{/user_delete_capability}}
                                             </div>
                                         </div>
