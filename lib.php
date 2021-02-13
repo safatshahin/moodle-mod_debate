@@ -291,7 +291,7 @@ function debate_view($debate, $course, $cm, $context) {
     $completion->set_module_viewed($cm);
     $user_response_count = $DB->count_records_select('debate_response', 'debateid = :debateid AND courseid = :courseid AND userid = :userid',
         array('debateid' => (int)$debate->id, 'courseid' => (int)$course->id, 'userid' => $USER->id), 'COUNT("id")');
-    if ($user_response_count == (int)$debate->debateresponsecomcount) {
+    if ($user_response_count >= (int)$debate->debateresponsecomcount) {
         $completion->update_state($cm, COMPLETION_COMPLETE, $USER->id);
     } else {
         $current = $completion->get_data($cm, false, $USER->id);

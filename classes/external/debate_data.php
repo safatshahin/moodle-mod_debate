@@ -126,7 +126,7 @@ class debate_data extends external_api {
         $completion = new \completion_info($course);
         if ($completion->is_enabled($course_module) == COMPLETION_TRACKING_AUTOMATIC
             && (int)$debate->debateresponsecomcount > 0 &&
-            $user_response_count == (int)$debate->debateresponsecomcount) {
+            $user_response_count >= (int)$debate->debateresponsecomcount) {
             $completion->update_state($course_module, COMPLETION_COMPLETE, $USER->id);
         }
 
@@ -161,8 +161,7 @@ class debate_data extends external_api {
             array(
                 'courseid' => new external_value(PARAM_INT, '', 1),
                 'debateid' => new external_value(PARAM_INT, '', 1),
-                'id' => new external_value(PARAM_INT, '', 1),
-                'deleteuserid' => new external_value(PARAM_INT, '', 1)
+                'id' => new external_value(PARAM_INT, '', 1)
             )
         );
     }
@@ -179,20 +178,22 @@ class debate_data extends external_api {
         );
     }
 
-    public static function delete_debate_respose($courseid, $debateid, $id, $deleteuserid) {
+    public static function delete_debate_respose($courseid, $debateid, $id) {
         global $DB, $USER;
         $params = self::validate_parameters(
             self::delete_debate_respose_parameters(),
             array(
                 'courseid' => $courseid,
                 'debateid' => $debateid,
-                'id' => $id,
-                'deleteuserid' => $deleteuserid
+                'id' => $id
             )
         );
         $result = array(
             'result' => false
         );
+        $userid = $DB->get_record('debate_response',
+            array('courseid' => $params['courseid'], 'debateid' => $params['debateid'], 'id' => $params['id']),
+            'userid', MUST_EXIST)->userid;
 
         $result['result'] = $DB->delete_records('debate_response',
                 array('courseid' => $params['courseid'], 'debateid' => $params['debateid'], 'id' => $params['id']));
@@ -203,22 +204,25 @@ class debate_data extends external_api {
         $course_module = get_coursemodule_from_instance('debate', $debate->id, $course->id, false, MUST_EXIST);
         $completion = new \completion_info($course);
         $user_response_count = $DB->count_records_select('debate_response', 'debateid = :debateid AND courseid = :courseid AND userid = :userid',
-            array('debateid' => (int)$debate->id, 'courseid' => (int)$course->id, 'userid' => (int)$params['deleteuserid']), 'COUNT("id")');
+            array('debateid' => (int)$debate->id, 'courseid' => (int)$course->id, 'userid' => $userid), 'COUNT("id")');
         if ($completion->is_enabled($course_module) == COMPLETION_TRACKING_AUTOMATIC &&
-            (int)$debate->debateresponsecomcount > 0 &&
-            ($user_response_count != (int)$debate->debateresponsecomcount)) {
-            $current = $completion->get_data($course_module, false, (int)$params['deleteuserid']);
-            $current->completionstate = COMPLETION_INCOMPLETE;
-            $current->timemodified    = time();
-            $current->overrideby      = null;
-            $completion->internal_set_data($course_module, $current);
+            (int)$debate->debateresponsecomcount > 0) {
+            if ($user_response_count >= (int)$debate->debateresponsecomcount) {
+                $completion->update_state($course_module, COMPLETION_COMPLETE, $USER->id);
+            } else {
+                $current = $completion->get_data($course_module, false, $userid);
+                $current->completionstate = COMPLETION_INCOMPLETE;
+                $current->timemodified    = time();
+                $current->overrideby      = null;
+                $completion->internal_set_data($course_module, $current);
+            }
         }
 
         //event
         $param = array(
             'context' => \context_module::instance($course_module->id),
             'userid' => $USER->id,
-            'relateduserid' => $params['deleteuserid'],
+            'relateduserid' => $userid,
             'other' => array(
                 'debateid' => $params['debateid']
             )
