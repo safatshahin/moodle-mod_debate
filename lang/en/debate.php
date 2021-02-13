@@ -47,6 +47,9 @@ $string['debateresponsecomgroup'] = 'Require response';
 //access
 $string['debate:addinstance'] = 'Add a new debate instance';
 $string['debate:view'] = 'View debate content';
+$string['debate:deleteanyresponse'] = 'Delete any debate response';
+$string['debate:deleteownresponse'] = 'Delete own debate response';
+$string['debate:updateownresponse'] = 'Update own debate reponse';
 
 //view
 $string['pros'] = 'Positive';
@@ -67,6 +70,8 @@ $string['edit_mode_active'] = 'Either the edit mode is active or no more respons
 $string['empty_response'] = 'Cannot save empty response';
 $string['error_add'] = 'Error updating response, please check the typed response, it can only accept text';
 $string['error_delete'] = 'Error deleting response, please check database for more info';
+$string['edit'] = 'Edit';
+$string['delete'] = 'Delete';
 
 //reset
 $string['attemptsdeleted'] = 'Debate responses deleted';
@@ -80,3 +85,9 @@ $string['privacy:metadata:debate_response:responsetype'] = 'The response type fo
 $string['privacy:metadata:debate_response:timecreated'] = 'The timestamp indicating when a user first recorded an interaction with the debate Course';
 $string['privacy:metadata:debate_response:timemodified'] = 'The timestamp indicating when a user last recorded an interaction with the debate Course';
 $string['privacy:metadata:debate_response'] = 'Information about the response of the debate topic for a debate Course';
+
+//event
+$string['event_response_added'] = 'Debate response added';
+$string['event_response_updated'] = 'Debate response updated';
+$string['event_response_error'] = 'Error from debate response';
+$string['event_response_deleted'] = 'Debate response deleted';

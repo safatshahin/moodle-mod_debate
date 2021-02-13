@@ -35,6 +35,7 @@ use external_function_parameters;
 use external_value;
 use external_single_structure;
 use stdClass;
+use context_system;
 
 class debate_data extends external_api {
 
@@ -79,7 +80,8 @@ class debate_data extends external_api {
             'result' => false,
             'id' => null
         );
-
+        $add = false;
+        $update = false;
         if (empty($params['id'])) {
             $debate_response = new stdClass();
             $debate_response->courseid = $params['courseid'];
@@ -94,6 +96,7 @@ class debate_data extends external_api {
             if ($add_response) {
                 $result['result'] = true;
                 $result['id'] = $add_response;
+                $add = true;
             }
         } else {
             $debate_response = new stdClass();
@@ -108,7 +111,8 @@ class debate_data extends external_api {
             $update_response = $DB->update_record('debate_response', $debate_response, true);
             if ($update_response) {
                 $result['result'] = true;
-                $result['id'] = $update_response;
+                $result['id'] = $params['id'];
+                $update = true;
             }
         }
 
@@ -122,9 +126,32 @@ class debate_data extends external_api {
         $completion = new \completion_info($course);
         if ($completion->is_enabled($course_module) == COMPLETION_TRACKING_AUTOMATIC
             && (int)$debate->debateresponsecomcount > 0 &&
-            $user_response_count == (int)$debate->debateresponsecomcount) {
+            $user_response_count >= (int)$debate->debateresponsecomcount) {
             $completion->update_state($course_module, COMPLETION_COMPLETE, $USER->id);
         }
+
+        //event
+        $param = array(
+            'context' => \context_module::instance($course_module->id),
+            'userid' => $USER->id,
+            'other' => array(
+                'debateid' => $params['debateid']
+            )
+        );
+        if ($add) {
+            // Trigger debate_response_added event.
+            $param['objectid'] = $add_response;
+            $event = \mod_debate\event\debate_response_added::create($param);
+        } else if ($update) {
+            // Trigger debate_response_updated event.
+            $param['objectid'] = $params['id'];
+            $event = \mod_debate\event\debate_response_updated::create($param);
+        } else {
+            // Trigger debate_response_error event.
+            $param['objectid'] = $params['id'];
+            $event = \mod_debate\event\debate_response_error::create($param);
+        }
+        $event->trigger();
 
         return $result;
     }
@@ -164,6 +191,9 @@ class debate_data extends external_api {
         $result = array(
             'result' => false
         );
+        $userid = $DB->get_record('debate_response',
+            array('courseid' => $params['courseid'], 'debateid' => $params['debateid'], 'id' => $params['id']),
+            'userid', MUST_EXIST)->userid;
 
         $result['result'] = $DB->delete_records('debate_response',
                 array('courseid' => $params['courseid'], 'debateid' => $params['debateid'], 'id' => $params['id']));
@@ -174,16 +204,32 @@ class debate_data extends external_api {
         $course_module = get_coursemodule_from_instance('debate', $debate->id, $course->id, false, MUST_EXIST);
         $completion = new \completion_info($course);
         $user_response_count = $DB->count_records_select('debate_response', 'debateid = :debateid AND courseid = :courseid AND userid = :userid',
-            array('debateid' => (int)$debate->id, 'courseid' => (int)$course->id, 'userid' => $USER->id), 'COUNT("id")');
+            array('debateid' => (int)$debate->id, 'courseid' => (int)$course->id, 'userid' => $userid), 'COUNT("id")');
         if ($completion->is_enabled($course_module) == COMPLETION_TRACKING_AUTOMATIC &&
-            (int)$debate->debateresponsecomcount > 0 &&
-            ($user_response_count != (int)$debate->debateresponsecomcount)) {
-            $current = $completion->get_data($course_module, false, $USER->id);
-            $current->completionstate = COMPLETION_INCOMPLETE;
-            $current->timemodified    = time();
-            $current->overrideby      = null;
-            $completion->internal_set_data($course_module, $current);
+            (int)$debate->debateresponsecomcount > 0) {
+            if ($user_response_count >= (int)$debate->debateresponsecomcount) {
+                $completion->update_state($course_module, COMPLETION_COMPLETE, $USER->id);
+            } else {
+                $current = $completion->get_data($course_module, false, $userid);
+                $current->completionstate = COMPLETION_INCOMPLETE;
+                $current->timemodified    = time();
+                $current->overrideby      = null;
+                $completion->internal_set_data($course_module, $current);
+            }
         }
+
+        //event
+        $param = array(
+            'context' => \context_module::instance($course_module->id),
+            'userid' => $USER->id,
+            'relateduserid' => $userid,
+            'other' => array(
+                'debateid' => $params['debateid']
+            )
+        );
+        $param['objectid'] = $params['id'];
+        $event = \mod_debate\event\debate_response_deleted::create($param);
+        $event->trigger();
 
         return $result;
     }

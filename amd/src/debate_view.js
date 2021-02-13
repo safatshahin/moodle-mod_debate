@@ -11,7 +11,8 @@ define(['jquery', 'core/ajax', 'core/str', 'core/config', 'core/notification', '
               mdlcfg, notification, templates) {
         var debateView = {
             init: function (userFullName, userImageURL, userID, courseID, debateID,
-                            responseAllowed, positiveResponse, negativeResponse) {
+                            responseAllowed, positiveResponse, negativeResponse, userCapability,
+                            userEditCapability, userDeleteCapability) {
                 // VARIABLES TO MAINTAIN THE FRONTEND FEATURES
                 var responseType = 0;
                 var responseId = '';
@@ -160,6 +161,7 @@ define(['jquery', 'core/ajax', 'core/str', 'core/config', 'core/notification', '
                         deleteID = 'mod-debate-positive-delete';
                         $(responseTextID).val('');
                         $(responseId).css('display', 'block');
+                        id = null;
                     } else {
                         debateView.renderNotification(0, 'info');
                     }
@@ -175,6 +177,7 @@ define(['jquery', 'core/ajax', 'core/str', 'core/config', 'core/notification', '
                         deleteID = 'mod-debate-negative-delete';
                         $(responseTextID).val('');
                         $(responseId).css('display', 'block');
+                        id = null;
                     } else {
                         debateView.renderNotification(0, 'info');
                     }
@@ -219,10 +222,13 @@ define(['jquery', 'core/ajax', 'core/str', 'core/config', 'core/notification', '
                                     response: userResponse,
                                     elementidcontainer: 'element' + id + 'container',
                                     elementid: 'element' + id,
-                                    user_capability: true,
+                                    user_capability: userCapability,
+                                    user_edit_capability: userEditCapability,
+                                    user_delete_capability: userDeleteCapability,
                                     id: id,
                                     editid: editID,
-                                    deleteid: deleteID
+                                    deleteid: deleteID,
+                                    userid: userID
                                 };
                                 templates.render('mod_debate/debate_response_output', outputContext).then(function (html, js) {
                                     var outputResponse = $(responseId);
