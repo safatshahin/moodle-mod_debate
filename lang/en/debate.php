@@ -49,7 +49,7 @@ $string['debate:addinstance'] = 'Add a new debate instance';
 $string['debate:view'] = 'View debate content';
 $string['debate:deleteanyresponse'] = 'Delete any debate response';
 $string['debate:deleteownresponse'] = 'Delete own debate response';
-$string['debate:updateownresponse'] = 'Update own debate reponse';
+$string['debate:updateownresponse'] = 'Update own debate response';
 
 //view
 $string['pros'] = 'Positive';
