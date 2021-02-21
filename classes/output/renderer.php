@@ -48,4 +48,8 @@ class renderer extends \plugin_renderer_base {
         return parent::render_from_template('mod_debate/debate', $moduleinstance);
     }
 
+    public function render_debate_teams($moduleinstance) {
+        return parent::render_from_template('mod_debate/debate_teams', $moduleinstance);
+    }
+
 }

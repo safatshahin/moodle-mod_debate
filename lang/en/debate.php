@@ -29,6 +29,7 @@ $string['pluginname'] = 'Debate';
 $string['pluginadministration'] = 'Debate Admin';
 $string['modulename'] = 'Debate';
 $string['modulenameplural'] = 'Debates';
+$string['missingidandcmid'] = 'Missing course module ID';
 
 //mod form
 $string['debatename'] = 'Name';
@@ -43,6 +44,7 @@ $string['user_response'] = 'User response type';
 $string['reset_debate_attempts'] = 'Delete debate responses';
 $string['debateresponsecom'] = 'Students must post responses';
 $string['debateresponsecomgroup'] = 'Require response';
+$string['use_teams'] = 'Use teams feature';
 
 //access
 $string['debate:addinstance'] = 'Add a new debate instance';
@@ -50,6 +52,7 @@ $string['debate:view'] = 'View debate content';
 $string['debate:deleteanyresponse'] = 'Delete any debate response';
 $string['debate:deleteownresponse'] = 'Delete own debate response';
 $string['debate:updateownresponse'] = 'Update own debate response';
+$string['debate:manageteams'] = 'Manage debate teams';
 
 //view
 $string['pros'] = 'Positive';
@@ -58,6 +61,7 @@ $string['pros_response_count'] = 'Positive response count';
 $string['cons_response_count'] = 'Negative response count';
 $string['join_debate'] = 'Join/View debate';
 $string['grade_debater'] = 'Grade debaters';
+$string['manage_teams'] = 'Manage teams';
 
 //debate
 $string['save'] = 'Save';
@@ -66,7 +70,7 @@ $string['cancel'] = 'Cancel';
 $string['possible_match'] = 'Possible matching responses';
 $string['no_possible_match'] = 'No matching responses';
 $string['confirm_delete'] = 'Are you sure you want to delete this response?';
-$string['edit_mode_active'] = 'Either the edit mode is active or no more response is allowed.';
+$string['edit_mode_active'] = 'Either the edit mode is active or no response is allowed.';
 $string['empty_response'] = 'Cannot save empty response';
 $string['error_add'] = 'Error updating response, please check the typed response, it can only accept text';
 $string['error_delete'] = 'Error deleting response, please check database for more info';
@@ -91,3 +95,9 @@ $string['event_response_added'] = 'Debate response added';
 $string['event_response_updated'] = 'Debate response updated';
 $string['event_response_error'] = 'Error from debate response';
 $string['event_response_deleted'] = 'Debate response deleted';
+
+//teams
+$string['pros_user_count'] = 'Positive user count';
+$string['cons_user_count'] = 'Negative user count';
+$string['manage_positive_team'] = 'Manage positive teams';
+$string['manage_negative_team'] = 'Manage negative teams';

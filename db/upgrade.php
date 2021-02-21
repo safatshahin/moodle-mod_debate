@@ -49,6 +49,28 @@ function xmldb_debate_upgrade($oldversion) {
             $dbman->add_field($table, $field);
         }
     }
+    if ($oldversion < 2021022100) {
+        $table = new xmldb_table('debate_teams');
+        $table->add_field('id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, XMLDB_SEQUENCE, null);
+        $table->add_field('courseid', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, false);
+        $table->add_field('debateid', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, false);
+        $table->add_field('responsetype', XMLDB_TYPE_INTEGER, '4', null, XMLDB_NOTNULL, false, '0');
+        $table->add_field('responseallowed', XMLDB_TYPE_INTEGER, '4', null, XMLDB_NOTNULL, false, '0');
+        $table->add_field('userselectiontype', XMLDB_TYPE_INTEGER, '4', null, XMLDB_NOTNULL, false, '0');
+        $table->add_field('userselection', XMLDB_TYPE_TEXT, null, null, false, false);
+        $table->add_field('userviewtype', XMLDB_TYPE_INTEGER, '4', null, XMLDB_NOTNULL, false, '0');
+        $table->add_field('userviewselection', XMLDB_TYPE_TEXT, null, null, false, false);
+        $table->add_field('timecreated', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, false, '0');
+        $table->add_field('timemodified', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, false, '0');
+
+        // Adding keys to table debate_teams.
+        $table->add_key('primary', XMLDB_KEY_PRIMARY, array('id'));
+        $table->add_key('fk_courseid', XMLDB_KEY_FOREIGN, array('courseid'), 'course', 'id');
+        $table->add_key('fk_debateid', XMLDB_KEY_FOREIGN, array('debateid'), 'debate', 'id');
+        if (!$dbman->table_exists($table)) {
+            $dbman->create_table($table);
+        }
+    }
 
     return true;
 }

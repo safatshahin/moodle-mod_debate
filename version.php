@@ -25,7 +25,7 @@
 defined('MOODLE_INTERNAL') || die();
 
 $plugin->component = 'mod_debate';
-$plugin->release = '1.1.1';
-$plugin->version = 2021021300;
+$plugin->release = '1.2.0';
+$plugin->version = 2021022101;
 $plugin->requires = 2017111300;
 $plugin->maturity = MATURITY_STABLE;

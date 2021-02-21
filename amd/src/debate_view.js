@@ -227,8 +227,7 @@ define(['jquery', 'core/ajax', 'core/str', 'core/config', 'core/notification', '
                                     user_delete_capability: userDeleteCapability,
                                     id: id,
                                     editid: editID,
-                                    deleteid: deleteID,
-                                    userid: userID
+                                    deleteid: deleteID
                                 };
                                 templates.render('mod_debate/debate_response_output', outputContext).then(function (html, js) {
                                     var outputResponse = $(responseId);
