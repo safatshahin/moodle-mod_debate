@@ -101,3 +101,35 @@ $string['pros_user_count'] = 'Positive user count';
 $string['cons_user_count'] = 'Negative user count';
 $string['manage_positive_team'] = 'Manage positive teams';
 $string['manage_negative_team'] = 'Manage negative teams';
+
+//teams table
+$string['createnew'] = 'Create new team';
+$string['goback'] = 'Go back';
+$string['id'] = 'ID';
+$string['name'] = 'Name';
+$string['status'] = 'Status';
+$string['timemodified'] = 'Time modified';
+$string['actions'] = 'Actions';
+$string['active'] = 'Active';
+$string['inactive'] = 'Inactive';
+
+//teams page
+$string['debate_teams'] = 'Debate teams';
+$string['debate_team_deleted'] = 'Debate team: {$a->name} is successfully deleted.';
+$string['debate_team_delete_failed'] = 'Debate team: {$a->name} could not be deleted.';
+$string['delete_debate_team'] = 'Delete debate team';
+$string['delete_debate_team_confirmation'] = 'Are you sure you want to delete debate team: {$a->name} ?';
+$string['debate_team_active'] = 'Debate team: {$a->name} activated.';
+$string['debate_team_active_error'] = 'Failed to activate debate team: {$a->name}.';
+$string['debate_team_deactive'] = 'Debate team: {$a->name} deactivated.';
+$string['debate_team_deactive_error'] = 'Failed to deactivate debate team: {$a->name}.';
+$string['missingresponsetype'] = 'Missing response type';
+
+//teams form
+$string['name'] = 'Name';
+$string['maximum_character_255'] = 'Maximum 255 characters accepted.';
+$string['responseallowed'] = 'Response allowed';
+$string['maximum_character_2'] = 'Maximum 2 digit numbers allowed for the number of responses';
+$string['groupselection'] = 'Selects groups';
+$string['edit_negative_team'] = 'Edit negative team';
+$string['edit_positive_team'] = 'Edit positive team';

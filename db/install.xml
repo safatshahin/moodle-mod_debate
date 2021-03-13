@@ -44,14 +44,13 @@
     <TABLE NAME="debate_teams" COMMENT="Stores the debate teams information.">
       <FIELDS>
         <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="name" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false" COMMENT="The name of the debate team"/>
         <FIELD NAME="courseid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="ID of the course this activity is part of."/>
         <FIELD NAME="debateid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="ID of the debate instance."/>
         <FIELD NAME="responsetype" TYPE="int" LENGTH="4" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="The type of response."/>
         <FIELD NAME="responseallowed" TYPE="int" LENGTH="4" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="The number of response allowed."/>
-        <FIELD NAME="userselectiontype" TYPE="int" LENGTH="4" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="User selection of type."/>
-        <FIELD NAME="userselection" TYPE="text" NOTNULL="false" SEQUENCE="false" COMMENT="ids of user selections."/>
-        <FIELD NAME="userviewtype" TYPE="int" LENGTH="4" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="User view type."/>
-        <FIELD NAME="userviewselection" TYPE="text" NOTNULL="false" SEQUENCE="false" COMMENT="ids of user view selections."/>
+        <FIELD NAME="groupselection" TYPE="text" NOTNULL="true" SEQUENCE="false" COMMENT="ids of group selections."/>
+        <FIELD NAME="active" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="Team active or inactive."/>
         <FIELD NAME="timecreated" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="Timestamp of when the team was added to the course."/>
         <FIELD NAME="timemodified" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="Timestamp of when the team was last modified."/>
       </FIELDS>

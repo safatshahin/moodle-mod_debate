@@ -39,14 +39,14 @@ if ($id) {
     $cm             = get_coursemodule_from_id('debate', $id, 0, false, MUST_EXIST);
     $course         = $DB->get_record('course', array('id' => $cm->course), '*', MUST_EXIST);
     $moduleinstance = $DB->get_record('debate', array('id' => $cm->instance), '*', MUST_EXIST);
-    $positive_user = $DB->get_records('debate_teams', array('courseid' => $course->id, 'debateid' => $moduleinstance->id, 'responsetype' => debate_constants::MOD_DEBATE_POSITIVE), '', '*');
-    $negative_user = $DB->get_records('debate_teams', array('courseid' => $course->id, 'debateid' => $moduleinstance->id, 'responsetype' => debate_constants::MOD_DEBATE_NEGATIVE), '', '*');
+//    $positive_user = $DB->get_records('debate_teams', array('courseid' => $course->id, 'debateid' => $moduleinstance->id, 'responsetype' => debate_constants::MOD_DEBATE_POSITIVE), '', '*');
+//    $negative_user = $DB->get_records('debate_teams', array('courseid' => $course->id, 'debateid' => $moduleinstance->id, 'responsetype' => debate_constants::MOD_DEBATE_NEGATIVE), '', '*');
 } else if ($d) {
     $moduleinstance = $DB->get_record('debate', array('id' => $d), '*', MUST_EXIST);
     $course         = $DB->get_record('course', array('id' => $moduleinstance->course), '*', MUST_EXIST);
     $cm             = get_coursemodule_from_instance('debate', $moduleinstance->id, $course->id, false, MUST_EXIST);
-    $positive_user = $DB->get_records('debate_teams', array('courseid' => $course->id, 'debateid' => $moduleinstance->id, 'responsetype' => debate_constants::MOD_DEBATE_POSITIVE), '', '*');
-    $negative_user = $DB->get_records('debate_teams', array('courseid' => $course->id, 'debateid' => $moduleinstance->id, 'responsetype' => debate_constants::MOD_DEBATE_NEGATIVE), '', '*');
+//    $positive_user = $DB->get_records('debate_teams', array('courseid' => $course->id, 'debateid' => $moduleinstance->id, 'responsetype' => debate_constants::MOD_DEBATE_POSITIVE), '', '*');
+//    $negative_user = $DB->get_records('debate_teams', array('courseid' => $course->id, 'debateid' => $moduleinstance->id, 'responsetype' => debate_constants::MOD_DEBATE_NEGATIVE), '', '*');
 } else {
     print_error(get_string('missingidandcmid', 'mod_debate'));
 }
@@ -74,18 +74,17 @@ $moduleinstance->intro = $content;
 $usercontext = context_system::instance();
 
 $positive = 0;
-foreach ($positive_user as $pos) {
-    $positive++;
-}
+//foreach ($positive_user as $pos) {
+//    $positive++;
+//}
 $negative = 0;
-foreach ($negative_user as $neg) {
-    $negative++;
-}
+//foreach ($negative_user as $neg) {
+//    $negative++;
+//}
 $moduleinstance->positive = $positive;
 $moduleinstance->negative = $negative;
-$moduleinstance->debateteamsurl = 'debate_teams.php?id='.$cm->id;
-$moduleinstance->managepositiveurl = 'test.php';
-$moduleinstance->managenegativeurl = 'test.php';
+$moduleinstance->managepositiveurl = 'debate_teams_page.php?response=1&id='.$cm->id;
+$moduleinstance->managenegativeurl = 'debate_teams_page.php?response=0&id='.$cm->id;
 echo $OUTPUT->header();
 
 $output = $PAGE->get_renderer('mod_debate');
