@@ -64,6 +64,7 @@ class debate_teams_table extends table_sql {
         $fields = "id,
         name,
         active,
+        responsetype,
         timemodified,
         '' AS actions";
         $from = "{debate_teams}";
@@ -130,11 +131,11 @@ class debate_teams_table extends table_sql {
         // Decide to activate or deactivate.
         if ($values->active) {
             $toggleurl = new moodle_url('/mod/debate/debate_teams_page.php', $urlparams + array('action' => 'hide'));
-            $togglename = get_string('deactivate', 'mod_debate');
+            $togglename = get_string('inactive', 'mod_debate');
             $toggleicon = 'fa fa-eye';
         } else {
             $toggleurl = new moodle_url('/mod/debate/debate_teams_page.php', $urlparams + array('action' => 'show'));
-            $togglename = get_string('activate', 'mod_debate');
+            $togglename = get_string('active', 'mod_debate');
             $toggleicon = 'fa fa-eye-slash';
         }
 

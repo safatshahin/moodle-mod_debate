@@ -83,8 +83,8 @@ $negative = 0;
 //}
 $moduleinstance->positive = $positive;
 $moduleinstance->negative = $negative;
-$moduleinstance->managepositiveurl = 'debate_teams_page.php?response=1&id='.$cm->id;
-$moduleinstance->managenegativeurl = 'debate_teams_page.php?response=0&id='.$cm->id;
+$moduleinstance->managepositiveurl = 'debate_teams_page.php?response=1&cmid='.$cm->id;
+$moduleinstance->managenegativeurl = 'debate_teams_page.php?response=0&cmid='.$cm->id;
 echo $OUTPUT->header();
 
 $output = $PAGE->get_renderer('mod_debate');

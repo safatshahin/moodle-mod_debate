@@ -47,6 +47,15 @@ class debate_teams_form extends moodleform {
         $mform->addElement('hidden', 'id');
         $mform->setType('id', PARAM_INT);
 
+        $mform->addElement('hidden', 'courseid');
+        $mform->setType('courseid', PARAM_INT);
+
+        $mform->addElement('hidden', 'debateid');
+        $mform->setType('debateid', PARAM_INT);
+
+        $mform->addElement('hidden', 'responsetype');
+        $mform->setType('responsetype', PARAM_INT);
+
         $mform->addElement('text', 'name', get_string('name','mod_debate'));
         $mform->addRule('name', get_string('required'), 'required', null, 'client');
         $mform->addRule('name',get_string('maximum_character_255', 'mod_debate'), 'maxlength', 255, 'client');
@@ -72,28 +81,15 @@ class debate_teams_form extends moodleform {
         $mform->addElement('hidden', 'active');
         $mform->setType('active', PARAM_INT);
 
-        $buttonarray=array();
-        $buttonarray[] = &$mform->createElement('submit', 'submitbutton', get_string('savechanges'));
-        $buttonarray[] = &$mform->createElement('cancel');
-        $mform->addGroup($buttonarray, 'buttonar', '', array(' '), false);
-        $mform->closeHeaderBefore('buttonar');
+        $mform->addElement('hidden', 'cmid');
+        $mform->setType('cmid', PARAM_INT);
+        $mform->setDefault('cmid', (int)$this->_customdata['cmid']);
 
+        $mform->addElement('hidden', 'response');
+        $mform->setType('response', PARAM_INT);
+        $mform->setDefault('response', (int)$this->_customdata['response']);
+
+        $this->add_action_buttons(false);
         $this->set_data($data);
     }
-
-
-    /**
-     * Export this data so it can be used as the context for a mustache template.
-     *
-     * @return string
-     */
-//    public function export_for_template() {
-//        ob_start();
-//        $this->display();
-//        $formhtml = ob_get_contents();
-//        ob_end_clean();
-//
-//        return $formhtml;
-//    }
-
 }

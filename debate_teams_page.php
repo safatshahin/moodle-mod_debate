@@ -23,9 +23,9 @@
  */
 
 require('../../config.php');
-require_once($CFG->libdir.'/adminlib.php');
-require($CFG->dirroot.'/mod/debate/classes/debate_teams_page.php');
-require($CFG->dirroot.'/mod/debate/classes/output/tables/debate_teams_table.php');
+require_once($CFG->libdir . '/adminlib.php');
+require($CFG->dirroot . '/mod/debate/classes/debate_teams_page.php');
+require($CFG->dirroot . '/mod/debate/classes/output/tables/debate_teams_table.php');
 
 use \core\output\notification;
 
@@ -33,20 +33,15 @@ require_login();
 
 // Course_module ID, or
 $id = optional_param('id', 0, PARAM_INT);
-// ... module instance id.
-$d  = optional_param('d', 0, PARAM_INT);
+$cmid = optional_param('cmid', 0, PARAM_INT);
 $action = optional_param('action', '', PARAM_TEXT);
 $confirm = optional_param('confirm', 0, PARAM_BOOL);
 $response = required_param('response', PARAM_INT);
 
-if ($id) {
-    $cm             = get_coursemodule_from_id('debate', $id, 0, false, MUST_EXIST);
-    $course         = $DB->get_record('course', array('id' => $cm->course), '*', MUST_EXIST);
+if ($cmid) {
+    $cm = get_coursemodule_from_id('debate', $cmid, 0, false, MUST_EXIST);
+    $course = $DB->get_record('course', array('id' => $cm->course), '*', MUST_EXIST);
     $moduleinstance = $DB->get_record('debate', array('id' => $cm->instance), '*', MUST_EXIST);
-} else if ($d) {
-    $moduleinstance = $DB->get_record('debate', array('id' => $d), '*', MUST_EXIST);
-    $course         = $DB->get_record('course', array('id' => $moduleinstance->course), '*', MUST_EXIST);
-    $cm             = get_coursemodule_from_instance('debate', $moduleinstance->id, $course->id, false, MUST_EXIST);
 } else {
     print_error(get_string('missingidandcmid', 'mod_debate'));
 }
@@ -56,7 +51,7 @@ $modulecontext = context_module::instance($cm->id);
 
 require_capability('mod/debate:manageteams', $modulecontext);
 
-$PAGE->set_url('/mod/debate/debate_teams_page.php', array('id' => $cm->id, 'response' => $response));
+$PAGE->set_url('/mod/debate/debate_teams_page.php', array('id' => $id, 'cmid' => $cmid, 'response' => $response));
 $PAGE->set_title(get_string('debate_teams', 'mod_debate'));
 $response_text = '';
 if ($response == 0) {
@@ -66,10 +61,10 @@ if ($response == 0) {
 }
 $PAGE->set_heading($response_text);
 $PAGE->set_context($modulecontext);
-$PAGE->navbar->add($response_text, new moodle_url('/mod/debate/debate_teams_page.php', array('id' => $cm->id, 'response' => $response)));
-$returnurl = new moodle_url('/mod/debate/debate_teams_page.php', array('id' => $cm->id, 'response' => $response));
+$PAGE->navbar->add($response_text, new moodle_url('/mod/debate/debate_teams_page.php', array('id' => $id, 'cmid' => $cmid, 'response' => $response)));
+$returnurl = new moodle_url('/mod/debate/debate_teams_page.php', array('id' => $id, 'cmid' => $cmid, 'response' => $response));
 
-$debate_team =  new debate_teams_page($id);
+$debate_team = new debate_teams_page($id);
 
 //table logic
 if (!empty($debate_team->id)) {
@@ -95,15 +90,15 @@ if (!empty($debate_team->id)) {
         echo $OUTPUT->header();
 
         $yesurl = new moodle_url($CFG->wwwroot . '/mod/debate/debate_teams_page.php', array(
-            'id' => $debate_team->id, 'response' => $debate_team->responsetype, 'action' => 'delete', 'confirm' => 1, 'sesskey' => sesskey()
+            'id' => $debate_team->id, 'cmid' => $cmid, 'response' => $debate_team->responsetype, 'action' => 'delete', 'confirm' => 1, 'sesskey' => sesskey()
         ));
         $message = get_string('delete_debate_team_confirmation', 'mod_debate', $a);
         echo $OUTPUT->confirm($message, $yesurl, $returnurl);
         echo $OUTPUT->footer();
         die;
     }
-    if (confirm_sesskey()) {
-        if ($action == 'show') {
+    if ($action == 'show') {
+        if ($confirm and confirm_sesskey()) {
             $a = new stdClass();
             $a->name = $debate_team->name;
             $message = get_string('debate_team_active', 'mod_debate', $a);
@@ -116,7 +111,9 @@ if (!empty($debate_team->id)) {
                 }
             }
             redirect($returnurl, $message, null, $messagestyle);
-        } else if ($action == 'hide') {
+        }
+    } else if ($action == 'hide') {
+        if ($confirm and confirm_sesskey()) {
             $a = new stdClass();
             $a->name = $debate_team->name;
             $message = get_string('debate_team_deactive', 'mod_debate', $a);
@@ -137,7 +134,7 @@ if (!empty($debate_team->id)) {
 $debate_teams_table = new debate_teams_table('debate_teams_table', $response, $moduleinstance->id, $cm->id);
 
 $params = [
-    'editurl' => new moodle_url($CFG->wwwroot . '/mod/debate/debate_teams_form_page.php', array('cmid'=> $cm->id, 'response' => $response)),
+    'editurl' => new moodle_url($CFG->wwwroot . '/mod/debate/debate_teams_form_page.php', array('cmid' => $cm->id, 'response' => $response)),
     'tablehtml' => $debate_teams_table->export_for_template()
 ];
 

@@ -34,8 +34,7 @@ class debate_teams_page {
     public $debateid = 0;
     public $responsetype = 0;
     public $responseallowed = 0;
-    public $userselectiontype = 0;
-    public $userselection = 0;
+    public $groupselection = 0;
     public $active = 0;
     public $timecreated = 0;
     public $timemodified = 0;
@@ -64,11 +63,8 @@ class debate_teams_page {
             $this->debateid = $teams_page->debateid;
             $this->responsetype = $teams_page->responsetype;
             $this->responseallowed = $teams_page->responseallowed;
-            $this->userselectiontype = $teams_page->userselectiontype;
-            $this->userselection = $teams_page->userselection;
+            $this->groupselection = $teams_page->groupselection;
             $this->active = $teams_page->active;
-            $this->timecreated = $teams_page->timecreated;
-            $this->timemodified = $teams_page->timemodified;
         }
     }
 

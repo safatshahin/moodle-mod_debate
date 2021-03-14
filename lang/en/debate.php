@@ -124,6 +124,7 @@ $string['debate_team_active_error'] = 'Failed to activate debate team: {$a->name
 $string['debate_team_deactive'] = 'Debate team: {$a->name} deactivated.';
 $string['debate_team_deactive_error'] = 'Failed to deactivate debate team: {$a->name}.';
 $string['missingresponsetype'] = 'Missing response type';
+$string['debate_team_saved'] = 'Debate team saved.';
 
 //teams form
 $string['name'] = 'Name';
