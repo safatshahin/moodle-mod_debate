@@ -23,9 +23,9 @@
  */
 
 require('../../config.php');
-require_once($CFG->libdir.'/adminlib.php');
-require($CFG->dirroot.'/mod/debate/classes/debate_teams_page.php');
-require($CFG->dirroot.'/mod/debate/classes/output/forms/debate_teams_form.php');
+require_once($CFG->libdir . '/adminlib.php');
+require($CFG->dirroot . '/mod/debate/classes/debate_teams_page.php');
+require($CFG->dirroot . '/mod/debate/classes/output/forms/debate_teams_form.php');
 
 use \core\output\notification;
 
@@ -46,7 +46,7 @@ $course = $DB->get_record('course', array('id' => $cm->course), '*', MUST_EXIST)
 $moduleinstance = $DB->get_record('debate', array('id' => $cm->instance), '*', MUST_EXIST);
 $courseid = $course->id;
 
-$data =  new debate_teams_page($id);
+$data = new debate_teams_page($id);
 $editoroptions = array(
     'subdirs' => 0,
     'noclean' => true,
@@ -66,29 +66,27 @@ $PAGE->navbar->add($title);
 $PAGE->set_title($title);
 $PAGE->set_heading(get_string("pluginname", 'mod_debate'));
 
-//$returnurl = new moodle_url($CFG->wwwroot . '/mod/debate/debate_teams_page.php', array('id' => $cmid, 'response' => $response));
 $args = array(
     'editoroptions' => $editoroptions,
     'data' => $data,
     'courseid' => $courseid,
     'cmid' => $cmid,
-    'response' => $response
+    'response' => $response,
+    'cancelurl' => new moodle_url($CFG->wwwroot . '/mod/debate/debate_teams_page.php', array('cmid' => $cmid, 'response' => $response))
 );
 
 $debate_team_form = new debate_teams_form(null, $args);
 
-if ($debate_team_form->is_cancelled()) {
-//    redirect($returnurl);
-} else if ($savedata = $debate_team_form->get_data()) {
+if ($savedata = $debate_team_form->get_data()) {
     $returnurl = new moodle_url($CFG->wwwroot . '/mod/debate/debate_teams_page.php', array('cmid' => $savedata->cmid, 'response' => $savedata->response));
-    $new_debate_team =  new debate_teams_page();
+    $new_debate_team = new debate_teams_page();
     if (empty($savedata->id)) {
         $savedata->active = 1;
         $savedata->courseid = $course->id;
         $savedata->debateid = $moduleinstance->id;
         $savedata->responsetype = $response;
     }
-    if(!empty($savedata->groupselection)) {
+    if (!empty($savedata->groupselection)) {
         $savedata->groupselection = implode(",", $savedata->groupselection);
     }
 

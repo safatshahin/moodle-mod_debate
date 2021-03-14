@@ -43,6 +43,7 @@ class debate_teams_form extends moodleform {
         $mform = $this->_form;
         $data = $this->_customdata['data'];
         $courseid = $this->_customdata['courseid'];
+        $cancelurl = $this->_customdata['cancelurl'];
 
         $mform->addElement('hidden', 'id');
         $mform->setType('id', PARAM_INT);
@@ -90,6 +91,14 @@ class debate_teams_form extends moodleform {
         $mform->setDefault('response', (int)$this->_customdata['response']);
 
         $this->add_action_buttons(false);
+
+        $cancelhtml  = '<div class="row" style="margin-left: 1.5em">';
+        $cancelhtml .= '<div class="col-md-3 col-form-label d-flex pb-0 pr-md-0"></div>';
+        $cancelhtml .= '<div class="col-md-9 form-inline align-items-start felement">';
+        $cancelhtml .= '<a href='.$cancelurl.' class="btn btn-secondary" style="width: 8.2em">Cancel</a>';
+        $cancelhtml .= '</div></div>';
+        $mform->addElement('html', $cancelhtml);
+
         $this->set_data($data);
     }
 }

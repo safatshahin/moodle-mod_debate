@@ -68,7 +68,7 @@ $debate_team = new debate_teams_page($id);
 
 //table logic
 if (!empty($debate_team->id)) {
-    if ($action == 'delete') {
+    if ($action === 'delete') {
         $PAGE->url->param('action', 'delete');
         $a = new stdClass();
         $a->name = $debate_team->name;
@@ -97,8 +97,8 @@ if (!empty($debate_team->id)) {
         echo $OUTPUT->footer();
         die;
     }
-    if ($action == 'show') {
-        if ($confirm and confirm_sesskey()) {
+    if ($action === 'show') {
+        if (confirm_sesskey()) {
             $a = new stdClass();
             $a->name = $debate_team->name;
             $message = get_string('debate_team_active', 'mod_debate', $a);
@@ -112,8 +112,8 @@ if (!empty($debate_team->id)) {
             }
             redirect($returnurl, $message, null, $messagestyle);
         }
-    } else if ($action == 'hide') {
-        if ($confirm and confirm_sesskey()) {
+    } else if ($action === 'hide') {
+        if (confirm_sesskey()) {
             $a = new stdClass();
             $a->name = $debate_team->name;
             $message = get_string('debate_team_deactive', 'mod_debate', $a);
