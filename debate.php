@@ -62,7 +62,7 @@ $PAGE->set_url('/mod/debate/debate.php', array('id' => $cm->id));
 $PAGE->set_title(format_string($moduleinstance->name));
 $PAGE->set_heading(format_string($course->fullname));
 $PAGE->set_context($modulecontext);
-$PAGE->navbar->add('Join Debate', new moodle_url('/mod/debate/debate.php', array('id' => $cm->id)));
+$PAGE->navbar->add(get_string('join_debate', 'mod_debate'), new moodle_url('/mod/debate/debate.php', array('id' => $cm->id)));
 
 $content = file_rewrite_pluginfile_urls($moduleinstance->intro, 'pluginfile.php', $modulecontext->id, 'mod_debate', 'intro', null);
 $formatoptions = new stdClass;

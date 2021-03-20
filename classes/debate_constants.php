@@ -22,6 +22,14 @@
  * @license     https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+//namespace mod_debate;
+
+defined('MOODLE_INTERNAL') || die();
+
+/**
+ * Class debate_constants.
+ * A class to help with debate teams constants.
+ */
 class debate_constants {
     //debate type
     const MOD_DEBATE_POSITIVE = 1;

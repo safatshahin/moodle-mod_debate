@@ -61,6 +61,7 @@ if ($response == 0) {
 }
 $PAGE->set_heading($response_text);
 $PAGE->set_context($modulecontext);
+$PAGE->navbar->add(get_string('manage_teams', 'mod_debate'), new moodle_url('/mod/debate/debate_teams.php', array('id' => $cm->id)));
 $PAGE->navbar->add($response_text, new moodle_url('/mod/debate/debate_teams_page.php', array('id' => $id, 'cmid' => $cmid, 'response' => $response)));
 $returnurl = new moodle_url('/mod/debate/debate_teams_page.php', array('id' => $id, 'cmid' => $cmid, 'response' => $response));
 

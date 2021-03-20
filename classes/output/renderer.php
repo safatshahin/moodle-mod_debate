@@ -102,7 +102,6 @@ class renderer extends \plugin_renderer_base {
         $context = new stdClass();
         $context->editurl = $params['editurl'];
         $context->tablehtml = $params['tablehtml'];
-
         return $OUTPUT->render_from_template('mod_debate/debate_teams_table', $context);
     }
 

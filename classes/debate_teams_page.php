@@ -26,7 +26,7 @@ defined('MOODLE_INTERNAL') || die();
 
 /**
  * Class debate_teams_page.
- * A class to help with data.
+ * A class to help with debate teams page data.
  */
 class debate_teams_page {
     public $name = null;

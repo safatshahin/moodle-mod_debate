@@ -25,8 +25,9 @@
 require(__DIR__.'/../../config.php');
 require_once(__DIR__.'/lib.php');
 require_once(__DIR__.'/classes/debate_constants.php');
-require_once(__DIR__.'/classes/debate_teams.php');
 require_once($CFG->libdir.'/completionlib.php');
+
+use mod_debate\debate_teams;
 
 global $USER;
 
@@ -40,14 +41,16 @@ if ($id) {
     $cm             = get_coursemodule_from_id('debate', $id, 0, false, MUST_EXIST);
     $course         = $DB->get_record('course', array('id' => $cm->course), '*', MUST_EXIST);
     $moduleinstance = $DB->get_record('debate', array('id' => $cm->instance), '*', MUST_EXIST);
-//    $positive_user = $DB->get_records('debate_teams', array('courseid' => $course->id, 'debateid' => $moduleinstance->id, 'responsetype' => debate_constants::MOD_DEBATE_POSITIVE), '', '*');
-//    $negative_user = $DB->get_records('debate_teams', array('courseid' => $course->id, 'debateid' => $moduleinstance->id, 'responsetype' => debate_constants::MOD_DEBATE_NEGATIVE), '', '*');
+    $debate_teams = new debate_teams($course->id, $moduleinstance->id);
+    $positive_user = $debate_teams->get_team_member_count(1);
+    $negative_user = $debate_teams->get_team_member_count(0);
 } else if ($d) {
     $moduleinstance = $DB->get_record('debate', array('id' => $d), '*', MUST_EXIST);
     $course         = $DB->get_record('course', array('id' => $moduleinstance->course), '*', MUST_EXIST);
     $cm             = get_coursemodule_from_instance('debate', $moduleinstance->id, $course->id, false, MUST_EXIST);
-//    $positive_user = $DB->get_records('debate_teams', array('courseid' => $course->id, 'debateid' => $moduleinstance->id, 'responsetype' => debate_constants::MOD_DEBATE_POSITIVE), '', '*');
-//    $negative_user = $DB->get_records('debate_teams', array('courseid' => $course->id, 'debateid' => $moduleinstance->id, 'responsetype' => debate_constants::MOD_DEBATE_NEGATIVE), '', '*');
+    $debate_teams = new debate_teams($course->id, $moduleinstance->id);
+    $positive_user = $debate_teams->get_team_member_count(1);
+    $negative_user = $debate_teams->get_team_member_count(0);
 } else {
     print_error(get_string('missingidandcmid', 'mod_debate'));
 }
@@ -62,7 +65,7 @@ $PAGE->set_url('/mod/debate/debate_teams.php', array('id' => $cm->id));
 $PAGE->set_title(format_string($moduleinstance->name));
 $PAGE->set_heading(format_string($course->fullname));
 $PAGE->set_context($modulecontext);
-$PAGE->navbar->add('Manage teams', new moodle_url('/mod/debate/debate_teams.php', array('id' => $cm->id)));
+$PAGE->navbar->add(get_string('manage_teams', 'mod_debate'), new moodle_url('/mod/debate/debate_teams.php', array('id' => $cm->id)));
 
 $content = file_rewrite_pluginfile_urls($moduleinstance->intro, 'pluginfile.php', $modulecontext->id, 'mod_debate', 'intro', null);
 $formatoptions = new stdClass;
@@ -74,16 +77,8 @@ $moduleinstance->intro = $content;
 
 $usercontext = context_system::instance();
 
-$positive = 0;
-//foreach ($positive_user as $pos) {
-//    $positive++;
-//}
-$negative = 0;
-//foreach ($negative_user as $neg) {
-//    $negative++;
-//}
-$moduleinstance->positive = $positive;
-$moduleinstance->negative = $negative;
+$moduleinstance->positive = $positive_user;
+$moduleinstance->negative = $negative_user;
 $moduleinstance->managepositiveurl = 'debate_teams_page.php?response=1&cmid='.$cm->id;
 $moduleinstance->managenegativeurl = 'debate_teams_page.php?response=0&cmid='.$cm->id;
 echo $OUTPUT->header();
