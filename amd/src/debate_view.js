@@ -98,10 +98,16 @@ define(['jquery', 'core/ajax', 'core/str', 'core/config', 'core/notification', '
                 // DELETE RESPONSE
                 $(document).on('click', '.mod-debate-negative-delete', function () {
                     id = $(this).attr("data-id");
+                    if (negativeResponse > 0) {
+                        negativeResponse = negativeResponse - 1;
+                    }
                     debateView.deleteResponse(courseID, debateID, id);
                 });
                 $(document).on('click', '.mod-debate-positive-delete', function () {
                     id = $(this).attr("data-id");
+                    if (positiveResponse > 0) {
+                        positiveResponse = positiveResponse - 1;
+                    }
                     debateView.deleteResponse(courseID, debateID, id);
                 });
                 // EDIT RESPONSE
