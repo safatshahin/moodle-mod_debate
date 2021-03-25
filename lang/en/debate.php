@@ -70,12 +70,16 @@ $string['cancel'] = 'Cancel';
 $string['possible_match'] = 'Possible matching responses';
 $string['no_possible_match'] = 'No matching responses';
 $string['confirm_delete'] = 'Are you sure you want to delete this response?';
-$string['edit_mode_active'] = 'Either the edit mode is active or no more response is allowed.';
-$string['empty_response'] = 'Cannot save empty response';
-$string['error_add'] = 'Error updating response, please check the typed response, it can only accept text';
-$string['error_delete'] = 'Error deleting response, please check database for more info';
+$string['edit_mode_active'] = 'Please finish editing the response, save or cancel changes and then try adding another response.';
+$string['empty_response'] = 'Cannot save empty response.';
+$string['error_add'] = 'Error updating response, please check the typed response, it can only accept text.';
+$string['error_delete'] = 'Error deleting response, please check as your administrator to check the database record or refresh the page.';
 $string['edit'] = 'Edit';
 $string['delete'] = 'Delete';
+$string['one_response_any_side'] = 'Only one response allowed in any one side, you can not add any more responses.';
+$string['one_response_each_side'] = 'Only one response allowed in each side, you can not add any more responses as you already have a response for this side.';
+$string['no_team'] = 'Your team does not allow responses in this side.';
+$string['no_more_response'] = 'No more response allowed for this side from your team.';
 
 //reset
 $string['attemptsdeleted'] = 'Debate responses deleted';

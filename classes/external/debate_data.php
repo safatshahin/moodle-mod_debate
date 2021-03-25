@@ -36,8 +36,91 @@ use external_value;
 use external_single_structure;
 use stdClass;
 use context_system;
+use mod_debate\debate_teams;
 
 class debate_data extends external_api {
+
+    public static function check_debate_response_allocation_parameters() {
+        return new external_function_parameters(
+            array(
+                'courseid' => new external_value(PARAM_INT, '', 1),
+                'debateid' => new external_value(PARAM_INT, '', 1),
+                'debatetype' => new external_value(PARAM_INT, '', 1),
+                'attribute' => new external_value(PARAM_TEXT, '', 1),
+                'positive_response' => new external_value(PARAM_INT, '', 1),
+                'negative_response' => new external_value(PARAM_INT, '', 1),
+                'userid' => new external_value(PARAM_INT, '', 1)
+            )
+        );
+    }
+
+    public static function check_debate_response_allocation_is_allowed_from_ajax() {
+        return true;
+    }
+
+    public static function check_debate_response_allocation_returns() {
+        return new external_single_structure(
+            array(
+                'result' => new external_value(PARAM_BOOL, 'Status true or false'),
+                'message' => new external_value(PARAM_TEXT, 'Messages')
+            )
+        );
+    }
+
+    public static function check_debate_response_allocation($courseid, $debateid, $debatetype, $attribute,
+                                                            $positive_response, $negative_response, $userid) {
+        $params = self::validate_parameters(
+            self::check_debate_response_allocation_parameters(),
+            array(
+                'courseid' => $courseid,
+                'debateid' => $debateid,
+                'debatetype' => $debatetype,
+                'attribute' => $attribute,
+                'positive_response' => $positive_response,
+                'negative_response' => $negative_response,
+                'userid' => $userid
+            )
+        );
+        $result = array(
+            'result' => true,
+            'message' => ''
+        );
+
+        switch ($params["debatetype"]) {
+            case 0:
+                // UNLIMITED RESPONSE
+                break;
+            case 1:
+                // ONE RESPONSE IN ANY ONE SIDE
+                if ($params["positive_response"] > 0 || $params["negative_response"] > 0) {
+                    $result['result'] = false;
+                    $result['message'] = get_string('one_response_any_side', 'mode_debate');
+                }
+                break;
+            case 2:
+                // ONE RESPONSE IN EACH SIDE
+                if ($params["positive_response"] > 0 && $params["negative_response"] > 0) {
+                    $result['result'] = false;
+                    $result['message'] = get_string('one_response_each_side', 'mode_debate');
+                } else if ($attribute === 'positive' && $params["positive_response"] > 0) {
+                    $result['result'] = false;
+                    $result['message'] = get_string('one_response_each_side', 'mode_debate');
+                } else if ($attribute === 'negative' && $params["negative_response"] > 0) {
+                    $result['result'] = false;
+                    $result['message'] = get_string('one_response_each_side', 'mode_debate');
+                }
+                break;
+            case 3:
+                // USE DEBATE TEAMS
+                $teams_allocation = new debate_teams($params['courseid'], $params['debateid']);
+                $team_result = $teams_allocation->check_response_allocation($params);
+                $result['result'] = $team_result['result'];
+                $result['message'] = $team_result['message'];
+                break;
+        }
+
+        return $result;
+    }
 
     public static function add_debate_respose_parameters() {
         return new external_function_parameters(
