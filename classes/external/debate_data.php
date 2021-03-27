@@ -94,20 +94,20 @@ class debate_data extends external_api {
                 // ONE RESPONSE IN ANY ONE SIDE
                 if ($params["positive_response"] > 0 || $params["negative_response"] > 0) {
                     $result['result'] = false;
-                    $result['message'] = get_string('one_response_any_side', 'mode_debate');
+                    $result['message'] = get_string('one_response_any_side', 'mod_debate');
                 }
                 break;
             case 2:
                 // ONE RESPONSE IN EACH SIDE
                 if ($params["positive_response"] > 0 && $params["negative_response"] > 0) {
                     $result['result'] = false;
-                    $result['message'] = get_string('one_response_each_side', 'mode_debate');
+                    $result['message'] = get_string('one_response_each_side', 'mod_debate');
                 } else if ($attribute === 'positive' && $params["positive_response"] > 0) {
                     $result['result'] = false;
-                    $result['message'] = get_string('one_response_each_side', 'mode_debate');
+                    $result['message'] = get_string('one_response_each_side', 'mod_debate');
                 } else if ($attribute === 'negative' && $params["negative_response"] > 0) {
                     $result['result'] = false;
-                    $result['message'] = get_string('one_response_each_side', 'mode_debate');
+                    $result['message'] = get_string('one_response_each_side', 'mod_debate');
                 }
                 break;
             case 3:

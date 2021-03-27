@@ -30,34 +30,6 @@ define(['jquery', 'core/ajax', 'core/str', 'core/config', 'core/notification', '
                         timer = setTimeout(callback, ms);
                     };
                 })();
-                // GET THE ALLOCATION OF THE USER OF NUMBER OF RESPONSES FROM DEBATE SETTINGS
-                $.getAllocation = function (attr) {
-                    console.log(attr);
-                    var result = false;
-                    var allocationAjax = AJAX.call([{
-                        methodname: 'mod_debate_check_response_allocation',
-                        args: {
-                            courseid: courseID,
-                            debateid: debateID,
-                            debatetype: parseInt(responseAllowed),
-                            attribute: attr,
-                            positive_response: positiveResponse,
-                            negative_response: negativeResponse,
-                            userid: userID
-                        }
-                    }]);
-                    allocationAjax[0].done(function (output) {
-                        var result = output.result;
-                        console.log(result);
-                        if (!result) {
-                            notification.addNotification({
-                                message: output.message,
-                                type: 'info'
-                            });
-                        }
-                    }).fail(notification.exception);
-                    return result;
-                };
                 // ANIMATE TO THE TOP OF THE PAGE FOR EDITING RESPONSE
                 $.animateToDiv = function () {
                     $('html, body').animate({
@@ -117,7 +89,6 @@ define(['jquery', 'core/ajax', 'core/str', 'core/config', 'core/notification', '
                     id = $(this).attr("data-id");
                     elementid = '#element' + id;
                     elementidContainer = '#element' + id + 'container';
-                    //var result = $.getAllocation('negative');
                     if ($('#mod-debate-insert-postive-response').is(":hidden")
                         && $('#mod-debate-insert-negative-response').is(":hidden")) {
                         var text = $(elementid).text().trim();
@@ -139,7 +110,6 @@ define(['jquery', 'core/ajax', 'core/str', 'core/config', 'core/notification', '
                     id = $(this).attr("data-id");
                     elementid = '#element' + id;
                     elementidContainer = '#element' + id + 'container';
-                    //var result = $.getAllocation('positive');
                     if ($('#mod-debate-insert-negative-response').is(":hidden")
                         && $('#mod-debate-insert-postive-response').is(":hidden")) {
                         var text = $(elementid).text().trim();
@@ -159,41 +129,78 @@ define(['jquery', 'core/ajax', 'core/str', 'core/config', 'core/notification', '
                 });
                 // ADD RESPONSE
                 $(document).on('click', '.mod-debate-positive-icon', function () {
-                    var result = $.getAllocation('positive');
-                    console.log(result);
-                    if (result) {
-                        if ($('#mod-debate-insert-negative-response').is(":hidden")
-                            && $('#mod-debate-insert-postive-response').is(":hidden")) {
-                            responseType = 1;
-                            responseId = '#mod-debate-insert-postive-response';
-                            responseTextID = '#mod-debate-positive-response-input';
-                            editID = 'mod-debate-positive-edit';
-                            deleteID = 'mod-debate-positive-delete';
-                            $(responseTextID).val('');
-                            $(responseId).css('display', 'block');
-                            id = null;
-                        } else {
-                            debateView.renderNotification(0, 'info');
+                    var allocationAjax = AJAX.call([{
+                        methodname: 'mod_debate_check_response_allocation',
+                        args: {
+                            courseid: courseID,
+                            debateid: debateID,
+                            debatetype: parseInt(responseAllowed),
+                            attribute: 'positive',
+                            positive_response: positiveResponse,
+                            negative_response: negativeResponse,
+                            userid: userID
                         }
-                    }
+                    }]);
+                    allocationAjax[0].done(function (output) {
+                        var result = output.result;
+                        if (result) {
+                            if ($('#mod-debate-insert-negative-response').is(":hidden")
+                                && $('#mod-debate-insert-postive-response').is(":hidden")) {
+                                responseType = 1;
+                                responseId = '#mod-debate-insert-postive-response';
+                                responseTextID = '#mod-debate-positive-response-input';
+                                editID = 'mod-debate-positive-edit';
+                                deleteID = 'mod-debate-positive-delete';
+                                $(responseTextID).val('');
+                                $(responseId).css('display', 'block');
+                                id = null;
+                            } else {
+                                debateView.renderNotification(0, 'info');
+                            }
+                        } else {
+                            notification.addNotification({
+                                message: output.message,
+                                type: 'info'
+                            });
+                        }
+                    }).fail(notification.exception);
                 });
                 $(document).on('click', '.mod-debate-negative-icon', function () {
-                    var result = $.getAllocation('negative');
-                    if (result) {
-                        if ($('#mod-debate-insert-postive-response').is(":hidden")
-                            && $('#mod-debate-insert-negative-response').is(":hidden")) {
-                            responseType = 0;
-                            responseId = '#mod-debate-insert-negative-response';
-                            responseTextID = '#mod-debate-negative-response-input';
-                            editID = 'mod-debate-negative-edit';
-                            deleteID = 'mod-debate-negative-delete';
-                            $(responseTextID).val('');
-                            $(responseId).css('display', 'block');
-                            id = null;
-                        } else {
-                            debateView.renderNotification(0, 'info');
+                    var allocationAjax = AJAX.call([{
+                        methodname: 'mod_debate_check_response_allocation',
+                        args: {
+                            courseid: courseID,
+                            debateid: debateID,
+                            debatetype: parseInt(responseAllowed),
+                            attribute: 'negative',
+                            positive_response: positiveResponse,
+                            negative_response: negativeResponse,
+                            userid: userID
                         }
-                    }
+                    }]);
+                    allocationAjax[0].done(function (output) {
+                        var result = output.result;
+                        if (result) {
+                            if ($('#mod-debate-insert-postive-response').is(":hidden")
+                                && $('#mod-debate-insert-negative-response').is(":hidden")) {
+                                responseType = 0;
+                                responseId = '#mod-debate-insert-negative-response';
+                                responseTextID = '#mod-debate-negative-response-input';
+                                editID = 'mod-debate-negative-edit';
+                                deleteID = 'mod-debate-negative-delete';
+                                $(responseTextID).val('');
+                                $(responseId).css('display', 'block');
+                                id = null;
+                            } else {
+                                debateView.renderNotification(0, 'info');
+                            }
+                        } else {
+                            notification.addNotification({
+                                message: output.message,
+                                type: 'info'
+                            });
+                        }
+                    }).fail(notification.exception);
                 });
                 // CANCEL ADD RESPONSE
                 $(document).on('click', '#mod-debate-cancel-respose', function () {
