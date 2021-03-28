@@ -15,17 +15,24 @@
 // along with Moodle.  If not, see <https://www.gnu.org/licenses/>.
 
 /**
- * Plugin version and other meta-data are defined here.
+ * Debate activities search area.
  *
  * @package     mod_debate
  * @copyright   2021 Safat Shahin <safatshahin@gmail.com>
  * @license     https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+namespace mod_debate\search;
+
 defined('MOODLE_INTERNAL') || die();
 
-$plugin->component = 'mod_debate';
-$plugin->release = '1.2.0';
-$plugin->version = 2021032201;
-$plugin->requires = 2017111300;
-$plugin->maturity = MATURITY_STABLE;
+/**
+ * Debate activities search area.
+ *
+ * @package     mod_debate
+ * @copyright   2021 Safat Shahin <safatshahin@gmail.com>
+ * @license     https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
+class activity extends \core_search\base_activity {
+
+}

@@ -27,6 +27,8 @@ namespace mod_debate\output;
 defined('MOODLE_INTERNAL') || die;
 
 use mod_debate;
+use moodle_exception;
+use stdClass;
 
 class renderer extends \plugin_renderer_base {
     /**
@@ -40,12 +42,67 @@ class renderer extends \plugin_renderer_base {
         parent::__construct($PAGE, RENDERER_TARGET_GENERAL);
     }
 
+    /**
+     * @param $moduleinstance
+     * @return string Template
+     * @throws moodle_exception
+     */
     public function render_debate_view($moduleinstance) {
         return parent::render_from_template('mod_debate/view', $moduleinstance);
     }
 
+    /**
+     * @param $moduleinstance
+     * @return string Template
+     * @throws moodle_exception
+     */
     public function render_debate_page($moduleinstance) {
         return parent::render_from_template('mod_debate/debate', $moduleinstance);
+    }
+
+    /**
+     * @param $moduleinstance
+     * @return string Template
+     * @throws moodle_exception
+     */
+    public function render_debate_teams($moduleinstance) {
+        return parent::render_from_template('mod_debate/debate_teams', $moduleinstance);
+    }
+
+    /**
+     * @param $params
+     * @return string Template
+     */
+    public function render_action_buttons($params) {
+        global $OUTPUT;
+        $context = new stdClass();
+        $context->id = $params['id'];
+        $context->buttons = $params['buttons'];
+        return $OUTPUT->render_from_template('mod_debate/action_buttons', $context);
+    }
+
+    /**
+     * @param $params
+     * @return string Template
+     */
+    public function render_form_page($params) {
+        global $OUTPUT;
+        $context = new stdClass();
+        $context->title = $params['title'];
+        $context->formhtml = $params['formhtml'];
+        return $OUTPUT->render_from_template('mod_debate/debate_teams_form', $context);
+    }
+
+    /**
+     * @param $params
+     * @return string Template
+     */
+    public function render_table_page($params) {
+        global $OUTPUT;
+        $context = new stdClass();
+        $context->editurl = $params['editurl'];
+        $context->tablehtml = $params['tablehtml'];
+        return $OUTPUT->render_from_template('mod_debate/debate_teams_table', $context);
     }
 
 }

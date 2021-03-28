@@ -47,6 +47,14 @@ $functions = array(
         'type'        => 'write',
         'ajax'        => true
     ),
+    'mod_debate_check_response_allocation' => array(
+        'classname'   => 'mod_debate\external\debate_data',
+        'methodname'  => 'check_debate_response_allocation',
+        'classpath'   => 'mod/debate/classes/external/debate_data.php',
+        'description' => 'Check response allocation for the user',
+        'type'        => 'read',
+        'ajax'        => true
+    ),
 );
 
 // We define the services to install as pre-build services. A pre-build service is not editable by administrator.
@@ -55,7 +63,8 @@ $services = array(
         'functions' => array(
             'mod_debate_add_debate_respose',
             'mod_debate_find_debate_respose',
-            'mod_debate_delete_debate_respose'
+            'mod_debate_delete_debate_respose',
+            'mod_debate_check_response_allocation'
         ),
         'restrictedusers' => 0,
         'enabled'=>1

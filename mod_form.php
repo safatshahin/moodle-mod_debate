@@ -28,6 +28,7 @@ require_once($CFG->dirroot.'/course/moodleform_mod.php');
 require_once($CFG->dirroot.'/mod/debate/locallib.php');
 require_once($CFG->libdir.'/filelib.php');
 require_once("$CFG->libdir/formslib.php");
+require_once($CFG->dirroot.'/mod/debate/classes/debate_constants.php');
 
 class mod_debate_mod_form extends moodleform_mod {
 
@@ -51,12 +52,13 @@ class mod_debate_mod_form extends moodleform_mod {
         $mform->addElement('advcheckbox', 'debateformat', get_string('showinmodule', 'mod_debate'));
 
         $response_type = array(
-            '0' => get_string('unlimited_response', 'mod_debate'),
-            '1' => get_string('one_response', 'mod_debate'),
-            '2' => get_string('two_response', 'mod_debate')
+            debate_constants::MOD_DEBATE_RESPONSE_UNLIMITED => get_string('unlimited_response', 'mod_debate'),
+            debate_constants::MOD_DEBATE_RESPONSE_ONLY_ONE => get_string('one_response', 'mod_debate'),
+            debate_constants::MOD_DEBATE_RENPONSE_ONE_PER_SECTIOM => get_string('two_response', 'mod_debate'),
+            debate_constants::MOD_DEBATE_RESPONSE_USE_TEAMS => get_string('use_teams', 'mod_debate')
         );
         $mform->addElement('select', 'responsetype', get_string('user_response', 'mod_debate'), $response_type);
-        $mform->setDefault('responsetype', 0);
+        $mform->setDefault('responsetype', debate_constants::MOD_DEBATE_RESPONSE_UNLIMITED);
 
 
         $this->standard_grading_coursemodule_elements();
