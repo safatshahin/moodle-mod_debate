@@ -30,6 +30,7 @@ require_once("$CFG->libdir/externallib.php");
 require_once("$CFG->dirroot/webservice/externallib.php");
 require_once("$CFG->dirroot/lib/completionlib.php");
 
+use context_module;
 use external_api;
 use external_function_parameters;
 use external_value;
@@ -69,6 +70,7 @@ class debate_data extends external_api {
 
     public static function check_debate_response_allocation($courseid, $debateid, $debatetype, $attribute,
                                                             $positive_response, $negative_response, $userid) {
+        global $DB;
         $params = self::validate_parameters(
             self::check_debate_response_allocation_parameters(),
             array(
@@ -85,6 +87,15 @@ class debate_data extends external_api {
             'result' => true,
             'message' => ''
         );
+
+        //site admin and manage teams capability will be able to add responses without checking any rules
+        $debate = $DB->get_record('debate', array('id' => (int)$params['debateid']), '*', MUST_EXIST);
+        $course = $DB->get_record('course', array('id' => $debate->course), '*', MUST_EXIST);
+        $course_module = get_coursemodule_from_instance('debate', $debate->id, $course->id, false, MUST_EXIST);
+        $modulecontext = context_module::instance($course_module->id);
+        if (is_siteadmin($params['userid']) || has_capability('mod/debate:manageteams', $modulecontext)) {
+            return $result;
+        }
 
         switch ($params["debatetype"]) {
             case 0:
@@ -215,7 +226,7 @@ class debate_data extends external_api {
 
         //event
         $param = array(
-            'context' => \context_module::instance($course_module->id),
+            'context' => context_module::instance($course_module->id),
             'userid' => $USER->id,
             'other' => array(
                 'debateid' => $params['debateid']
@@ -303,7 +314,7 @@ class debate_data extends external_api {
 
         //event
         $param = array(
-            'context' => \context_module::instance($course_module->id),
+            'context' => context_module::instance($course_module->id),
             'userid' => $USER->id,
             'relateduserid' => $userid,
             'other' => array(
