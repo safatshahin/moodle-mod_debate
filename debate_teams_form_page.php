@@ -24,11 +24,10 @@
 
 require(__DIR__.'/../../config.php');
 global $CFG, $DB, $OUTPUT, $PAGE;
-require_once($CFG->libdir . '/adminlib.php');
-require($CFG->dirroot . '/mod/debate/classes/debate_teams_page.php');
-require($CFG->dirroot . '/mod/debate/classes/output/forms/debate_teams_form.php');
 
 use \core\output\notification;
+use mod_debate\debate_teams_page;
+use mod_debate\output\forms\debate_teams_form;
 
 require_login();
 if (!is_siteadmin()) {

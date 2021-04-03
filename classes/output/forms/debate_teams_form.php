@@ -22,11 +22,16 @@
  * @license     https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+namespace mod_debate\output\forms;
+
+
 defined('MOODLE_INTERNAL') || die();
 global $CFG;
 require_once($CFG->dirroot . '/lib/formslib.php');
 require_once($CFG->dirroot . '/lib/grouplib.php');
 require_once($CFG->dirroot . '/lib/datalib.php');
+
+use moodleform;
 
 /**
  * Class debate_teams_form.

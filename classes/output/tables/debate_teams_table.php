@@ -22,9 +22,13 @@
  * @license     https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+namespace mod_debate\output\tables;
+
 defined('MOODLE_INTERNAL') || die();
 global $CFG;
 require_once($CFG->libdir.'/tablelib.php');
+
+use table_sql;
 
 /**
  * Class debate_teams_table.
