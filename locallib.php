@@ -23,10 +23,10 @@
  */
 
 defined('MOODLE_INTERNAL') || die;
-
-require_once("$CFG->libdir/filelib.php");
-require_once("$CFG->libdir/resourcelib.php");
-require_once("$CFG->dirroot/mod/debate/lib.php");
+global $CFG;
+require_once($CFG->libdir.'/filelib.php');
+require_once($CFG->libdir.'/resourcelib.php');
+require_once($CFG->dirroot.'/mod/debate/lib.php');
 
 
 /**

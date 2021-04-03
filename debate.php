@@ -27,7 +27,7 @@ require_once(__DIR__.'/lib.php');
 require_once(__DIR__.'/classes/debate_constants.php');
 require_once (__DIR__.'/../../lib/outputcomponents.php');
 
-global $DB, $USER;
+global $CFG, $DB, $OUTPUT, $PAGE, $USER;
 
 // Course_module ID, or
 $id = optional_param('id', 0, PARAM_INT);

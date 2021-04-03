@@ -24,9 +24,6 @@
 
 namespace mod_debate;
 
-use coding_exception;
-use dml_exception;
-
 defined('MOODLE_INTERNAL') || die();
 
 /**
@@ -65,9 +62,8 @@ class debate_teams {
      * Gets the number of team member according to the response type passed.
      * @param $responsetype
      * @return int
-     * @throws dml_exception
      */
-    public function get_team_member_count($responsetype) {
+    public function get_team_member_count($responsetype): int {
         global $DB;
         $team_member_count = 0;
         $debate_team_groups = $DB->get_records('debate_teams', array('courseid' => $this->courseid,
@@ -92,9 +88,8 @@ class debate_teams {
      * Checks whether the requested response is allowed for the user.
      * @param $params
      * @return array
-     * @throws dml_exception|coding_exception
      */
-    public function check_response_allocation($params) {
+    public function check_response_allocation($params): array {
         global $DB;
         $result = array(
             'result' => false,

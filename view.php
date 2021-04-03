@@ -25,6 +25,7 @@
 require(__DIR__.'/../../config.php');
 require_once(__DIR__.'/lib.php');
 require_once(__DIR__.'/classes/debate_constants.php');
+global $CFG, $DB, $OUTPUT, $PAGE;
 require_once($CFG->libdir.'/completionlib.php');
 
 global $USER;

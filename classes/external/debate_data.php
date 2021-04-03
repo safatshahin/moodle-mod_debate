@@ -26,9 +26,9 @@ namespace mod_debate\external;
 defined('MOODLE_INTERNAL') || die;
 
 global $CFG;
-require_once("$CFG->libdir/externallib.php");
-require_once("$CFG->dirroot/webservice/externallib.php");
-require_once("$CFG->dirroot/lib/completionlib.php");
+require_once($CFG->libdir.'/externallib.php');
+require_once($CFG->dirroot.'/webservice/externallib.php');
+require_once($CFG->dirroot.'/lib/completionlib.php');
 
 use context_module;
 use external_api;
