@@ -24,19 +24,30 @@
 
 defined('MOODLE_INTERNAL') || die();
 
+/**
+ * data generator class for mod_debate
+ *
+ * @package     mod_debate
+ * @copyright   2021 Safat Shahin <safatshahin@gmail.com>
+ * @license     https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
 class mod_debate_generator extends testing_module_generator {
+
     /**
      * Creates a mod_debate instance
-     *
-     * @param array $record
-     * @param array $options
+     * @param null $record
+     * @param array|null $options
      * @return StdClass
      */
     public function create_instance($record = null, array $options = null) {
         $record = (object)(array)$record;
 
         $defaultsettings = array(
-
+            'debateformat' => 0,
+            'responsetype' => 0,
+            'intro' => 'debate description',
+            'introformat' => 1,
+            'debateresponsecomcount' => 0
         );
 
         foreach ($defaultsettings as $name => $value) {
