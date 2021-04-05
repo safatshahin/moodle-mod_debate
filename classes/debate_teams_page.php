@@ -125,9 +125,6 @@ class debate_teams_page {
                 $savesuccess = true;
             }
         }
-        if ($savesuccess) {
-            return true;
-        }
-        return false;
+        return $savesuccess;
     }
 }

@@ -38,6 +38,7 @@ use external_single_structure;
 use stdClass;
 use context_system;
 use mod_debate\debate_teams;
+use mod_debate\debate_response;
 
 class debate_data extends external_api {
 
@@ -177,36 +178,44 @@ class debate_data extends external_api {
         $add = false;
         $update = false;
         if (empty($params['id'])) {
-            $debate_response = new stdClass();
-            $debate_response->courseid = $params['courseid'];
-            $debate_response->debateid = $params['debateid'];
-            $debate_response->response = $params['response'];
-            $debate_response->responsetype = $params['responsetype'];
-            $debate_response->userid = $USER->id;
-            $debate_response->timecreated = time();
-            $debate_response->timemodified = time();
-
-            $add_response = $DB->insert_record('debate_response', $debate_response, true);
+//            $debate_response = new stdClass();
+//            $debate_response->courseid = $params['courseid'];
+//            $debate_response->debateid = $params['debateid'];
+//            $debate_response->response = $params['response'];
+//            $debate_response->responsetype = $params['responsetype'];
+//            $debate_response->userid = $USER->id;
+//            $debate_response->timecreated = time();
+//            $debate_response->timemodified = time();
+//
+//            $add_response = $DB->insert_record('debate_response', $debate_response, true);
+            $data = (object) $params;
+            $debate_response = new debate_response();
+            $debate_response->construct_debate_response($data);
+            $add_response = $debate_response->save();
             if ($add_response) {
                 $result['result'] = true;
-                $result['id'] = $add_response;
-                $add = true;
+                $result['id'] = $debate_response->id;
+//                $add = true;
             }
         } else {
-            $debate_response = new stdClass();
-            $debate_response->id = $params['id'];
-            $debate_response->courseid = $params['courseid'];
-            $debate_response->debateid = $params['debateid'];
-            $debate_response->response = $params['response'];
-            $debate_response->responsetype = $params['responsetype'];
-            $debate_response->userid = $USER->id;
-            $debate_response->timemodified = time();
-
-            $update_response = $DB->update_record('debate_response', $debate_response, true);
+//            $debate_response = new stdClass();
+//            $debate_response->id = $params['id'];
+//            $debate_response->courseid = $params['courseid'];
+//            $debate_response->debateid = $params['debateid'];
+//            $debate_response->response = $params['response'];
+//            $debate_response->responsetype = $params['responsetype'];
+//            $debate_response->userid = $USER->id;
+//            $debate_response->timemodified = time();
+//
+//            $update_response = $DB->update_record('debate_response', $debate_response, true);
+            $data = (object) $params;
+            $debate_response = new debate_response($params['id']);
+            $debate_response->construct_debate_response($data);
+            $update_response = $debate_response->save();
             if ($update_response) {
                 $result['result'] = true;
-                $result['id'] = $params['id'];
-                $update = true;
+                $result['id'] = $debate_response->id;
+//                $update = true;
             }
         }
 
@@ -225,27 +234,27 @@ class debate_data extends external_api {
         }
 
         //event
-        $param = array(
-            'context' => context_module::instance($course_module->id),
-            'userid' => $USER->id,
-            'other' => array(
-                'debateid' => $params['debateid']
-            )
-        );
-        if ($add) {
-            // Trigger debate_response_added event.
-            $param['objectid'] = $add_response;
-            $event = \mod_debate\event\debate_response_added::create($param);
-        } else if ($update) {
-            // Trigger debate_response_updated event.
-            $param['objectid'] = $params['id'];
-            $event = \mod_debate\event\debate_response_updated::create($param);
-        } else {
-            // Trigger debate_response_error event.
-            $param['objectid'] = $params['id'];
-            $event = \mod_debate\event\debate_response_error::create($param);
-        }
-        $event->trigger();
+//        $param = array(
+//            'context' => context_module::instance($course_module->id),
+//            'userid' => $USER->id,
+//            'other' => array(
+//                'debateid' => $params['debateid']
+//            )
+//        );
+//        if ($add) {
+//            // Trigger debate_response_added event.
+//            $param['objectid'] = $add_response;
+//            $event = \mod_debate\event\debate_response_added::create($param);
+//        } else if ($update) {
+//            // Trigger debate_response_updated event.
+//            $param['objectid'] = $params['id'];
+//            $event = \mod_debate\event\debate_response_updated::create($param);
+//        } else {
+//            // Trigger debate_response_error event.
+//            $param['objectid'] = $params['id'];
+//            $event = \mod_debate\event\debate_response_error::create($param);
+//        }
+//        $event->trigger();
 
         return $result;
     }

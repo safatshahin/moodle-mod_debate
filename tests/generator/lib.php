@@ -58,4 +58,16 @@ class mod_debate_generator extends testing_module_generator {
 
         return parent::create_instance($record, (array)$options);
     }
+
+    public function add_response(int $courseid, int $debateid, int $userid, int $responsetype){
+
+        $data = (object) [
+            'courseid' => $courseid,
+            'debateid' => $debateid,
+            'userid' => $userid,
+            'response' => 'test response from user:'.$userid,
+            'responsetype' => $responsetype,
+        ];
+
+    }
 }

@@ -33,6 +33,10 @@ defined('MOODLE_INTERNAL') || die();
  */
 class mod_debate_generator_testcase extends advanced_testcase {
 
+    /**
+     * Test generator
+     * @return void
+     */
     public function test_generator() {
         global $DB;
         $this->resetAfterTest();
