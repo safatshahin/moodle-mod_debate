@@ -41,7 +41,6 @@ class mod_debate_generator extends testing_module_generator {
      */
     public function create_instance($record = null, array $options = null) {
         $record = (object)(array)$record;
-
         $defaultsettings = array(
             'debateformat' => 0,
             'responsetype' => 0,
@@ -59,15 +58,20 @@ class mod_debate_generator extends testing_module_generator {
         return parent::create_instance($record, (array)$options);
     }
 
-    public function add_response(int $courseid, int $debateid, int $userid, int $responsetype){
-
+    public function add_response($params){
+        global $DB;
         $data = (object) [
-            'courseid' => $courseid,
-            'debateid' => $debateid,
-            'userid' => $userid,
-            'response' => 'test response from user:'.$userid,
-            'responsetype' => $responsetype,
+            'courseid' => $params['courseid'],
+            'debateid' => $params['debateid'],
+            'userid' => $params['userid'],
+            'response' => 'test response from user:'.$params['userid'],
+            'responsetype' => $params['responsetype']
         ];
 
+        $data = (object) $data;
+
+        $data_id = $DB->insert_record('debate_response', $data);
+
+        return $data_id;
     }
 }

@@ -41,15 +41,15 @@ class mod_debate_generator_testcase extends advanced_testcase {
         global $DB;
         $this->resetAfterTest();
         $this->setAdminUser();
-
+        //create course
         $course = $this->getDataGenerator()->create_course();
         $this->assertFalse($DB->record_exists('debate', array('course' => $course->id)));
-
+        // test create instance
         $debate = $this->getDataGenerator()->create_module('debate', array('course' => $course->id));
         $this->assertEquals(1, $DB->count_records('debate', array('course' => $course->id)));
         $this->assertTrue($DB->record_exists('debate', array('course' => $course->id)));
         $this->assertTrue($DB->record_exists('debate', array('id' => $debate->id)));
-
+        //test instance specific data
         $params = array('course' => $course->id, 'name' => 'Debate generator test', 'debate'=>'Debate generator test topic', 'debateresponsecomcount'=> 1);
         $debate = $this->getDataGenerator()->create_module('debate', $params);
         $this->assertEquals(2, $DB->count_records('debate', array('course' => $course->id)));
@@ -60,6 +60,47 @@ class mod_debate_generator_testcase extends advanced_testcase {
         $this->assertEquals('debate description', $DB->get_field_select('debate', 'intro', 'id = :id', array('id' => $debate->id)));
         $this->assertEquals(1, $DB->get_field_select('debate', 'introformat', 'id = :id', array('id' => $debate->id)));
         $this->assertEquals(1, $DB->get_field_select('debate', 'debateresponsecomcount', 'id = :id', array('id' => $debate->id)));
+    }
+
+    /**
+     * Test add_response
+     * @return void
+     */
+    public function test_add_response() {
+        global $DB;
+        $this->resetAfterTest();
+        //create course
+        $course = $this->getDataGenerator()->create_course();
+        $this->assertFalse($DB->record_exists('debate', array('course' => $course->id)));
+        //create instance
+        $debate = $this->getDataGenerator()->create_module('debate', array('course' => $course->id));
+        $this->assertEquals(1, $DB->count_records('debate', array('course' => $course->id)));
+        $this->assertTrue($DB->record_exists('debate', array('course' => $course->id)));
+        $this->assertTrue($DB->record_exists('debate', array('id' => $debate->id)));
+        //create user
+        $user = $this->getDataGenerator()->create_user();
+        //add some response data
+        $params1 = array(
+            'courseid' => $course->id,
+            'debateid' => $debate->id,
+            'userid' => $user->id,
+            'responsetype' => 1
+        );
+        $this->getDataGenerator()->get_plugin_generator('mod_debate')->add_response($params1);
+        $params2 = array(
+            'courseid' => $course->id,
+            'debateid' => $debate->id,
+            'userid' => $user->id,
+            'responsetype' => 0
+        );
+        $this->getDataGenerator()->get_plugin_generator('mod_debate')->add_response($params2);
+        //check the number of responses create successfully
+        $params = array(
+            'courseid' => $course->id,
+            'debateid' => $debate->id,
+            'userid' => $user->id
+        );
+        $this->assertEquals(2, $DB->count_records('debate_response', $params));
     }
 }
 
