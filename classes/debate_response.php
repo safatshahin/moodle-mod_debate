@@ -254,4 +254,55 @@ class debate_response {
         $event->trigger();
     }
 
+    /**
+     * find matching responses for debate_response.
+     * @param $params
+     * @return array
+     */
+    public static function find_matching_response($params): array {
+        global $DB;
+        $datas = $DB->get_records('debate_response', array('courseid' => $params['courseid'],
+            'debateid' => $params['debateid'], 'responsetype' => $params['responsetype']), '', 'response');
+
+        $exclude_words = array('i','a','about','an','and','are','as','at','be','by','com','de','en','for',
+            'from','how','in','is','it','la','of','on','or','that','the','this','to','was','what','when','where',
+            'who','will','with','und','the','www', "such", "have", "then");
+
+        $clean_response = preg_replace('/\s\s+/i', '', $params['response']);
+        $clean_response = trim($clean_response);
+        $clean_response = preg_replace('/[^a-zA-Z0-9 -]/', '', $clean_response);
+        $clean_response = strtolower($clean_response);
+
+        //all the words from typed response
+        preg_match_all('/\b.*?\b/i', $clean_response, $response_words);
+        $response_words = $response_words[0];
+
+        //remove invalid words
+        foreach ($response_words as $key => $word) {
+            if ( $word == '' || in_array(strtolower($word), $exclude_words) || strlen($word) <= 2 ) {
+                unset($response_words[$key]);
+            }
+        }
+
+        $response_word_counter = count($response_words);
+        if (!empty($datas)) {
+            foreach ($datas as $key => $data) {
+                $data_counter = 0;
+                foreach ($response_words as $response_word) {
+                    if (strpos($data->response, $response_word) == false) {
+                        $data_counter++;
+                    }
+                }
+                if ($data_counter == $response_word_counter) {
+                    unset($datas[$key]);
+                }
+            }
+        }
+        $final_data = array();
+        foreach ($datas as $dt) {
+            $final_data[] = $dt;
+        }
+        return $final_data;
+    }
+
 }
