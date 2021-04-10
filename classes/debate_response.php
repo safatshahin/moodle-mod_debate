@@ -24,9 +24,9 @@
 
 namespace mod_debate;
 
-
 defined('MOODLE_INTERNAL') || die;
 
+use context_module;
 use mod_debate\event\debate_response_added;
 use mod_debate\event\debate_response_updated;
 use mod_debate\event\debate_response_deleted;
@@ -41,6 +41,7 @@ class debate_response {
     public $responsetype;
     public $timecreated = 0;
     public $timemodified = 0;
+    public $cmid;
 
     /**
      * debate_response constructor.
@@ -59,24 +60,29 @@ class debate_response {
      */
     public function load_debate_response($id) {
         global $DB;
-        $debate_reponse = $DB->get_record('debate_response', array('id' => $id));
-        if (!empty($debate_reponse)) {
-            $this->id = $debate_reponse->id;
+        $debate_response = $DB->get_record('debate_response', array('id' => $id));
+        if (!empty($debate_response)) {
+            $this->id = $debate_response->id;
+            $this->courseid = $debate_response->courseid;
+            $this->debateid = $debate_response->debateid;
+            $this->userid = $debate_response->userid;
+            $this->response = $debate_response->response;
+            $this->responsetype = $debate_response->responsetype;
+            $this->timecreated = $debate_response->timecreated;
+            $this->timemodified = $debate_response->timemodified;
         }
-        $this->construct_debate_response($debate_reponse);
     }
 
     /**
      * Constructs the actual debate_response object given either a $DB object or Moodle form data.
-     * @param $debate_reponse
+     * @param $debate_response
      */
-    public function construct_debate_response($debate_reponse) {
-        if (!empty($debate_reponse)) {
-            $this->courseid = $debate_reponse->courseid;
-            $this->debateid = $debate_reponse->debateid;
-            $this->userid = $debate_reponse->userid;
-            $this->response = $debate_reponse->response;
-            $this->responsetype = $debate_reponse->responsetype;
+    public function construct_debate_response($debate_response) {
+        if (!empty($debate_response)) {
+            $this->courseid = $debate_response->courseid;
+            $this->debateid = $debate_response->debateid;
+            $this->response = $debate_response->response;
+            $this->responsetype = $debate_response->responsetype;
         }
     }
 
@@ -84,13 +90,20 @@ class debate_response {
      * Delete the debate_response.
      * @return bool
      */
-    public function delete() {
+    public function delete(): bool {
         global $DB;
+        $delete_success = false;
         if (!empty($this->id)) {
             $delete_success = $DB->delete_records('debate_response', array('id' => $this->id));
-        }
-        if ($delete_success) {
-            self::after_delete();
+            if ($delete_success) {
+                $event_success = self::calculate_completion(true);
+                if ($event_success) {
+                    self::after_delete();
+                } else {
+                    self::update_error();
+                }
+                $delete_success = $event_success;
+            }
         }
         return $delete_success;
     }
@@ -99,40 +112,94 @@ class debate_response {
      * Save or create debate_response.
      * @return bool
      */
-    public function save() {
-        global $DB;
-        $savesuccess = false;
+    public function save(): bool {
+        global $DB, $USER;
+        $save_success = false;
         if (!empty($this->id)) {
             $this->timemodified = time();
-            $savesuccess = $DB->update_record('debate_response', $this);
-            if($savesuccess) {
-                self::after_update();
+            $save_success = $DB->update_record('debate_response', $this);
+            if($save_success) {
+                $event_success = self::calculate_completion();
+                if ($event_success) {
+                    self::after_update();
+                } else {
+                    self::update_error();
+                }
+                $save_success = $event_success;
             }
         } else {
+            $this->userid = $USER->id;
             $this->timecreated = time();
-            $this->timemodified = time();
             $this->id = $DB->insert_record('debate_response', $this);
             if (!empty($this->id)) {
-                $savesuccess = true;
-                self::after_create();
+                $event_success = self::calculate_completion();
+                if ($event_success) {
+                    self::after_create();
+                } else {
+                    self::update_error();
+                }
+                $save_success = $event_success;
             }
         }
-        if (!$savesuccess) {
-            self::update_error();
+        return $save_success;
+    }
+
+    /**
+     * calculate completion for debate instance.
+     * @param bool $delete
+     * @return bool
+     */
+    public function calculate_completion($delete = false): bool {
+        global $DB;
+        $result = false;
+        $debate = $DB->get_record('debate', array('id' => (int)$this->debateid), '*', MUST_EXIST);
+        $course = $DB->get_record('course', array('id' => (int)$this->courseid), '*', MUST_EXIST);
+        $course_module = get_coursemodule_from_instance('debate', $debate->id, $course->id, false, MUST_EXIST);
+        if ($course_module) {
+            $this->cmid = $course_module->id;
+            $user_response_count = $DB->count_records_select('debate_response',
+                'debateid = :debateid AND courseid = :courseid AND userid = :userid',
+                array('debateid' => (int)$debate->id, 'courseid' => (int)$course->id, 'userid' => $this->userid), 'COUNT("id")');
+            $completion = new \completion_info($course);
+            if ($delete) {
+                if ($completion->is_enabled($course_module) == COMPLETION_TRACKING_AUTOMATIC &&
+                    (int)$debate->debateresponsecomcount > 0) {
+                    if ($user_response_count >= (int)$debate->debateresponsecomcount) {
+                        $completion->update_state($course_module, COMPLETION_COMPLETE, $this->userid);
+                    } else {
+                        $current = $completion->get_data($course_module, false, $this->userid);
+                        $current->completionstate = COMPLETION_INCOMPLETE;
+                        $current->timemodified    = time();
+                        $current->overrideby      = null;
+                        $completion->internal_set_data($course_module, $current);
+                    }
+                }
+            } else {
+                if ($completion->is_enabled($course_module) == COMPLETION_TRACKING_AUTOMATIC
+                    && (int)$debate->debateresponsecomcount > 0 &&
+                    $user_response_count >= (int)$debate->debateresponsecomcount) {
+                    $completion->update_state($course_module, COMPLETION_COMPLETE, $this->userid);
+                }
+            }
+            $result = true;
         }
-        return $savesuccess;
+
+        return $result;
     }
 
     /**
      * create event for debate_response.
-     * @return bool
      */
     public function after_create() {
         global $USER;
         $event = debate_response_added::create(
             array(
+                'context' => context_module::instance($this->cmid),
                 'userid' => $USER->id,
-                'objectid' => $this->id
+                'objectid' => $this->id,
+                'other' => array(
+                    'debateid' => $this->debateid
+                )
             )
         );
         $event->trigger();
@@ -140,14 +207,17 @@ class debate_response {
 
     /**
      * update event for debate_response.
-     * @return bool
      */
     public function after_update() {
         global $USER;
         $event = debate_response_updated::create(
             array(
+                'context' => context_module::instance($this->cmid),
                 'userid' => $USER->id,
-                'objectid' => $this->id
+                'objectid' => $this->id,
+                'other' => array(
+                    'debateid' => $this->debateid
+                )
             )
         );
         $event->trigger();
@@ -155,14 +225,17 @@ class debate_response {
 
     /**
      * delete event for debate_response.
-     * @return bool
      */
     public function after_delete() {
         global $USER;
         $event = debate_response_deleted::create(
             array(
+                'context' => context_module::instance($this->cmid),
                 'userid' => $USER->id,
-                'objectid' => $this->id
+                'objectid' => $this->id,
+                'other' => array(
+                    'debateid' => $this->debateid
+                )
             )
         );
         $event->trigger();
@@ -170,14 +243,12 @@ class debate_response {
 
     /**
      * error event for debate_response.
-     * @return bool
      */
     public function update_error() {
         global $USER;
         $event = debate_response_error::create(
             array(
-                'userid' => $USER->id,
-                'objectid' => $this->id
+                'userid' => $USER->id
             )
         );
         $event->trigger();
