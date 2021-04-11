@@ -73,6 +73,7 @@ $string['edit_mode_active'] = 'Please finish editing the response, save or cance
 $string['empty_response'] = 'Cannot save empty response.';
 $string['error_add'] = 'Error updating response, please check the typed response, it can only accept text.';
 $string['error_delete'] = 'Error deleting response, please check as your administrator to check the database record or refresh the page.';
+$string['success_delete'] = 'Successfully deleted the response';
 $string['edit'] = 'Edit';
 $string['delete'] = 'Delete';
 $string['one_response_any_side'] = 'Only one response allowed in any one side, you can not add any more responses.';

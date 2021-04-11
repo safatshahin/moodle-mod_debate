@@ -85,11 +85,11 @@ class debate_teams {
     }
 
     /**
-     * Checks whether the requested response is allowed for the user.
+     * Checks whether the requested response is allowed for the user in the team.
      * @param $params
      * @return array
      */
-    public function check_response_allocation($params): array {
+    public function check_teams_allocation($params): array {
         global $DB;
         $result = array(
             'result' => false,
@@ -97,11 +97,12 @@ class debate_teams {
         );
         if ($params['attribute'] === 'positive') {
             $responsetype = 1;
-            $responseallowed = $params['positive_response'];
-            } else {
+        } else {
             $responsetype = 0;
-            $responseallowed = $params['negative_response'];
         }
+        //count current responses
+        $response_count = $DB->count_records('debate_response', array('courseid' => $this->courseid,
+            'debateid' => $this->debateid, 'userid' => $params['userid'], 'responsetype' => $responsetype));
         //check if user is in the team and did not exceed the allowed response number
         $debate_team_groups = $DB->get_records('debate_teams', array('courseid' => $this->courseid,
             'debateid' => $this->debateid, 'responsetype' => $responsetype, 'active' => $this->active));
@@ -111,7 +112,7 @@ class debate_teams {
                 $group_members = $DB->get_records('groups_members', array('groupid' => (int)$group));
                 foreach ($group_members as $group_member) {
                     if ((int)$group_member->userid == $params['userid']) {
-                        if ($responseallowed < $debate_team_group->responseallowed ||
+                        if ($response_count < $debate_team_group->responseallowed ||
                             $debate_team_group->responseallowed == 0) {
                             $result['result'] = true;
                             $result['message'] = '';

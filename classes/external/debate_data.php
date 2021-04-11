@@ -39,18 +39,15 @@ use mod_debate\debate_response;
 use stdClass;
 use context_system;
 use mod_debate\debate_teams;
+use mod_debate\debate_constants;
 
 class debate_data extends external_api {
 
     public static function check_debate_response_allocation_parameters() {
         return new external_function_parameters(
             array(
-                'courseid' => new external_value(PARAM_INT, '', 1),
                 'debateid' => new external_value(PARAM_INT, '', 1),
-                'debatetype' => new external_value(PARAM_INT, '', 1),
                 'attribute' => new external_value(PARAM_TEXT, '', 1),
-                'positive_response' => new external_value(PARAM_INT, '', 1),
-                'negative_response' => new external_value(PARAM_INT, '', 1),
                 'userid' => new external_value(PARAM_INT, '', 1)
             )
         );
@@ -69,19 +66,14 @@ class debate_data extends external_api {
         );
     }
 
-    public static function check_debate_response_allocation($courseid, $debateid, $debatetype, $attribute,
-                                                            $positive_response, $negative_response, $userid) {
+    public static function check_debate_response_allocation($debateid, $attribute, $userid) {
         global $DB;
         $params = self::validate_parameters(
             self::check_debate_response_allocation_parameters(),
             array(
-                'courseid' => $courseid,
-                'debateid' => $debateid,
-                'debatetype' => $debatetype,
                 'attribute' => $attribute,
-                'positive_response' => $positive_response,
-                'negative_response' => $negative_response,
-                'userid' => $userid
+                'userid' => $userid,
+                'debateid' => $debateid
             )
         );
         $result = array(
@@ -98,34 +90,38 @@ class debate_data extends external_api {
             return $result;
         }
 
-        switch ($params["debatetype"]) {
-            case 0:
+        $positive_response_count = $DB->count_records('debate_response', array('courseid' => $debate->course,
+            'debateid' => $debate->id, 'userid' => $params['userid'], 'responsetype' => debate_constants::MOD_DEBATE_POSITIVE));
+        $negative_response_count = $DB->count_records('debate_response', array('courseid' => $debate->course,
+            'debateid' => $debate->id, 'userid' => $params['userid'], 'responsetype' => debate_constants::MOD_DEBATE_NEGATIVE));
+        switch ($debate->responsetype) {
+            case debate_constants::MOD_DEBATE_RESPONSE_UNLIMITED:
                 // UNLIMITED RESPONSE
                 break;
-            case 1:
+            case debate_constants::MOD_DEBATE_RESPONSE_ONLY_ONE:
                 // ONE RESPONSE IN ANY ONE SIDE
-                if ($params["positive_response"] > 0 || $params["negative_response"] > 0) {
+                if ($positive_response_count > 0 || $negative_response_count > 0) {
                     $result['result'] = false;
                     $result['message'] = get_string('one_response_any_side', 'mod_debate');
                 }
                 break;
-            case 2:
+            case debate_constants::MOD_DEBATE_RENPONSE_ONE_PER_SECTIOM:
                 // ONE RESPONSE IN EACH SIDE
-                if ($params["positive_response"] > 0 && $params["negative_response"] > 0) {
+                if ($positive_response_count > 0 && $negative_response_count > 0) {
                     $result['result'] = false;
                     $result['message'] = get_string('one_response_each_side', 'mod_debate');
-                } else if ($attribute === 'positive' && $params["positive_response"] > 0) {
+                } else if ($attribute === 'positive' && $positive_response_count > 0) {
                     $result['result'] = false;
                     $result['message'] = get_string('one_response_each_side', 'mod_debate');
-                } else if ($attribute === 'negative' && $params["negative_response"] > 0) {
+                } else if ($attribute === 'negative' && $negative_response_count > 0) {
                     $result['result'] = false;
                     $result['message'] = get_string('one_response_each_side', 'mod_debate');
                 }
                 break;
-            case 3:
+            case debate_constants::MOD_DEBATE_RESPONSE_USE_TEAMS:
                 // USE DEBATE TEAMS
-                $teams_allocation = new debate_teams($params['courseid'], $params['debateid']);
-                $team_result = $teams_allocation->check_response_allocation($params);
+                $teams_allocation = new debate_teams($course->id, $params['debateid']);
+                $team_result = $teams_allocation->check_teams_allocation($params);
                 $result['result'] = $team_result['result'];
                 $result['message'] = $team_result['message'];
                 break;

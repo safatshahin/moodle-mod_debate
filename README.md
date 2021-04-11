@@ -57,6 +57,18 @@ These are capabilities available:<br />
 5. Update own debate response: Gives the user the capability to update their own response.<br />
 6. Manage debate teams: Gives a teacher or manager the capability to create, update or manage teams.<br />
 
+### Automated testing support ###
+Debate activity includes automated testing support for testing any issues from the code.<br />
+I am continuously adding phpunit tests to the plugin, the coverage of test will increase time to time.<br />
+
+### GDPR compliant ###
+Debate activity includes privacy api to maintain GDPR compliance.<br />
+
+## Want something more? Let's talk about it ##
+If you have something you want for your organisation to be implemented, please create an issue in the link below:<br />
+https://github.com/safatshahin/moodle-mod_debate/issues
+I am always happy to talk about your requirements and discuss further.
+
 ## Track progress of any current and future developments ##
 https://trello.com/b/7nep6sSF/moodle-debate-plugin
 

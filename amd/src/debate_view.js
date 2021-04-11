@@ -11,8 +11,7 @@ define(['jquery', 'core/ajax', 'core/str', 'core/config', 'core/notification', '
               mdlcfg, notification, templates) {
         var debateView = {
             init: function (userFullName, userImageURL, userID, courseID, debateID,
-                            responseAllowed, positiveResponse, negativeResponse, userCapability,
-                            userEditCapability, userDeleteCapability) {
+                            userCapability, userEditCapability, userDeleteCapability) {
                 // VARIABLES TO MAINTAIN THE FRONTEND FEATURES
                 var responseType = 0;
                 var responseId = '';
@@ -72,16 +71,10 @@ define(['jquery', 'core/ajax', 'core/str', 'core/config', 'core/notification', '
                 // DELETE RESPONSE
                 $(document).on('click', '.mod-debate-negative-delete', function () {
                     id = $(this).attr("data-id");
-                    if (negativeResponse > 0) {
-                        negativeResponse = negativeResponse - 1;
-                    }
                     debateView.deleteResponse(courseID, debateID, id);
                 });
                 $(document).on('click', '.mod-debate-positive-delete', function () {
                     id = $(this).attr("data-id");
-                    if (positiveResponse > 0) {
-                        positiveResponse = positiveResponse - 1;
-                    }
                     debateView.deleteResponse(courseID, debateID, id);
                 });
                 // EDIT RESPONSE
@@ -134,12 +127,8 @@ define(['jquery', 'core/ajax', 'core/str', 'core/config', 'core/notification', '
                         var allocationAjax = AJAX.call([{
                             methodname: 'mod_debate_check_response_allocation',
                             args: {
-                                courseid: courseID,
                                 debateid: debateID,
-                                debatetype: parseInt(responseAllowed),
                                 attribute: 'positive',
-                                positive_response: positiveResponse,
-                                negative_response: negativeResponse,
                                 userid: userID
                             }
                         }]);
@@ -171,12 +160,8 @@ define(['jquery', 'core/ajax', 'core/str', 'core/config', 'core/notification', '
                         var allocationAjax = AJAX.call([{
                             methodname: 'mod_debate_check_response_allocation',
                             args: {
-                                courseid: courseID,
                                 debateid: debateID,
-                                debatetype: parseInt(responseAllowed),
                                 attribute: 'negative',
-                                positive_response: positiveResponse,
-                                negative_response: negativeResponse,
                                 userid: userID
                             }
                         }]);
@@ -225,11 +210,6 @@ define(['jquery', 'core/ajax', 'core/str', 'core/config', 'core/notification', '
                         }]);
                         responseCall[0].done(function (output) {
                             if (output.result) {
-                                if (responseType === 0) {
-                                    negativeResponse++;
-                                } else {
-                                    positiveResponse++;
-                                }
                                 $(responseId).css('display', 'none');
                                 $("div").remove(".mod-debate-find-response");
                                 $(elementidContainer).remove();
@@ -284,6 +264,7 @@ define(['jquery', 'core/ajax', 'core/str', 'core/config', 'core/notification', '
                         responseAjax[0].done(function (deleted) {
                             if (deleted.result) {
                                 $(elementidContainer).remove();
+                                debateView.renderNotification(4, 'info');
                             } else {
                                 debateView.renderNotification(3, 'info');
                             }
@@ -296,7 +277,8 @@ define(['jquery', 'core/ajax', 'core/str', 'core/config', 'core/notification', '
                     {'key': 'edit_mode_active', component: 'mod_debate'},
                     {'key': 'empty_response', component: 'mod_debate'},
                     {'key': 'error_add', component: 'mod_debate'},
-                    {'key': 'error_delete', component: 'mod_debate'}
+                    {'key': 'error_delete', component: 'mod_debate'},
+                    {'key': 'success_delete', component: 'mod_debate'}
                 ];
                 str.get_strings(strings).then(function (results) {
                     notification.addNotification({
