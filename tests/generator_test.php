@@ -50,16 +50,26 @@ class mod_debate_generator_testcase extends advanced_testcase {
         $this->assertTrue($DB->record_exists('debate', array('course' => $course->id)));
         $this->assertTrue($DB->record_exists('debate', array('id' => $debate->id)));
         //test instance specific data
-        $params = array('course' => $course->id, 'name' => 'Debate generator test', 'debate'=>'Debate generator test topic', 'debateresponsecomcount'=> 1);
+        $params = array('course' => $course->id,
+            'name' => 'Debate generator test',
+            'debate'=>'Debate generator test topic',
+            'debateresponsecomcount'=> 1);
         $debate = $this->getDataGenerator()->create_module('debate', $params);
         $this->assertEquals(2, $DB->count_records('debate', array('course' => $course->id)));
-        $this->assertEquals('Debate generator test', $DB->get_field_select('debate', 'name', 'id = :id', array('id' => $debate->id)));
-        $this->assertEquals('Debate generator test topic', $DB->get_field_select('debate', 'debate', 'id = :id', array('id' => $debate->id)));
-        $this->assertEquals(0, $DB->get_field_select('debate', 'debateformat', 'id = :id', array('id' => $debate->id)));
-        $this->assertEquals(0, $DB->get_field_select('debate', 'responsetype', 'id = :id', array('id' => $debate->id)));
-        $this->assertEquals('debate description', $DB->get_field_select('debate', 'intro', 'id = :id', array('id' => $debate->id)));
-        $this->assertEquals(1, $DB->get_field_select('debate', 'introformat', 'id = :id', array('id' => $debate->id)));
-        $this->assertEquals(1, $DB->get_field_select('debate', 'debateresponsecomcount', 'id = :id', array('id' => $debate->id)));
+        $this->assertEquals('Debate generator test',
+            $DB->get_field_select('debate', 'name', 'id = :id', array('id' => $debate->id)));
+        $this->assertEquals('Debate generator test topic',
+            $DB->get_field_select('debate', 'debate', 'id = :id', array('id' => $debate->id)));
+        $this->assertEquals(0,
+            $DB->get_field_select('debate', 'debateformat', 'id = :id', array('id' => $debate->id)));
+        $this->assertEquals(0,
+            $DB->get_field_select('debate', 'responsetype', 'id = :id', array('id' => $debate->id)));
+        $this->assertEquals('debate description',
+            $DB->get_field_select('debate', 'intro', 'id = :id', array('id' => $debate->id)));
+        $this->assertEquals(1,
+            $DB->get_field_select('debate', 'introformat', 'id = :id', array('id' => $debate->id)));
+        $this->assertEquals(1,
+            $DB->get_field_select('debate', 'debateresponsecomcount', 'id = :id', array('id' => $debate->id)));
     }
 
     /**
@@ -101,6 +111,37 @@ class mod_debate_generator_testcase extends advanced_testcase {
             'userid' => $user->id
         );
         $this->assertEquals(2, $DB->count_records('debate_response', $params));
+    }
+
+    /**
+     * Test create_team
+     * @return void
+     */
+    public function test_create_team() {
+        global $DB;
+        $this->resetAfterTest();
+
+        //create course
+        $course = $this->getDataGenerator()->create_course();
+        //create instance
+        $debate = $this->getDataGenerator()->create_module('debate', array('course' => $course->id));
+        //create group
+        $group1 = $this->getDataGenerator()->create_group(array('courseid' => $course->id));
+        $group2 = $this->getDataGenerator()->create_group(array('courseid' => $course->id));
+        $debate_groups = $group1->id.','.$group2->id;
+        //create team
+        $params = array(
+            'courseid' => $course->id,
+            'debateid' => $debate->id,
+            'groupselection' => (string) $debate_groups
+        );
+        $this->getDataGenerator()->get_plugin_generator('mod_debate')->create_team($params);
+        //check data
+        $params2 = array(
+            'courseid' => $course->id,
+            'debateid' => $debate->id
+        );
+        $this->assertEquals(1, $DB->count_records('debate_teams', $params2));
     }
 }
 

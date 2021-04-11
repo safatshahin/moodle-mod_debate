@@ -41,7 +41,6 @@ $string['unlimited_response'] = 'Allow unlimited response';
 $string['one_response'] = 'Allow one response in any one side';
 $string['two_response'] = 'Allow one response in each side';
 $string['user_response'] = 'User response type';
-$string['reset_debate_attempts'] = 'Delete debate responses';
 $string['debateresponsecom'] = 'Students must post responses';
 $string['debateresponsecomgroup'] = 'Require response';
 $string['use_teams'] = 'Use teams feature';
@@ -83,6 +82,9 @@ $string['no_more_response'] = 'No more response allowed for this side from your 
 
 //reset
 $string['attemptsdeleted'] = 'Debate responses deleted';
+$string['reset_debate_attempts'] = 'Delete debate responses';
+$string['reset_debate_teams'] = 'Delete debate teams';
+$string['teamsdeleted'] = 'Debate teams deleted';
 
 //privacy
 $string['privacy:metadata:debate_response:courseid'] = 'The ID of the debate course';

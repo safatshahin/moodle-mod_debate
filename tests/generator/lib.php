@@ -58,6 +58,10 @@ class mod_debate_generator extends testing_module_generator {
         return parent::create_instance($record, (array)$options);
     }
 
+    /**
+     * Creates a debate response
+     * @param $params
+     */
     public function add_response($params){
         global $DB;
         $data = (object) [
@@ -67,11 +71,29 @@ class mod_debate_generator extends testing_module_generator {
             'response' => 'test response from user:'.$params['userid'],
             'responsetype' => $params['responsetype']
         ];
-
-        $data = (object) $data;
-
-        $data_id = $DB->insert_record('debate_response', $data);
-
-        return $data_id;
+        $DB->insert_record('debate_response', $data);
     }
+
+    /**
+     * Creates a debate team
+     * @param $params
+     */
+    public function create_team($params) {
+        global $DB;
+        $params = (object) $params;
+        $data = (object) [
+            'name' => 'test debate team',
+            'responsetype' => 1,
+            'responseallowed' => 2,
+            'active' => 1
+        ];
+
+        foreach ($data as $name => $value) {
+            if (!isset($params->{$name})) {
+                $params->{$name} = $value;
+            }
+        }
+        $DB->insert_record('debate_teams', $params);
+    }
+
 }
