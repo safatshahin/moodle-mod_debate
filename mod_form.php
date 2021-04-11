@@ -24,11 +24,13 @@
 
 defined('MOODLE_INTERNAL') || die();
 
+global $CFG;
 require_once($CFG->dirroot.'/course/moodleform_mod.php');
 require_once($CFG->dirroot.'/mod/debate/locallib.php');
 require_once($CFG->libdir.'/filelib.php');
-require_once("$CFG->libdir/formslib.php");
-require_once($CFG->dirroot.'/mod/debate/classes/debate_constants.php');
+require_once($CFG->libdir.'/formslib.php');
+
+use mod_debate\debate_constants;
 
 class mod_debate_mod_form extends moodleform_mod {
 
@@ -60,7 +62,6 @@ class mod_debate_mod_form extends moodleform_mod {
         $mform->addElement('select', 'responsetype', get_string('user_response', 'mod_debate'), $response_type);
         $mform->setDefault('responsetype', debate_constants::MOD_DEBATE_RESPONSE_UNLIMITED);
 
-
         $this->standard_grading_coursemodule_elements();
 
         $this->standard_coursemodule_elements();
@@ -68,18 +69,21 @@ class mod_debate_mod_form extends moodleform_mod {
         $this->add_action_buttons();
     }
 
+    /**
+     * set pre processing of data.
+     * @param $default_values
+     */
     function data_preprocessing(&$default_values) {
         parent::data_preprocessing($default_values);
         $default_values['debateresponsecom']=
             !empty($default_values['debateresponsecomcount']) ? 1 : 0;
         if (empty($default_values['debateresponsecomcount'])) {
-            $default_values['debateresponsecomcount']=1;
+            $default_values['debateresponsecomcount'] = 1;
         }
     }
 
     /**
      * Add custom completion rules.
-     *
      * @return array Array of string IDs of added items, empty array if none
      */
     public function add_completion_rules() {
@@ -101,9 +105,7 @@ class mod_debate_mod_form extends moodleform_mod {
     /**
      * Allows module to modify the data returned by form get_data().
      * This method is also called in the bulk activity completion form.
-     *
      * Only available on moodleform_mod.
-     *
      * @param stdClass $data the form data to be modified.
      */
     public function data_postprocessing($data) {

@@ -75,3 +75,7 @@
 .mod-debate-find-response-container {
     border: 1px solid lightgray;
 }
+
+.debate-view-buttons {
+    min-width: 10em;
+}

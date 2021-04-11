@@ -32,13 +32,13 @@ defined('MOODLE_INTERNAL') || die();
  * @copyright   2021 Safat Shahin <safatshahin@gmail.com>
  * @license     https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class debate_response_error extends \core\event\course_module_viewed {
+class debate_response_error extends \core\event\base {
 
     /**
      * Init method.
      */
     protected function init() {
-        $this->data['crud'] = 'c';
+        $this->data['crud'] = 'u';
         $this->data['edulevel'] = self::LEVEL_PARTICIPATING;
         $this->data['objecttable'] = 'debate_response';
     }
@@ -49,8 +49,7 @@ class debate_response_error extends \core\event\course_module_viewed {
      * @return string
      */
     public function get_description() {
-        return "There was an error occurred for user with id '$this->userid' while trying to add/update/delete a response with id '$this->objectid' (null if failed while adding) in the debate with " .
-            "id '{$this->other['debateid']}'.";
+        return "There was an error occurred for user with id '$this->userid' while trying to update a debate response.";
     }
 
     /**
@@ -60,9 +59,5 @@ class debate_response_error extends \core\event\course_module_viewed {
      */
     public static function get_name() {
         return get_string('event_response_error', 'mod_debate');
-    }
-
-    public static function get_objectid_mapping() {
-        return array('db' => 'debate_response', 'restore' => 'debate_response');
     }
 }

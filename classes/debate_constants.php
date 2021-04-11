@@ -22,7 +22,7 @@
  * @license     https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-//namespace mod_debate;
+namespace mod_debate;
 
 defined('MOODLE_INTERNAL') || die();
 

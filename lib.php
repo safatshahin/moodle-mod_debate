@@ -51,6 +51,8 @@ function debate_reset_course_form_definition($mform) {
     $mform->addElement('header', 'debateheader', get_string('modulenameplural', 'mod_debate'));
     $mform->addElement('advcheckbox', 'reset_debate_attempts',
         get_string('reset_debate_attempts', 'mod_debate'));
+    $mform->addElement('advcheckbox', 'reset_debate_teams',
+        get_string('reset_debate_teams', 'mod_debate'));
 }
 
 
@@ -59,12 +61,15 @@ function debate_reset_course_form_definition($mform) {
  * @return array the defaults.
  */
 function debate_reset_course_form_defaults($course) {
-    return array('reset_debate_attempts' => 1);
+    return array(
+        'reset_debate_attempts' => 0,
+        'reset_debate_teams' => 0
+    );
 }
 
 /**
  * This function is used by the reset_course_userdata function in moodlelib.
- * @param $data the data submitted from the reset course.
+ * @param $data
  * @return array status array
  */
 function debate_reset_userdata($data) {
@@ -77,6 +82,13 @@ function debate_reset_userdata($data) {
         $status[] = array(
             'component' => $componentstr,
             'item' => get_string('attemptsdeleted', 'mod_debate'),
+            'error' => false);
+    }
+    if (!empty($data->reset_debate_teams)) {
+        $DB->delete_records_select('debate_teams', '', array($data->courseid));
+        $status[] = array(
+            'component' => $componentstr,
+            'item' => get_string('teamsdeleted', 'mod_debate'),
             'error' => false);
     }
     return $status;

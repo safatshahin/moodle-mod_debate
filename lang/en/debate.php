@@ -41,7 +41,6 @@ $string['unlimited_response'] = 'Allow unlimited response';
 $string['one_response'] = 'Allow one response in any one side';
 $string['two_response'] = 'Allow one response in each side';
 $string['user_response'] = 'User response type';
-$string['reset_debate_attempts'] = 'Delete debate responses';
 $string['debateresponsecom'] = 'Students must post responses';
 $string['debateresponsecomgroup'] = 'Require response';
 $string['use_teams'] = 'Use teams feature';
@@ -74,6 +73,7 @@ $string['edit_mode_active'] = 'Please finish editing the response, save or cance
 $string['empty_response'] = 'Cannot save empty response.';
 $string['error_add'] = 'Error updating response, please check the typed response, it can only accept text.';
 $string['error_delete'] = 'Error deleting response, please check as your administrator to check the database record or refresh the page.';
+$string['success_delete'] = 'Successfully deleted the response';
 $string['edit'] = 'Edit';
 $string['delete'] = 'Delete';
 $string['one_response_any_side'] = 'Only one response allowed in any one side, you can not add any more responses.';
@@ -83,6 +83,9 @@ $string['no_more_response'] = 'No more response allowed for this side from your 
 
 //reset
 $string['attemptsdeleted'] = 'Debate responses deleted';
+$string['reset_debate_attempts'] = 'Delete debate responses';
+$string['reset_debate_teams'] = 'Delete debate teams';
+$string['teamsdeleted'] = 'Debate teams deleted';
 
 //privacy
 $string['privacy:metadata:debate_response:courseid'] = 'The ID of the debate course';

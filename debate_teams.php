@@ -24,12 +24,10 @@
 
 require(__DIR__.'/../../config.php');
 require_once(__DIR__.'/lib.php');
-require_once(__DIR__.'/classes/debate_constants.php');
-require_once($CFG->libdir.'/completionlib.php');
+global $DB, $OUTPUT, $PAGE;
 
 use mod_debate\debate_teams;
-
-global $USER;
+use mod_debate\debate_constants;
 
 // Course_module ID, or
 $id = optional_param('id', 0, PARAM_INT);
@@ -42,15 +40,15 @@ if ($id) {
     $course         = $DB->get_record('course', array('id' => $cm->course), '*', MUST_EXIST);
     $moduleinstance = $DB->get_record('debate', array('id' => $cm->instance), '*', MUST_EXIST);
     $debate_teams = new debate_teams($course->id, $moduleinstance->id);
-    $positive_user = $debate_teams->get_team_member_count(1);
-    $negative_user = $debate_teams->get_team_member_count(0);
+    $positive_user = $debate_teams->get_team_member_count(debate_constants::MOD_DEBATE_POSITIVE);
+    $negative_user = $debate_teams->get_team_member_count(debate_constants::MOD_DEBATE_NEGATIVE);
 } else if ($d) {
     $moduleinstance = $DB->get_record('debate', array('id' => $d), '*', MUST_EXIST);
     $course         = $DB->get_record('course', array('id' => $moduleinstance->course), '*', MUST_EXIST);
     $cm             = get_coursemodule_from_instance('debate', $moduleinstance->id, $course->id, false, MUST_EXIST);
     $debate_teams = new debate_teams($course->id, $moduleinstance->id);
-    $positive_user = $debate_teams->get_team_member_count(1);
-    $negative_user = $debate_teams->get_team_member_count(0);
+    $positive_user = $debate_teams->get_team_member_count(debate_constants::MOD_DEBATE_POSITIVE);
+    $negative_user = $debate_teams->get_team_member_count(debate_constants::MOD_DEBATE_NEGATIVE);
 } else {
     print_error(get_string('missingidandcmid', 'mod_debate'));
 }

@@ -22,12 +22,12 @@
  * @license     https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-require('../../config.php');
-require_once($CFG->libdir . '/adminlib.php');
-require($CFG->dirroot . '/mod/debate/classes/debate_teams_page.php');
-require($CFG->dirroot . '/mod/debate/classes/output/tables/debate_teams_table.php');
+require(__DIR__.'/../../config.php');
+global $CFG, $DB, $OUTPUT, $PAGE;
 
 use \core\output\notification;
+use mod_debate\debate_teams_page;
+use mod_debate\output\tables\debate_teams_table;
 
 require_login();
 

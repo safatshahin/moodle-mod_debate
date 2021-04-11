@@ -22,9 +22,15 @@
  * @license     https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-defined('MOODLE_INTERNAL') || die();
+namespace mod_debate\output\tables;
 
+defined('MOODLE_INTERNAL') || die();
+global $CFG;
 require_once($CFG->libdir.'/tablelib.php');
+
+use DateTime;
+use moodle_url;
+use table_sql;
 
 /**
  * Class debate_teams_table.
@@ -41,7 +47,6 @@ class debate_teams_table extends table_sql {
      * @param $uniqueid
      * @param $response
      * @param $debateid
-     * @throws coding_exception
      */
     public function __construct($uniqueid, $response, $debateid, $cmid) {
         global $PAGE;
@@ -78,7 +83,6 @@ class debate_teams_table extends table_sql {
     /**
      * @param $values
      * @return string
-     * @throws moodle_exception
      */
     public function col_name($values) {
         $urlparams = array('id' => $values->id, 'sesskey' => sesskey());
@@ -89,7 +93,6 @@ class debate_teams_table extends table_sql {
     /**
      * @param $values
      * @return string
-     * @throws coding_exception
      */
     public function col_active($values) {
         $status = get_string('active', 'mod_debate');
@@ -119,8 +122,6 @@ class debate_teams_table extends table_sql {
     /**
      * @param $values
      * @return string Renderer template
-     * @throws coding_exception
-     * @throws moodle_exception
      */
     public function col_actions($values) {
         global $PAGE;

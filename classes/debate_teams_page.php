@@ -22,6 +22,8 @@
  * @license     https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+namespace mod_debate;
+
 defined('MOODLE_INTERNAL') || die();
 
 /**
@@ -43,7 +45,6 @@ class debate_teams_page {
      * debate_teams_page constructor.
      * Builds object if $id provided.
      * @param null $id
-     * @throws dml_exception
      */
     public function __construct($id = null) {
         if (!empty($id)) {
@@ -71,7 +72,6 @@ class debate_teams_page {
     /**
      * Gets the specified debate_team and loads it into the object.
      * @param $id
-     * @throws dml_exception
      */
     private function load_teams_page($id) {
         global $DB;
@@ -82,7 +82,6 @@ class debate_teams_page {
     /**
      * Delete the debate_team.
      * @return bool
-     * @throws dml_exception
      */
     public function delete() {
         global $DB;
@@ -95,7 +94,6 @@ class debate_teams_page {
     /**
      * Deactivate/activate the debate_team.
      * @return bool
-     * @throws dml_exception
      */
     public function activate_deactivate() {
         global $DB;
@@ -112,7 +110,6 @@ class debate_teams_page {
     /**
      * Save or create debate_team.
      * @return bool
-     * @throws dml_exception
      */
     public function save() {
         global $DB;
@@ -128,9 +125,6 @@ class debate_teams_page {
                 $savesuccess = true;
             }
         }
-        if ($savesuccess) {
-            return true;
-        }
-        return false;
+        return $savesuccess;
     }
 }
