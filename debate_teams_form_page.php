@@ -30,9 +30,6 @@ use mod_debate\debate_teams_page;
 use mod_debate\output\forms\debate_teams_form;
 
 require_login();
-if (!is_siteadmin()) {
-    print_error('nopermissions', 'error');
-}
 
 $context = context_system::instance();
 
@@ -45,6 +42,9 @@ $cm = get_coursemodule_from_id('debate', $cmid, 0, false, MUST_EXIST);
 $course = $DB->get_record('course', array('id' => $cm->course), '*', MUST_EXIST);
 $moduleinstance = $DB->get_record('debate', array('id' => $cm->instance), '*', MUST_EXIST);
 $courseid = $course->id;
+
+$modulecontext = context_module::instance($cm->id);
+require_capability('mod/debate:manageteams', $modulecontext);
 
 $data = new debate_teams_page($id);
 $editoroptions = array(
