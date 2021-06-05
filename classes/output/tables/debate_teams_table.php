@@ -114,13 +114,13 @@ class debate_teams_table extends table_sql {
      */
     public function col_active(\stdClass $values): string {
         $status = get_string('active', 'mod_debate');
-        $css = 'success';
+        $css = 'text-success';
         if (!$values->active) {
             $status = get_string('inactive', 'mod_debate');
-            $css = 'danger';
+            $css = 'text-danger';
         }
         $icon = \html_writer::tag('i', '', array('class' => 'fa fa-circle'));
-        return \html_writer::tag('div', $icon . ' ' . $status, array('class' => "text-' . $css . '"));
+        return \html_writer::tag('div', $icon . ' ' . $status, array('class' => $css));
     }
 
     /**

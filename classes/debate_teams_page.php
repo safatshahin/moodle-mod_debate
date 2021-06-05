@@ -111,9 +111,9 @@ class debate_teams_page {
     /**
      * Constructs the actual debate_teams_page object given either a $DB object or Moodle form data.
      *
-     * @param \stdClass $teamspage
+     * @param \stdClass|bool $teamspage
      */
-    public function construct_teams_page(\stdClass $teamspage): void {
+    public function construct_teams_page($teamspage): void {
         if (!empty($teamspage)) {
             $this->id = $teamspage->id;
             $this->name = $teamspage->name;
