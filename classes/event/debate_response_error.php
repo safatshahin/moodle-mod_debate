@@ -18,7 +18,7 @@
  * The mod_debate response error event.
  *
  * @package     mod_debate
- * @copyright   2021 Safat Shahin <safatshahin@gmail.com>
+ * @copyright   2021 Safat Shahin <safatshahin@yahoo.com>
  * @license     https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
@@ -29,7 +29,7 @@ defined('MOODLE_INTERNAL') || die();
  * The mod_debate response error event class.
  *
  * @package     mod_debate
- * @copyright   2021 Safat Shahin <safatshahin@gmail.com>
+ * @copyright   2021 Safat Shahin <safatshahin@yahoo.com>
  * @license     https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class debate_response_error extends \core\event\base {

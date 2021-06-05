@@ -18,7 +18,7 @@
  * webservices for mod_debate.
  *
  * @package     mod_debate
- * @copyright   2021 Safat Shahin <safatshahin@gmail.com>
+ * @copyright   2021 Safat Shahin <safatshahin@yahoo.com>
  * @license     https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
@@ -41,9 +41,21 @@ use context_system;
 use mod_debate\debate_teams;
 use mod_debate\debate_constants;
 
+/**
+ * Class debate_data.
+ *
+ * @package mod_debate
+ * @copyright   2021 Safat Shahin <safatshahin@yahoo.com>
+ * @license     https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
 class debate_data extends external_api {
 
-    public static function check_debate_response_allocation_parameters() {
+    /**
+     * Check parameters.
+     *
+     * @return external_function_parameters
+     */
+    public static function check_debate_response_allocation_parameters(): external_function_parameters {
         return new external_function_parameters(
             array(
                 'debateid' => new external_value(PARAM_INT, '', 1),
@@ -53,11 +65,21 @@ class debate_data extends external_api {
         );
     }
 
-    public static function check_debate_response_allocation_is_allowed_from_ajax() {
+    /**
+     * If allowed from Ajax.
+     *
+     * @return bool
+     */
+    public static function check_debate_response_allocation_is_allowed_from_ajax(): bool {
         return true;
     }
 
-    public static function check_debate_response_allocation_returns() {
+    /**
+     * Endpoint returns.
+     *
+     * @return external_single_structure
+     */
+    public static function check_debate_response_allocation_returns(): external_single_structure {
         return new external_single_structure(
             array(
                 'result' => new external_value(PARAM_BOOL, 'Status true or false'),
@@ -66,7 +88,15 @@ class debate_data extends external_api {
         );
     }
 
-    public static function check_debate_response_allocation($debateid, $attribute, $userid) {
+    /**
+     * Check response allocation for the user.
+     *
+     * @param int $debateid
+     * @param string $attribute
+     * @param int $userid
+     * @return array
+     */
+    public static function check_debate_response_allocation(int $debateid, string $attribute, int $userid): array {
         global $DB;
         $params = self::validate_parameters(
             self::check_debate_response_allocation_parameters(),
@@ -76,61 +106,68 @@ class debate_data extends external_api {
                 'debateid' => $debateid
             )
         );
+
         $result = array(
             'result' => true,
             'message' => ''
         );
 
-        //site admin and manage teams capability will be able to add responses without checking any rules
+        // Site admin and manage teams capability will be able to add responses without checking any rules.
         $debate = $DB->get_record('debate', array('id' => (int)$params['debateid']), '*', MUST_EXIST);
         $course = $DB->get_record('course', array('id' => $debate->course), '*', MUST_EXIST);
-        $course_module = get_coursemodule_from_instance('debate', $debate->id, $course->id, false, MUST_EXIST);
-        $modulecontext = context_module::instance($course_module->id);
+        $coursemodule = get_coursemodule_from_instance('debate', $debate->id, $course->id, false, MUST_EXIST);
+        $modulecontext = context_module::instance($coursemodule->id);
         if (is_siteadmin($params['userid']) || has_capability('mod/debate:manageteams', $modulecontext)) {
             return $result;
         }
 
-        $positive_response_count = $DB->count_records('debate_response', array('courseid' => $debate->course,
+        $positiveresponsecount = $DB->count_records('debate_response', array('courseid' => $debate->course,
             'debateid' => $debate->id, 'userid' => $params['userid'], 'responsetype' => debate_constants::MOD_DEBATE_POSITIVE));
-        $negative_response_count = $DB->count_records('debate_response', array('courseid' => $debate->course,
+        $negativeresponsecount = $DB->count_records('debate_response', array('courseid' => $debate->course,
             'debateid' => $debate->id, 'userid' => $params['userid'], 'responsetype' => debate_constants::MOD_DEBATE_NEGATIVE));
+
         switch ($debate->responsetype) {
             case debate_constants::MOD_DEBATE_RESPONSE_UNLIMITED:
-                // UNLIMITED RESPONSE
+                // Unlimited response.
                 break;
             case debate_constants::MOD_DEBATE_RESPONSE_ONLY_ONE:
-                // ONE RESPONSE IN ANY ONE SIDE
-                if ($positive_response_count > 0 || $negative_response_count > 0) {
+                // One response in any one side.
+                if ($positiveresponsecount > 0 || $negativeresponsecount > 0) {
                     $result['result'] = false;
                     $result['message'] = get_string('one_response_any_side', 'mod_debate');
                 }
                 break;
             case debate_constants::MOD_DEBATE_RENPONSE_ONE_PER_SECTIOM:
-                // ONE RESPONSE IN EACH SIDE
-                if ($positive_response_count > 0 && $negative_response_count > 0) {
+                // One response in each side.
+                if ($positiveresponsecount > 0 && $negativeresponsecount > 0) {
                     $result['result'] = false;
                     $result['message'] = get_string('one_response_each_side', 'mod_debate');
-                } else if ($attribute === 'positive' && $positive_response_count > 0) {
+                } else if ($attribute === 'positive' && $positiveresponsecount > 0) {
                     $result['result'] = false;
                     $result['message'] = get_string('one_response_each_side', 'mod_debate');
-                } else if ($attribute === 'negative' && $negative_response_count > 0) {
+                } else if ($attribute === 'negative' && $negativeresponsecount > 0) {
                     $result['result'] = false;
                     $result['message'] = get_string('one_response_each_side', 'mod_debate');
                 }
                 break;
             case debate_constants::MOD_DEBATE_RESPONSE_USE_TEAMS:
-                // USE DEBATE TEAMS
-                $teams_allocation = new debate_teams($course->id, $params['debateid']);
-                $team_result = $teams_allocation->check_teams_allocation($params);
-                $result['result'] = $team_result['result'];
-                $result['message'] = $team_result['message'];
+                // Use debate teams.
+                $teamsallocation = new debate_teams($course->id, $params['debateid']);
+                $teamresult = $teamsallocation->check_teams_allocation($params);
+                $result['result'] = $teamresult['result'];
+                $result['message'] = $teamresult['message'];
                 break;
         }
 
         return $result;
     }
 
-    public static function add_debate_respose_parameters() {
+    /**
+     * Check parameters.
+     *
+     * @return external_function_parameters
+     */
+    public static function add_debate_respose_parameters(): external_function_parameters {
         return new external_function_parameters(
             array(
                 'courseid' => new external_value(PARAM_INT, '', 1),
@@ -142,11 +179,21 @@ class debate_data extends external_api {
         );
     }
 
-    public static function add_debate_respose_is_allowed_from_ajax() {
+    /**
+     * Check if Ajax allowed.
+     *
+     * @return bool
+     */
+    public static function add_debate_respose_is_allowed_from_ajax(): bool {
         return true;
     }
 
-    public static function add_debate_respose_returns() {
+    /**
+     * Return parameters.
+     *
+     * @return external_single_structure
+     */
+    public static function add_debate_respose_returns(): external_single_structure {
         return new external_single_structure(
             array(
                 'result' => new external_value(PARAM_BOOL, 'Status true or false'),
@@ -155,7 +202,16 @@ class debate_data extends external_api {
         );
     }
 
-    public static function add_debate_respose($courseid, $debateid, $response, $responsetype, $id = null) {
+    /**
+     * @param int $courseid
+     * @param int $debateid
+     * @param string $response
+     * @param int $responsetype
+     * @param int $id
+     * @return array
+     */
+    public static function add_debate_respose(int $courseid, int $debateid,
+            string $response, int $responsetype, int $id = 0): array {
         $params = self::validate_parameters(
             self::add_debate_respose_parameters(),
             array(
@@ -166,34 +222,40 @@ class debate_data extends external_api {
                 'id' => $id
             )
         );
+
         $result = array(
             'result' => false,
             'id' => null
         );
+
+        $data = (object) $params;
         if (empty($params['id'])) {
-            $data = (object) $params;
-            $debate_response = new debate_response();
-            $debate_response->construct_debate_response($data);
-            $add_response = $debate_response->save();
-            if ($add_response) {
+            $debateresponse = new debate_response();
+            $debateresponse->construct_debate_response($data);
+            $addresponse = $debateresponse->save();
+            if ($addresponse) {
                 $result['result'] = true;
-                $result['id'] = $debate_response->id;
+                $result['id'] = $debateresponse->id;
             }
         } else {
-            $data = (object) $params;
-            $debate_response = new debate_response($params['id']);
-            $debate_response->construct_debate_response($data);
-            $update_response = $debate_response->save();
-            if ($update_response) {
+            $debateresponse = new debate_response($params['id']);
+            $debateresponse->construct_debate_response($data);
+            $updateresponse = $debateresponse->save();
+            if ($updateresponse) {
                 $result['result'] = true;
-                $result['id'] = $debate_response->id;
+                $result['id'] = $debateresponse->id;
             }
         }
 
         return $result;
     }
 
-    public static function delete_debate_respose_parameters() {
+    /**
+     * Check parameters.
+     *
+     * @return external_function_parameters
+     */
+    public static function delete_debate_respose_parameters(): external_function_parameters {
         return new external_function_parameters(
             array(
                 'courseid' => new external_value(PARAM_INT, '', 1),
@@ -203,11 +265,21 @@ class debate_data extends external_api {
         );
     }
 
-    public static function delete_debate_respose_is_allowed_from_ajax() {
+    /**
+     * Check if Ajax allowed.
+     *
+     * @return bool
+     */
+    public static function delete_debate_respose_is_allowed_from_ajax(): bool {
         return true;
     }
 
-    public static function delete_debate_respose_returns() {
+    /**
+     * Return parameters.
+     *
+     * @return external_single_structure
+     */
+    public static function delete_debate_respose_returns(): external_single_structure {
         return new external_single_structure(
             array(
                 'result' => new external_value(PARAM_BOOL, 'Status true or false')
@@ -215,7 +287,15 @@ class debate_data extends external_api {
         );
     }
 
-    public static function delete_debate_respose($courseid, $debateid, $id) {
+    /**
+     * Delete debate response.
+     *
+     * @param int $courseid
+     * @param int $debateid
+     * @param int $id
+     * @return array
+     */
+    public static function delete_debate_respose(int $courseid, int $debateid, int $id): array {
         $params = self::validate_parameters(
             self::delete_debate_respose_parameters(),
             array(
@@ -227,13 +307,18 @@ class debate_data extends external_api {
         $result = array(
             'result' => false
         );
-        $debate_response = new debate_response($params['id']);
-        $result['result'] = $debate_response->delete();
+        $debateresponse = new debate_response($params['id']);
+        $result['result'] = $debateresponse->delete();
 
         return $result;
     }
 
-    public static function find_debate_respose_parameters() {
+    /**
+     * Check parameter.
+     *
+     * @return external_function_parameters
+     */
+    public static function find_debate_respose_parameters(): external_function_parameters {
         return new external_function_parameters(
             array(
                 'courseid' => new external_value(PARAM_INT, '', 1),
@@ -244,20 +329,39 @@ class debate_data extends external_api {
         );
     }
 
-    public static function find_debate_respose_is_allowed_from_ajax() {
+    /**
+     * If ajax is allowed.
+     *
+     * @return bool
+     */
+    public static function find_debate_respose_is_allowed_from_ajax(): bool {
         return true;
     }
 
-    public static function find_debate_respose_returns() {
+    /**
+     * Find matching rebase response returns.
+     *
+     * @return external_single_structure
+     */
+    public static function find_debate_respose_returns(): external_single_structure {
         return new external_single_structure(
             array(
                 'result' => new external_value(PARAM_BOOL, 'Status true or false'),
-                'data' =>new external_value(PARAM_TEXT, 'Matching data')
+                'data' => new external_value(PARAM_TEXT, 'Matching data')
             )
         );
     }
 
-    public static function find_debate_respose($courseid, $debateid, $response, $responsetype) {
+    /**
+     * Find debate response.
+     *
+     * @param int $courseid
+     * @param int $debateid
+     * @param string $response
+     * @param int $responsetype
+     * @return array
+     */
+    public static function find_debate_respose(int $courseid, int $debateid, string $response, int $responsetype): array {
         $params = self::validate_parameters(
             self::find_debate_respose_parameters(),
             array(
@@ -276,5 +380,5 @@ class debate_data extends external_api {
         return $result;
     }
 
-
 }
+

@@ -18,7 +18,7 @@
  * mod_debate data generator
  *
  * @package     mod_debate
- * @copyright   2021 Safat Shahin <safatshahin@gmail.com>
+ * @copyright   2021 Safat Shahin <safatshahin@yahoo.com>
  * @license     https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
@@ -28,7 +28,7 @@ defined('MOODLE_INTERNAL') || die();
  * data generator class for mod_debate
  *
  * @package     mod_debate
- * @copyright   2021 Safat Shahin <safatshahin@gmail.com>
+ * @copyright   2021 Safat Shahin <safatshahin@yahoo.com>
  * @license     https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class mod_debate_generator extends testing_module_generator {
@@ -62,7 +62,7 @@ class mod_debate_generator extends testing_module_generator {
      * Creates a debate response
      * @param $params
      */
-    public function add_response($params){
+    public function add_response($params) {
         global $DB;
         $data = (object) [
             'courseid' => $params['courseid'],

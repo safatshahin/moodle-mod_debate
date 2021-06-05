@@ -18,7 +18,7 @@
  * Privacy Subsystem implementation for mod_debate.
  *
  * @package     mod_debate
- * @copyright   2021 Safat Shahin <safatshahin@gmail.com>
+ * @copyright   2021 Safat Shahin <safatshahin@yahoo.com>
  * @license     https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
@@ -54,8 +54,7 @@ class provider implements
      * @param collection $items a reference to the collection to use to store the metadata.
      * @return collection the updated collection of metadata items.
      */
-    public static function get_metadata(collection $items): collection
-    {
+    public static function get_metadata(collection $items): collection {
         $items->add_database_table(
             'debate_response',
             [
@@ -79,8 +78,7 @@ class provider implements
      * @param int $userid the userid.
      * @return contextlist the list of contexts containing user info for the user.
      */
-    public static function get_contexts_for_userid(int $userid): contextlist
-    {
+    public static function get_contexts_for_userid(int $userid): contextlist {
         $sql = "SELECT c.id
                   FROM {context} c
             INNER JOIN {course_modules} cm ON cm.id = c.instanceid AND c.contextlevel = :contextlevel
@@ -105,8 +103,7 @@ class provider implements
      *
      * @param userlist $userlist The userlist containing the list of users who have data in this context/plugin combination.
      */
-    public static function get_users_in_context(userlist $userlist)
-    {
+    public static function get_users_in_context(userlist $userlist) {
         $context = $userlist->get_context();
 
         if (!$context instanceof \context_module) {
@@ -134,8 +131,7 @@ class provider implements
      *
      * @param approved_contextlist $contextlist a list of contexts approved for export.
      */
-    public static function export_user_data(approved_contextlist $contextlist)
-    {
+    public static function export_user_data(approved_contextlist $contextlist) {
         global $DB;
 
         if (empty($contextlist->count())) {
@@ -203,8 +199,7 @@ class provider implements
      * @param \context_module $context the context of the debate.
      * @param \stdClass $user the user record
      */
-    protected static function export_debate_data_for_user(array $debatedata, \context_module $context, \stdClass $user)
-    {
+    protected static function export_debate_data_for_user(array $debatedata, \context_module $context, \stdClass $user) {
         // Fetch the generic module data for the debate.
         $contextdata = helper::get_context_data($context, $user);
 
@@ -221,8 +216,7 @@ class provider implements
      *
      * @param \context $context the context to delete in.
      */
-    public static function delete_data_for_all_users_in_context(\context $context)
-    {
+    public static function delete_data_for_all_users_in_context(\context $context) {
         global $DB;
 
         if (!$context instanceof \context_module) {
@@ -239,8 +233,7 @@ class provider implements
      *
      * @param approved_contextlist $contextlist a list of contexts approved for deletion.
      */
-    public static function delete_data_for_user(approved_contextlist $contextlist)
-    {
+    public static function delete_data_for_user(approved_contextlist $contextlist) {
         global $DB;
 
         if (empty($contextlist->count())) {
@@ -267,8 +260,7 @@ class provider implements
      *
      * @param approved_userlist $userlist The approved context and user information to delete information for.
      */
-    public static function delete_data_for_users(approved_userlist $userlist)
-    {
+    public static function delete_data_for_users(approved_userlist $userlist) {
         global $DB;
 
         $context = $userlist->get_context();
@@ -291,4 +283,6 @@ class provider implements
         $params = ['debateid' => $cm->instance] + $userparams;
         $DB->delete_records_select('debate_response', $select, $params);
     }
+
 }
+

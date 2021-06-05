@@ -18,7 +18,7 @@
  * The main mod_debate configuration form.
  *
  * @package     mod_debate
- * @copyright   2021 Safat Shahin <safatshahin@gmail.com>
+ * @copyright   2021 Safat Shahin <safatshahin@yahoo.com>
  * @license     https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
@@ -44,7 +44,8 @@ class mod_debate_mod_form extends moodleform_mod {
         $mform->addElement('text', 'name', get_string('debatename', 'debate'), array('size' => '64'));
         $mform->setType('name', PARAM_TEXT);
         $mform->addRule('name', null, 'required', null, 'client');
-        $mform->addRule('name', get_string('maximumchars', '', 255), 'maxlength', 255, 'client');
+        $mform->addRule('name', get_string('maximumchars', '', 255),
+                'maxlength', 255, 'client');
 
         $mform->addElement('text', 'debate', get_string('debate_topic', 'debate'), array('size' => '64'));
         $mform->setType('debate', PARAM_RAW);
@@ -53,13 +54,14 @@ class mod_debate_mod_form extends moodleform_mod {
         $this->standard_intro_elements();
         $mform->addElement('advcheckbox', 'debateformat', get_string('showinmodule', 'mod_debate'));
 
-        $response_type = array(
+        $responsetype = array(
             debate_constants::MOD_DEBATE_RESPONSE_UNLIMITED => get_string('unlimited_response', 'mod_debate'),
             debate_constants::MOD_DEBATE_RESPONSE_ONLY_ONE => get_string('one_response', 'mod_debate'),
             debate_constants::MOD_DEBATE_RENPONSE_ONE_PER_SECTIOM => get_string('two_response', 'mod_debate'),
             debate_constants::MOD_DEBATE_RESPONSE_USE_TEAMS => get_string('use_teams', 'mod_debate')
         );
-        $mform->addElement('select', 'responsetype', get_string('user_response', 'mod_debate'), $response_type);
+        $mform->addElement('select', 'responsetype',
+                get_string('user_response', 'mod_debate'), $responsetype);
         $mform->setDefault('responsetype', debate_constants::MOD_DEBATE_RESPONSE_UNLIMITED);
 
         $this->standard_grading_coursemodule_elements();
@@ -71,14 +73,14 @@ class mod_debate_mod_form extends moodleform_mod {
 
     /**
      * set pre processing of data.
-     * @param $default_values
+     * @param array $defaultvalues
      */
-    function data_preprocessing(&$default_values) {
-        parent::data_preprocessing($default_values);
-        $default_values['debateresponsecom']=
-            !empty($default_values['debateresponsecomcount']) ? 1 : 0;
-        if (empty($default_values['debateresponsecomcount'])) {
-            $default_values['debateresponsecomcount'] = 1;
+    public function data_preprocessing(&$defaultvalues) {
+        parent::data_preprocessing($defaultvalues);
+        $defaultvalues['debateresponsecom'] =
+            !empty($defaultvalues['debateresponsecomcount']) ? 1 : 0;
+        if (empty($defaultvalues['debateresponsecomcount'])) {
+            $defaultvalues['debateresponsecomcount'] = 1;
         }
     }
 
@@ -89,17 +91,24 @@ class mod_debate_mod_form extends moodleform_mod {
     public function add_completion_rules() {
         $mform =& $this->_form;
 
-        $group=array();
-        $group[] =& $mform->createElement('checkbox', 'debateresponsecom', '', get_string('debateresponsecom','mod_debate'));
-        $group[] =& $mform->createElement('text', 'debateresponsecomcount', '', array('size'=>3));
-        $mform->setType('debateresponsecomcount',PARAM_INT);
-        $mform->addGroup($group, 'debateresponsecomgroup', get_string('debateresponsecomgroup','mod_debate'), array(' '), false);
-        $mform->disabledIf('debateresponsecomcount','debateresponsecom','notchecked');
+        $group = array();
+        $group[] =& $mform->createElement('checkbox', 'debateresponsecom', '',
+                get_string('debateresponsecom', 'mod_debate'));
+        $group[] =& $mform->createElement('text', 'debateresponsecomcount', '', array('size' => 3));
+        $mform->setType('debateresponsecomcount', PARAM_INT);
+        $mform->addGroup($group, 'debateresponsecomgroup', get_string('debateresponsecomgroup', 'mod_debate'), array(' '), false);
+        $mform->disabledIf('debateresponsecomcount', 'debateresponsecom', 'notchecked');
         return array('debateresponsecomgroup');
     }
 
-    function completion_rule_enabled($data) {
-        return (!empty($data['debateresponsecom']) && $data['debateresponsecomcount']!=0);
+    /**
+     * Check if completion rule enabled.
+     *
+     * @param array $data
+     * @return bool
+     */
+    public function completion_rule_enabled($data) {
+        return (!empty($data['debateresponsecom']) && $data['debateresponsecomcount'] != 0);
     }
 
     /**
@@ -110,9 +119,9 @@ class mod_debate_mod_form extends moodleform_mod {
      */
     public function data_postprocessing($data) {
         parent::data_postprocessing($data);
-        // Turn off completion settings if the checkboxes aren't ticked
+        // Turn off completion settings if the checkboxes aren't ticked.
         if (!empty($data->completionunlocked)) {
-            $autocompletion = !empty($data->completion) && $data->completion==COMPLETION_TRACKING_AUTOMATIC;
+            $autocompletion = !empty($data->completion) && $data->completion == COMPLETION_TRACKING_AUTOMATIC;
             if (empty($data->debateresponsecom) || !$autocompletion) {
                 $data->debateresponsecomcount = 0;
             }

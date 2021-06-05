@@ -18,7 +18,7 @@
  * Get the data for the teams of mod_debate.
  *
  * @package     mod_debate
- * @copyright   2021 Safat Shahin <safatshahin@gmail.com>
+ * @copyright   2021 Safat Shahin <safatshahin@yahoo.com>
  * @license     https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
@@ -39,10 +39,10 @@ class debate_teams {
     /**
      * debate_teams constructor.
      * Builds object if $id provided.
-     * @param null $courseid
-     * @param null $debateid
+     * @param int $courseid
+     * @param int $debateid
      */
-    public function __construct($courseid = null, $debateid = null) {
+    public function __construct(int $courseid = 0, int $debateid = 0) {
         if (!empty($courseid) && !empty($debateid)) {
             $this->construct_teams($courseid, $debateid);
         }
@@ -50,46 +50,50 @@ class debate_teams {
 
     /**
      * Constructs the actual debate_teams object given the specific data.
-     * @param $courseid
-     * @param $debateid
+     *
+     * @param int $courseid
+     * @param int $debateid
      */
-    private function construct_teams($courseid, $debateid) {
+    private function construct_teams(int $courseid, int $debateid): void {
         $this->courseid = $courseid;
         $this->debateid = $debateid;
     }
 
     /**
      * Gets the number of team member according to the response type passed.
-     * @param $responsetype
+     *
+     * @param int $responsetype
      * @return int
      */
-    public function get_team_member_count($responsetype): int {
+    public function get_team_member_count(int $responsetype): int {
         global $DB;
-        $team_member_count = 0;
-        $debate_team_groups = $DB->get_records('debate_teams', array('courseid' => $this->courseid,
+        $teammembercount = 0;
+        $debateteamgroups = $DB->get_records('debate_teams', array('courseid' => $this->courseid,
             'debateid' => $this->debateid, 'responsetype' => $responsetype, 'active' => $this->active));
-        $team_groups = array();
-        foreach ($debate_team_groups as $debate_team_group) {
-            $groups = explode(",", $debate_team_group->groupselection);
+        $teamgroups = array();
+        foreach ($debateteamgroups as $debateteamgroup) {
+            $groups = explode(",", $debateteamgroup->groupselection);
             foreach ($groups as $group) {
-                $team_groups[] = $group;
+                $teamgroups[] = $group;
             }
         }
-        foreach ($team_groups as $team_group) {
-            $group_member_count = $DB->get_record('groups_members', array('groupid' => (int)$team_group), 'count(id) as usercount');
-            if ((int)$group_member_count->usercount > 0) {
-                $team_member_count = $team_member_count + (int)$group_member_count->usercount;
+        foreach ($teamgroups as $teamgroup) {
+            $groupmembercount = $DB->get_record('groups_members',
+                    array('groupid' => (int)$teamgroup), 'count(id) as usercount');
+            if ((int)$groupmembercount->usercount > 0) {
+                $teammembercount = $teammembercount + (int)$groupmembercount->usercount;
             }
         }
-        return $team_member_count;
+        return $teammembercount;
     }
 
     /**
      * Checks whether the requested response is allowed for the user in the team.
-     * @param $params
+     *
+     * @param array $params
      * @return array
      */
-    public function check_teams_allocation($params): array {
+    public function check_teams_allocation(array $params): array {
         global $DB;
         $result = array(
             'result' => false,
@@ -100,20 +104,20 @@ class debate_teams {
         } else {
             $responsetype = 0;
         }
-        //count current responses
-        $response_count = $DB->count_records('debate_response', array('courseid' => $this->courseid,
+        // Count current responses.
+        $responsecount = $DB->count_records('debate_response', array('courseid' => $this->courseid,
             'debateid' => $this->debateid, 'userid' => $params['userid'], 'responsetype' => $responsetype));
-        //check if user is in the team and did not exceed the allowed response number
-        $debate_team_groups = $DB->get_records('debate_teams', array('courseid' => $this->courseid,
+        // Check if user is in the team and did not exceed the allowed response number.
+        $debateteamgroups = $DB->get_records('debate_teams', array('courseid' => $this->courseid,
             'debateid' => $this->debateid, 'responsetype' => $responsetype, 'active' => $this->active));
-        foreach ($debate_team_groups as $debate_team_group) {
-            $groups = explode(",", $debate_team_group->groupselection);
+        foreach ($debateteamgroups as $debateteamgroup) {
+            $groups = explode(",", $debateteamgroup->groupselection);
             foreach ($groups as $group) {
-                $group_members = $DB->get_records('groups_members', array('groupid' => (int)$group));
-                foreach ($group_members as $group_member) {
-                    if ((int)$group_member->userid == $params['userid']) {
-                        if ($response_count < $debate_team_group->responseallowed ||
-                            $debate_team_group->responseallowed == 0) {
+                $groupmembers = $DB->get_records('groups_members', array('groupid' => (int)$group));
+                foreach ($groupmembers as $groupmember) {
+                    if ((int)$groupmember->userid == $params['userid']) {
+                        if ($responsecount < $debateteamgroup->responseallowed ||
+                                $debateteamgroup->responseallowed == 0) {
                             $result['result'] = true;
                             $result['message'] = '';
                         } else {

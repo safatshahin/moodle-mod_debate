@@ -18,7 +18,7 @@
  * mod_debate data generator test
  *
  * @package     mod_debate
- * @copyright   2021 Safat Shahin <safatshahin@gmail.com>
+ * @copyright   2021 Safat Shahin <safatshahin@yahoo.com>
  * @license     https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
@@ -28,7 +28,7 @@ defined('MOODLE_INTERNAL') || die();
  * data generator test class for mod_debate
  *
  * @package     mod_debate
- * @copyright   2021 Safat Shahin <safatshahin@gmail.com>
+ * @copyright   2021 Safat Shahin <safatshahin@yahoo.com>
  * @license     https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class mod_debate_generator_testcase extends advanced_testcase {
@@ -41,19 +41,19 @@ class mod_debate_generator_testcase extends advanced_testcase {
         global $DB;
         $this->resetAfterTest();
         $this->setAdminUser();
-        //create course
+        // Create course.
         $course = $this->getDataGenerator()->create_course();
         $this->assertFalse($DB->record_exists('debate', array('course' => $course->id)));
-        // test create instance
+        // Test create instance.
         $debate = $this->getDataGenerator()->create_module('debate', array('course' => $course->id));
         $this->assertEquals(1, $DB->count_records('debate', array('course' => $course->id)));
         $this->assertTrue($DB->record_exists('debate', array('course' => $course->id)));
         $this->assertTrue($DB->record_exists('debate', array('id' => $debate->id)));
-        //test instance specific data
+        // Test instance specific data.
         $params = array('course' => $course->id,
             'name' => 'Debate generator test',
-            'debate'=>'Debate generator test topic',
-            'debateresponsecomcount'=> 1);
+            'debate' => 'Debate generator test topic',
+            'debateresponsecomcount' => 1);
         $debate = $this->getDataGenerator()->create_module('debate', $params);
         $this->assertEquals(2, $DB->count_records('debate', array('course' => $course->id)));
         $this->assertEquals('Debate generator test',
@@ -79,17 +79,17 @@ class mod_debate_generator_testcase extends advanced_testcase {
     public function test_add_response() {
         global $DB;
         $this->resetAfterTest();
-        //create course
+        // Create course.
         $course = $this->getDataGenerator()->create_course();
         $this->assertFalse($DB->record_exists('debate', array('course' => $course->id)));
-        //create instance
+        // Create instance.
         $debate = $this->getDataGenerator()->create_module('debate', array('course' => $course->id));
         $this->assertEquals(1, $DB->count_records('debate', array('course' => $course->id)));
         $this->assertTrue($DB->record_exists('debate', array('course' => $course->id)));
         $this->assertTrue($DB->record_exists('debate', array('id' => $debate->id)));
-        //create user
+        // Create user.
         $user = $this->getDataGenerator()->create_user();
-        //add some response data
+        // Add some response data.
         $params1 = array(
             'courseid' => $course->id,
             'debateid' => $debate->id,
@@ -104,7 +104,7 @@ class mod_debate_generator_testcase extends advanced_testcase {
             'responsetype' => 0
         );
         $this->getDataGenerator()->get_plugin_generator('mod_debate')->add_response($params2);
-        //check the number of responses create successfully
+        // Check the number of responses create successfully.
         $params = array(
             'courseid' => $course->id,
             'debateid' => $debate->id,
@@ -121,22 +121,22 @@ class mod_debate_generator_testcase extends advanced_testcase {
         global $DB;
         $this->resetAfterTest();
 
-        //create course
+        // Create course.
         $course = $this->getDataGenerator()->create_course();
-        //create instance
+        // Create instance.
         $debate = $this->getDataGenerator()->create_module('debate', array('course' => $course->id));
-        //create group
+        // Create group.
         $group1 = $this->getDataGenerator()->create_group(array('courseid' => $course->id));
         $group2 = $this->getDataGenerator()->create_group(array('courseid' => $course->id));
-        $debate_groups = $group1->id.','.$group2->id;
-        //create team
+        $debategroups = $group1->id.','.$group2->id;
+        // Create team.
         $params = array(
             'courseid' => $course->id,
             'debateid' => $debate->id,
-            'groupselection' => (string) $debate_groups
+            'groupselection' => $debategroups
         );
         $this->getDataGenerator()->get_plugin_generator('mod_debate')->create_team($params);
-        //check data
+        // Check data.
         $params2 = array(
             'courseid' => $course->id,
             'debateid' => $debate->id

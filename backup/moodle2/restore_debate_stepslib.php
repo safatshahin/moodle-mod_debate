@@ -18,7 +18,7 @@
  * Class for restore
  *
  * @package     mod_debate
- * @copyright   2021 Safat Shahin <safatshahin@gmail.com>
+ * @copyright   2021 Safat Shahin <safatshahin@yahoo.com>
  * @license     https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
@@ -31,9 +31,6 @@ class restore_debate_activity_structure_step extends restore_activity_structure_
 
     /**
      * Define the structure of the restore workflow.
-     *
-     * @return restore_path_element $structure
-     * @throws base_step_exception
      */
     protected function define_structure() {
 
@@ -45,32 +42,31 @@ class restore_debate_activity_structure_step extends restore_activity_structure_
         if ($userinfo) {
             $paths[] = new restore_path_element('debate_response', '/activity/debate/debate_responses/debate_response');
         }
-        // Return the paths wrapped into standard activity structure
+        // Return the paths wrapped into standard activity structure.
         return $this->prepare_activity_structure($paths);
     }
 
     /**
      * Process a debate restore.
-     * @param object $data The data in object form
-     * @return void
+     *
+     * @param array $data The data in object form
      */
-    protected function process_debate($data) {
+    protected function process_debate(array $data): void {
         global $DB;
         $data = (object)$data;
         $data->course = $this->get_courseid();
-        // insert the page record
+        // Insert the page record.
         $newitemid = $DB->insert_record('debate', $data);
-        // immediately after inserting "activity" record, call this
+        // Immediately after inserting "activity" record, call this.
         $this->apply_activity_instance($newitemid);
     }
 
     /**
      * Process debate response
-     * @param object $data The data in object form
-     * @return void
-     * @throws dml_exception
+     *
+     * @param array $data The data in object form
      */
-    protected function process_debate_response($data) {
+    protected function process_debate_response(array $data): void {
         global $DB;
         $data = (object)$data;
         $oldid = $data->id;
@@ -80,8 +76,13 @@ class restore_debate_activity_structure_step extends restore_activity_structure_
         $this->set_mapping('debate_response', $oldid, $newitemid);
     }
 
-    protected function after_execute() {
-        // Add page related files, no need to match by itemname (just internally handled context)
+    /**
+     * Add page related files.
+     */
+    protected function after_execute(): void {
+        // Add page related files, no need to match by itemname (just internally handled context).
         $this->add_related_files('mod_debate', 'intro', null);
     }
+
 }
+

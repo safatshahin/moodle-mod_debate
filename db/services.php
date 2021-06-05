@@ -18,9 +18,11 @@
  * webservices for mod_debate.
  *
  * @package     mod_debate
- * @copyright   2021 Safat Shahin <safatshahin@gmail.com>
+ * @copyright   2021 Safat Shahin <safatshahin@yahoo.com>
  * @license     https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+
+defined('MOODLE_INTERNAL') || die();
 
 $functions = array(
     'mod_debate_add_debate_respose' => array(
@@ -67,6 +69,7 @@ $services = array(
             'mod_debate_check_response_allocation'
         ),
         'restrictedusers' => 0,
-        'enabled'=>1
+        'enabled' => 1
     )
 );
+

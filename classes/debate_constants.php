@@ -18,7 +18,7 @@
  * Constants of mod_debate.
  *
  * @package     mod_debate
- * @copyright   2021 Safat Shahin <safatshahin@gmail.com>
+ * @copyright   2021 Safat Shahin <safatshahin@yahoo.com>
  * @license     https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
@@ -31,14 +31,14 @@ defined('MOODLE_INTERNAL') || die();
  * A class to help with debate teams constants.
  */
 class debate_constants {
-    //debate type
+    // Debate type.
     const MOD_DEBATE_POSITIVE = 1;
     const MOD_DEBATE_NEGATIVE = 0;
-    //debate response type
+    // Debate response type.
     const MOD_DEBATE_RESPONSE_UNLIMITED = 0;
     const MOD_DEBATE_RESPONSE_ONLY_ONE = 1;
     const MOD_DEBATE_RENPONSE_ONE_PER_SECTIOM = 2;
     const MOD_DEBATE_RESPONSE_USE_TEAMS = 3;
-    //user selection type
 
 }
+

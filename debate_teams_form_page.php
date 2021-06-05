@@ -18,7 +18,7 @@
  * Manage teams form of mod_debate.
  *
  * @package     mod_debate
- * @copyright   2021 Safat Shahin <safatshahin@gmail.com>
+ * @copyright   2021 Safat Shahin <safatshahin@yahoo.com>
  * @license     https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
@@ -33,7 +33,7 @@ require_login();
 
 $context = context_system::instance();
 
-$id = optional_param('id', null, PARAM_INT);
+$id = optional_param('id', 0, PARAM_INT);
 $cmid = required_param('cmid', PARAM_INT);
 $response = required_param('response', PARAM_INT);
 
@@ -72,14 +72,16 @@ $args = array(
     'courseid' => $courseid,
     'cmid' => $cmid,
     'response' => $response,
-    'cancelurl' => new moodle_url($CFG->wwwroot . '/mod/debate/debate_teams_page.php', array('cmid' => $cmid, 'response' => $response))
+    'cancelurl' => new moodle_url($CFG->wwwroot . '/mod/debate/debate_teams_page.php',
+            array('cmid' => $cmid, 'response' => $response))
 );
 
-$debate_team_form = new debate_teams_form(null, $args);
+$debateteamform = new debate_teams_form(null, $args);
 
-if ($savedata = $debate_team_form->get_data()) {
-    $returnurl = new moodle_url($CFG->wwwroot . '/mod/debate/debate_teams_page.php', array('cmid' => $savedata->cmid, 'response' => $savedata->response));
-    $new_debate_team = new debate_teams_page();
+if ($savedata = $debateteamform->get_data()) {
+    $returnurl = new moodle_url($CFG->wwwroot . '/mod/debate/debate_teams_page.php',
+            array('cmid' => $savedata->cmid, 'response' => $savedata->response));
+    $newdebateteam = new debate_teams_page();
     if (empty($savedata->id)) {
         $savedata->active = 1;
         $savedata->courseid = $course->id;
@@ -90,8 +92,8 @@ if ($savedata = $debate_team_form->get_data()) {
         $savedata->groupselection = implode(",", $savedata->groupselection);
     }
 
-    $new_debate_team->construct_teams_page($savedata);
-    if ($new_debate_team->save()) {
+    $newdebateteam->construct_teams_page($savedata);
+    if ($newdebateteam->save()) {
         $message = get_string('debate_team_saved', 'mod_debate');
         $messagestyle = notification::NOTIFY_SUCCESS;
         redirect($returnurl, $message, null, $messagestyle);
@@ -105,7 +107,7 @@ if ($savedata = $debate_team_form->get_data()) {
 
 $params = [
     'title' => $title,
-    'formhtml' => $debate_team_form->render()
+    'formhtml' => $debateteamform->render()
 ];
 
 echo $OUTPUT->header();

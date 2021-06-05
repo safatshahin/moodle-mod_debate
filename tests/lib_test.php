@@ -18,7 +18,7 @@
  * mod_debate lib test
  *
  * @package     mod_debate
- * @copyright   2021 Safat Shahin <safatshahin@gmail.com>
+ * @copyright   2021 Safat Shahin <safatshahin@yahoo.com>
  * @license     https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
@@ -28,7 +28,7 @@ defined('MOODLE_INTERNAL') || die();
  * lib test class for mod_debate
  *
  * @package     mod_debate
- * @copyright   2021 Safat Shahin <safatshahin@gmail.com>
+ * @copyright   2021 Safat Shahin <safatshahin@yahoo.com>
  * @license     https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class mod_debate_lib_testcase extends advanced_testcase {
@@ -43,7 +43,7 @@ class mod_debate_lib_testcase extends advanced_testcase {
     }
 
     /**
-     * Test debate_supports
+     * Test debate_supports.
      * @return void
      */
     public function test_debate_supports() {
@@ -54,7 +54,7 @@ class mod_debate_lib_testcase extends advanced_testcase {
     }
 
     /**
-     * Test debate_view
+     * Test debate_view.
      * @return void
      */
     public function test_debate_view() {
@@ -63,25 +63,25 @@ class mod_debate_lib_testcase extends advanced_testcase {
         $CFG->enablecompletion = 1;
         $this->resetAfterTest();
 
-        //test data
+        // Test data.
         $course = $this->getDataGenerator()->create_course(array('enablecompletion' => 1));
         $debate = $this->getDataGenerator()->create_module('debate', array('course' => $course->id),
             array('completion' => 2, 'completionview' => 1));
         $context = context_module::instance($debate->cmid);
         $cm = get_coursemodule_from_instance('debate', $debate->id);
 
-        //event
-        $event_link = $this->redirectEvents();
+        // Event.
+        $eventlink = $this->redirectEvents();
 
         $this->setAdminUser();
         debate_view($debate, $course, $cm, $context);
 
-        $events = $event_link->get_events();
-        //additional events for completion
+        $events = $eventlink->get_events();
+        // Additional events for completion.
         $this->assertCount(3, $events);
         $event = array_shift($events);
 
-        //event checking
+        // Event checking.
         $this->assertInstanceOf('\mod_debate\event\course_module_viewed', $event);
         $this->assertEquals($context, $event->get_context());
         $moodleurl = new \moodle_url('/mod/debate/view.php', array('id' => $cm->id));
@@ -89,21 +89,21 @@ class mod_debate_lib_testcase extends advanced_testcase {
         $this->assertEventContextNotUsed($event);
         $this->assertNotEmpty($event->get_name());
 
-        //completion checking
+        // Completion checking.
         $completion = new completion_info($course);
         $completiondata = $completion->get_data($cm);
         $this->assertEquals(1, $completiondata->completionstate);
     }
 
     /**
-     * Test debate_delete_instance
+     * Test debate_delete_instance.
      * @return void
      */
-    public function test_debate_delete_instance(){
+    public function test_debate_delete_instance() {
         global $DB;
         $this->resetAfterTest();
 
-        //test data
+        // Test data.
         $course = $this->getDataGenerator()->create_course(array('enablecompletion' => 1));
         $debate = $this->getDataGenerator()->create_module('debate',
             array('course' => $course->id, 'debateresponsecomcount'),
@@ -112,7 +112,7 @@ class mod_debate_lib_testcase extends advanced_testcase {
         $cm = get_coursemodule_from_instance('debate', $debate->id);
         $user = $this->getDataGenerator()->create_user();
         $this->getDataGenerator()->enrol_user($user->id, $course->id);
-        //add some response data
+        // Add some response data.
         $params1 = array(
             'courseid' => $course->id,
             'debateid' => $debate->id,
@@ -127,11 +127,11 @@ class mod_debate_lib_testcase extends advanced_testcase {
             'responsetype' => 0
         );
         $this->getDataGenerator()->get_plugin_generator('mod_debate')->add_response($params2);
-        //calculate completion
+        // Calculate completion.
         debate_view($debate, $course, $cm, $context);
-        //delete instance
+        // Delete instance.
         debate_delete_instance($debate->id);
-        //check data
+        // Check data.
         $this->assertEquals(0, $DB->count_records('debate', array('course' => $course->id)));
         $this->assertFalse($DB->record_exists('debate', array('id' => $debate->id)));
         $params = array(
@@ -143,14 +143,14 @@ class mod_debate_lib_testcase extends advanced_testcase {
     }
 
     /**
-     * Test debate_update_instance
+     * Test debate_update_instance.
      * @return void
      */
     public function test_debate_update_instance() {
         global $DB;
         $this->resetAfterTest();
 
-        //test data
+        // Test data.
         $course = $this->getDataGenerator()->create_course();
         $debate = $this->getDataGenerator()->create_module('debate', array('course' => $course->id));
         $cm = get_coursemodule_from_instance('debate', $debate->id);
@@ -171,19 +171,19 @@ class mod_debate_lib_testcase extends advanced_testcase {
     }
 
     /**
-     * Test debate_reset_userdata
+     * Test debate_reset_userdata.
      * @return void
      */
     public function test_debate_reset_userdata() {
         global $DB;
         $this->resetAfterTest();
 
-        //create test data
+        // Create test data.
         $course = $this->getDataGenerator()->create_course();
         $debate = $this->getDataGenerator()->create_module('debate', array('course' => $course->id));
         $user = $this->getDataGenerator()->create_user();
         $this->getDataGenerator()->enrol_user($user->id, $course->id);
-        //add some response data
+        // Add some response data.
         $params1 = array(
             'courseid' => $course->id,
             'debateid' => $debate->id,
@@ -198,15 +198,15 @@ class mod_debate_lib_testcase extends advanced_testcase {
             'responsetype' => 0
         );
         $this->getDataGenerator()->get_plugin_generator('mod_debate')->add_response($params2);
-        //create group
+        // Create group.
         $group1 = $this->getDataGenerator()->create_group(array('courseid' => $course->id));
         $group2 = $this->getDataGenerator()->create_group(array('courseid' => $course->id));
-        $debate_groups = $group1->id.','.$group2->id;
-        //create team
+        $debategroups = $group1->id.','.$group2->id;
+        // Create team.
         $params3 = array(
             'courseid' => $course->id,
             'debateid' => $debate->id,
-            'groupselection' => (string) $debate_groups
+            'groupselection' => $debategroups
         );
         $this->getDataGenerator()->get_plugin_generator('mod_debate')->create_team($params3);
         $data = (object) [
@@ -222,4 +222,6 @@ class mod_debate_lib_testcase extends advanced_testcase {
         $this->assertEquals(0, $DB->count_records('debate_response', $params4));
         $this->assertEquals(0, $DB->count_records('debate_teams', $params4));
     }
+
 }
+

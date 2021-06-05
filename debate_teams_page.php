@@ -18,7 +18,7 @@
  * List teams table of mod_debate.
  *
  * @package     mod_debate
- * @copyright   2021 Safat Shahin <safatshahin@gmail.com>
+ * @copyright   2021 Safat Shahin <safatshahin@yahoo.com>
  * @license     https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
@@ -31,7 +31,6 @@ use mod_debate\output\tables\debate_teams_table;
 
 require_login();
 
-// Course_module ID, or
 $id = optional_param('id', 0, PARAM_INT);
 $cmid = optional_param('cmid', 0, PARAM_INT);
 $action = optional_param('action', '', PARAM_TEXT);
@@ -43,7 +42,7 @@ if ($cmid) {
     $course = $DB->get_record('course', array('id' => $cm->course), '*', MUST_EXIST);
     $moduleinstance = $DB->get_record('debate', array('id' => $cm->instance), '*', MUST_EXIST);
 } else {
-    print_error(get_string('missingidandcmid', 'mod_debate'));
+    throw new moodle_exception(get_string('missingidandcmid', 'mod_debate'));
 }
 
 require_login($course, true, $cm);
@@ -53,28 +52,31 @@ require_capability('mod/debate:manageteams', $modulecontext);
 
 $PAGE->set_url('/mod/debate/debate_teams_page.php', array('id' => $id, 'cmid' => $cmid, 'response' => $response));
 $PAGE->set_title(get_string('debate_teams', 'mod_debate'));
-$response_text = '';
+$responsetext = '';
 if ($response == 0) {
-    $response_text = get_string('manage_negative_team', 'mod_debate');
+    $responsetext = get_string('manage_negative_team', 'mod_debate');
 } else if ($response == 1) {
-    $response_text = get_string('manage_positive_team', 'mod_debate');
+    $responsetext = get_string('manage_positive_team', 'mod_debate');
 }
-$PAGE->set_heading($response_text);
+$PAGE->set_heading($responsetext);
 $PAGE->set_context($modulecontext);
-$PAGE->navbar->add(get_string('manage_teams', 'mod_debate'), new moodle_url('/mod/debate/debate_teams.php', array('id' => $cm->id)));
-$PAGE->navbar->add($response_text, new moodle_url('/mod/debate/debate_teams_page.php', array('id' => $id, 'cmid' => $cmid, 'response' => $response)));
-$returnurl = new moodle_url('/mod/debate/debate_teams_page.php', array('id' => $id, 'cmid' => $cmid, 'response' => $response));
+$PAGE->navbar->add(get_string('manage_teams', 'mod_debate'),
+        new moodle_url('/mod/debate/debate_teams.php', array('id' => $cm->id)));
+$PAGE->navbar->add($responsetext, new moodle_url('/mod/debate/debate_teams_page.php',
+        array('id' => $id, 'cmid' => $cmid, 'response' => $response)));
+$returnurl = new moodle_url('/mod/debate/debate_teams_page.php',
+        array('id' => $id, 'cmid' => $cmid, 'response' => $response));
 
-$debate_team = new debate_teams_page($id);
+$debateteam = new debate_teams_page($id);
 
-//table logic
-if (!empty($debate_team->id)) {
+// Table logic.
+if (!empty($debateteam->id)) {
     if ($action === 'delete') {
         $PAGE->url->param('action', 'delete');
         $a = new stdClass();
-        $a->name = $debate_team->name;
+        $a->name = $debateteam->name;
         if ($confirm and confirm_sesskey()) {
-            if ($debate_team->delete()) {
+            if ($debateteam->delete()) {
                 $message = get_string('debate_team_deleted', 'mod_debate', $a);
                 $messagestyle = notification::NOTIFY_SUCCESS;
             } else {
@@ -91,7 +93,8 @@ if (!empty($debate_team->id)) {
         echo $OUTPUT->header();
 
         $yesurl = new moodle_url($CFG->wwwroot . '/mod/debate/debate_teams_page.php', array(
-            'id' => $debate_team->id, 'cmid' => $cmid, 'response' => $debate_team->responsetype, 'action' => 'delete', 'confirm' => 1, 'sesskey' => sesskey()
+            'id' => $debateteam->id, 'cmid' => $cmid, 'response' => $debateteam->responsetype,
+                'action' => 'delete', 'confirm' => 1, 'sesskey' => sesskey()
         ));
         $message = get_string('delete_debate_team_confirmation', 'mod_debate', $a);
         echo $OUTPUT->confirm($message, $yesurl, $returnurl);
@@ -101,12 +104,12 @@ if (!empty($debate_team->id)) {
     if ($action === 'show') {
         if (confirm_sesskey()) {
             $a = new stdClass();
-            $a->name = $debate_team->name;
+            $a->name = $debateteam->name;
             $message = get_string('debate_team_active', 'mod_debate', $a);
             $messagestyle = notification::NOTIFY_SUCCESS;
-            if (!$debate_team->active) {
-                $debate_team->active = 1;
-                if (!$debate_team->save()) {
+            if (!$debateteam->active) {
+                $debateteam->active = 1;
+                if (!$debateteam->save()) {
                     $message = get_string('debate_team_active_error', 'mod_debate', $a);
                     $messagestyle = notification::NOTIFY_ERROR;
                 }
@@ -116,13 +119,13 @@ if (!empty($debate_team->id)) {
     } else if ($action === 'hide') {
         if (confirm_sesskey()) {
             $a = new stdClass();
-            $a->name = $debate_team->name;
+            $a->name = $debateteam->name;
             $message = get_string('debate_team_deactive', 'mod_debate', $a);
             $messagestyle = notification::NOTIFY_SUCCESS;
             // Don't bother doing anything if it's already inactive.
-            if ($debate_team->active) {
-                $debate_team->active = 0;
-                if (!$debate_team->save()) {
+            if ($debateteam->active) {
+                $debateteam->active = 0;
+                if (!$debateteam->save()) {
                     $message = get_string('debate_team_deactive_error', 'mod_debate', $a);
                     $messagestyle = notification::NOTIFY_ERROR;
                 }
@@ -132,17 +135,15 @@ if (!empty($debate_team->id)) {
     }
 }
 
-$debate_teams_table = new debate_teams_table('debate_teams_table', $response, $moduleinstance->id, $cm->id);
+$debateteamstable = new debate_teams_table('debate_teams_table', $response, $moduleinstance->id, $cm->id);
 
 $params = [
-    'editurl' => new moodle_url($CFG->wwwroot . '/mod/debate/debate_teams_form_page.php', array('cmid' => $cm->id, 'response' => $response)),
-    'tablehtml' => $debate_teams_table->export_for_template()
+    'editurl' => new moodle_url($CFG->wwwroot . '/mod/debate/debate_teams_form_page.php',
+            array('cmid' => $cm->id, 'response' => $response)),
+    'tablehtml' => $debateteamstable->export_for_template()
 ];
 
 echo $OUTPUT->header();
-
-$renderer = $PAGE->get_renderer('mod_debate');
-
-echo $renderer->render_table_page($params);
-
+echo $PAGE->get_renderer('mod_debate')->render_table_page($params);
 echo $OUTPUT->footer();
+

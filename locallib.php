@@ -17,17 +17,17 @@
 /**
  * Private debate module utility functions
  *
- * @package mod_debate
- * @copyright  2009 Petr Skoda (http://skodak.org)
+ * @package    mod_debate
+ * @copyright  2021 Safat Shahin <safatshahin@yahoo.com>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 defined('MOODLE_INTERNAL') || die;
+
 global $CFG;
 require_once($CFG->libdir.'/filelib.php');
 require_once($CFG->libdir.'/resourcelib.php');
 require_once($CFG->dirroot.'/mod/debate/lib.php');
-
 
 /**
  * File browsing support class
@@ -49,5 +49,6 @@ class debate_content_file_info extends file_info_stored {
 
 function debate_get_editor_options($context) {
     global $CFG;
-    return array('subdirs'=>1, 'maxbytes'=>$CFG->maxbytes, 'maxfiles'=>-1, 'changeformat'=>1, 'context'=>$context, 'noclean'=>1, 'trusttext'=>0);
+    return array('subdirs' => 1, 'maxbytes' => $CFG->maxbytes, 'maxfiles' => -1, 'changeformat' => 1,
+            'context' => $context, 'noclean' => 1, 'trusttext' => 0);
 }

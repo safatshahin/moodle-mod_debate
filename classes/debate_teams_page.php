@@ -18,7 +18,7 @@
  * Manage teams page of mod_debate.
  *
  * @package     mod_debate
- * @copyright   2021 Safat Shahin <safatshahin@gmail.com>
+ * @copyright   2021 Safat Shahin <safatshahin@yahoo.com>
  * @license     https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
@@ -31,6 +31,7 @@ defined('MOODLE_INTERNAL') || die();
  * A class to help with debate teams page data.
  */
 class debate_teams_page {
+
     public $name = null;
     public $courseid = 0;
     public $debateid = 0;
@@ -44,9 +45,10 @@ class debate_teams_page {
     /**
      * debate_teams_page constructor.
      * Builds object if $id provided.
-     * @param null $id
+     *
+     * @param int $id
      */
-    public function __construct($id = null) {
+    public function __construct(int $id = 0) {
         if (!empty($id)) {
             $this->load_teams_page($id);
         }
@@ -54,36 +56,38 @@ class debate_teams_page {
 
     /**
      * Constructs the actual debate_teams_page object given either a $DB object or Moodle form data.
-     * @param $teams_page
+     *
+     * @param \stdClass $teamspage
      */
-    public function construct_teams_page($teams_page) {
-        if (!empty($teams_page)) {
-            $this->id = $teams_page->id;
-            $this->name = $teams_page->name;
-            $this->courseid = $teams_page->courseid;
-            $this->debateid = $teams_page->debateid;
-            $this->responsetype = $teams_page->responsetype;
-            $this->responseallowed = $teams_page->responseallowed;
-            $this->groupselection = $teams_page->groupselection;
-            $this->active = $teams_page->active;
+    public function construct_teams_page(\stdClass $teamspage): void {
+        if (!empty($teamspage)) {
+            $this->id = $teamspage->id;
+            $this->name = $teamspage->name;
+            $this->courseid = $teamspage->courseid;
+            $this->debateid = $teamspage->debateid;
+            $this->responsetype = $teamspage->responsetype;
+            $this->responseallowed = $teamspage->responseallowed;
+            $this->groupselection = $teamspage->groupselection;
+            $this->active = $teamspage->active;
         }
     }
 
     /**
      * Gets the specified debate_team and loads it into the object.
-     * @param $id
+     *
+     * @param int $id
      */
-    private function load_teams_page($id) {
+    private function load_teams_page(int $id): void {
         global $DB;
-        $teams_page = $DB->get_record('debate_teams', array('id' => $id));
-        $this->construct_teams_page($teams_page);
+        $teamspage = $DB->get_record('debate_teams', array('id' => $id));
+        $this->construct_teams_page($teamspage);
     }
 
     /**
      * Delete the debate_team.
      * @return bool
      */
-    public function delete() {
+    public function delete(): bool {
         global $DB;
         if (!empty($this->id)) {
             return $DB->delete_records('debate_teams', array('id' => $this->id));
@@ -95,7 +99,7 @@ class debate_teams_page {
      * Deactivate/activate the debate_team.
      * @return bool
      */
-    public function activate_deactivate() {
+    public function activate_deactivate(): bool {
         global $DB;
         if (!empty($this->id)) {
             $this->timemodified = time();
@@ -111,7 +115,7 @@ class debate_teams_page {
      * Save or create debate_team.
      * @return bool
      */
-    public function save() {
+    public function save(): bool {
         global $DB;
         $savesuccess = false;
         if (!empty($this->id)) {
