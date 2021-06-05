@@ -100,9 +100,10 @@ class debate_teams_table extends table_sql {
      * @return string
      */
     public function col_name(\stdClass $values): string {
-        $urlparams = array('id' => $values->id, 'sesskey' => sesskey());
+        $urlparams = array('id' => $values->id, 'cmid' => $this->cmid,
+                'response' => $values->responsetype, 'sesskey' => sesskey());
         $editurl = new moodle_url('/mod/debate/debate_teams_form_page.php', $urlparams);
-        return '<a href = "' . $editurl . '">' . $values->name . '</a>';
+        return \html_writer::tag('a', $values->name, array('href' => $editurl));
     }
 
     /**
@@ -118,7 +119,8 @@ class debate_teams_table extends table_sql {
             $status = get_string('inactive', 'mod_debate');
             $css = 'danger';
         }
-        return '<div class = "text-' . $css . '"><i class = "fa fa-circle"></i>' . $status . '</div>';
+        $icon = \html_writer::tag('i', '', array('class' => 'fa fa-circle'));
+        return \html_writer::tag('div', $icon . ' ' . $status, array('class' => "text-' . $css . '"));
     }
 
     /**
@@ -160,7 +162,6 @@ class debate_teams_table extends table_sql {
             $toggleicon = 'fa fa-eye-slash';
         }
 
-        $renderer = $PAGE->get_renderer('mod_debate');
         $params = array(
             'id' => $values->id,
             'buttons' => array(
@@ -182,7 +183,7 @@ class debate_teams_table extends table_sql {
             )
         );
 
-        return $renderer->render_action_buttons($params);
+        return $PAGE->get_renderer('mod_debate')->render_action_buttons($params);
     }
 
     /**
