@@ -135,7 +135,7 @@ if (!empty($debateteam->id)) {
     }
 }
 
-$debateteamstable = new debate_teams_table('debate_teams_table', $response, $moduleinstance->id, $cm->id);
+$debateteamstable = new debate_teams_table('debate_teams_table', (int)$response, (int)$moduleinstance->id, (int)$cm->id);
 
 $params = [
     'editurl' => new moodle_url($CFG->wwwroot . '/mod/debate/debate_teams_form_page.php',

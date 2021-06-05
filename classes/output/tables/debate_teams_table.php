@@ -56,12 +56,12 @@ class debate_teams_table extends table_sql {
     /**
      * debate_teams_table constructor.
      * Sets the SQL for the table and the pagination.
-     * @param int $uniqueid
+     * @param string $uniqueid
      * @param int $response
      * @param int $debateid
      * @param int $cmid
      */
-    public function __construct(int $uniqueid, int $response, int $debateid, int $cmid) {
+    public function __construct(string $uniqueid, int $response, int $debateid, int $cmid) {
         global $PAGE;
         $this->cmid = $cmid;
         parent::__construct($uniqueid);
