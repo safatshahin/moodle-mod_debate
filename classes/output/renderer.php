@@ -27,47 +27,55 @@ namespace mod_debate\output;
 defined('MOODLE_INTERNAL') || die;
 
 use mod_debate;
+use setasign\Fpdi\Tfpdf\FpdfTpl;
 use stdClass;
 
+/**
+ * Class renderer.
+ *
+ * @package     mod_debate
+ * @copyright   2021 Safat Shahin <safatshahin@yahoo.com>
+ * @license     https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
 class renderer extends \plugin_renderer_base {
 
     /**
      * Render debate view.
      *
-     * @param $moduleinstance
+     * @param stdClass $moduleinstance
      * @return string Template
      */
-    public function render_debate_view($moduleinstance) {
+    public function render_debate_view(stdClass $moduleinstance): string {
         return $this->render_from_template('mod_debate/view', $moduleinstance);
     }
 
     /**
      * Render debate page.
      *
-     * @param $moduleinstance
+     * @param stdClass $moduleinstance
      * @return string Template
      */
-    public function render_debate_page($moduleinstance) {
+    public function render_debate_page(stdClass $moduleinstance): string {
         return $this->render_from_template('mod_debate/debate', $moduleinstance);
     }
 
     /**
      * Render rebate teams page.
      *
-     * @param $moduleinstance
+     * @param stdClass $moduleinstance
      * @return string Template
      */
-    public function render_debate_teams($moduleinstance) {
+    public function render_debate_teams(stdClass $moduleinstance): string {
         return $this->render_from_template('mod_debate/debate_teams', $moduleinstance);
     }
 
     /**
      * Render action buttons.
      *
-     * @param $params
+     * @param array $params
      * @return string Template
      */
-    public function render_action_buttons($params) {
+    public function render_action_buttons(array $params): string {
         $context = new stdClass();
         $context->id = $params['id'];
         $context->buttons = $params['buttons'];
@@ -77,10 +85,10 @@ class renderer extends \plugin_renderer_base {
     /**
      * Render form page.
      *
-     * @param $params
+     * @param array $params
      * @return string Template
      */
-    public function render_form_page($params) {
+    public function render_form_page(array $params): string {
         $context = new stdClass();
         $context->title = $params['title'];
         $context->formhtml = $params['formhtml'];
@@ -90,17 +98,23 @@ class renderer extends \plugin_renderer_base {
     /**
      * Render teams table.
      *
-     * @param $params
+     * @param array $params
      * @return string Template
      */
-    public function render_table_page($params) {
+    public function render_table_page(array $params): string {
         $context = new stdClass();
         $context->editurl = $params['editurl'];
         $context->tablehtml = $params['tablehtml'];
         return $this->render_from_template('mod_debate/debate_teams_table', $context);
     }
 
-    public function render_cancel_button($cancelurl) {
+    /**
+     * Render cancel button in teams form.
+     *
+     * @param \moodle_url $cancelurl
+     * @return string
+     */
+    public function render_cancel_button(\moodle_url $cancelurl): string {
         $data = new stdClass();
         $data->cancelurl = $cancelurl;
         return $this->render_from_template('mod_debate/cancel_button', $data);

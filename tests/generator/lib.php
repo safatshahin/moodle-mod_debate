@@ -60,9 +60,10 @@ class mod_debate_generator extends testing_module_generator {
 
     /**
      * Creates a debate response
-     * @param $params
+     *
+     * @param array $params
      */
-    public function add_response($params) {
+    public function add_response(array $params) {
         global $DB;
         $data = (object) [
             'courseid' => $params['courseid'],
@@ -76,9 +77,10 @@ class mod_debate_generator extends testing_module_generator {
 
     /**
      * Creates a debate team
-     * @param $params
+     *
+     * @param array $params
      */
-    public function create_team($params) {
+    public function create_team(array $params) {
         global $DB;
         $params = (object) $params;
         $data = (object) [

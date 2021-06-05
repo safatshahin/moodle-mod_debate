@@ -32,6 +32,13 @@ require_once($CFG->libdir.'/formslib.php');
 
 use mod_debate\debate_constants;
 
+/**
+ * Class mod_debate_mod_form
+ *
+ * @package     mod_debate
+ * @copyright   2021 Safat Shahin <safatshahin@yahoo.com>
+ * @license     https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
 class mod_debate_mod_form extends moodleform_mod {
 
     /**

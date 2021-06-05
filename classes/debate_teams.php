@@ -28,13 +28,31 @@ defined('MOODLE_INTERNAL') || die();
 
 /**
  * Class debate_teams.
+ *
  * A class to help with debate teams data.
  */
 class debate_teams {
 
-    public $courseid = null;
-    public $debateid = null;
-    public $active = 1;
+    /**
+     * Course id.
+     *
+     * @var int
+     */
+    public $courseid;
+
+    /**
+     * Debate id.
+     *
+     * @var int
+     */
+    public $debateid;
+
+    /**
+     * Team active/inactive.
+     *
+     * @var int
+     */
+    public $active;
 
     /**
      * debate_teams constructor.

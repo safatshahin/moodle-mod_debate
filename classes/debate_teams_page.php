@@ -28,18 +28,72 @@ defined('MOODLE_INTERNAL') || die();
 
 /**
  * Class debate_teams_page.
+ *
  * A class to help with debate teams page data.
  */
 class debate_teams_page {
 
-    public $name = null;
-    public $courseid = 0;
-    public $debateid = 0;
-    public $responsetype = 0;
-    public $responseallowed = 0;
-    public $groupselection = 0;
-    public $active = 0;
+    /**
+     * Name of the team.
+     *
+     * @var string
+     */
+    public $name;
+
+    /**
+     * Course id.
+     *
+     * @var int
+     */
+    public $courseid;
+
+    /**
+     * Debate id.
+     *
+     * @var int
+     */
+    public $debateid;
+
+    /**
+     * Response type, positive/negative.
+     *
+     * @var int
+     */
+    public $responsetype;
+
+    /**
+     * Number of response allowed.
+     *
+     * @var int
+     */
+    public $responseallowed;
+
+    /**
+     * Selected groups for the team.
+     *
+     * @var int
+     */
+    public $groupselection;
+
+    /**
+     * Team active or not.
+     *
+     * @var int
+     */
+    public $active;
+
+    /**
+     * Time of team created.
+     *
+     * @var int
+     */
     public $timecreated = 0;
+
+    /**
+     * Time of team modified.
+     *
+     * @var int
+     */
     public $timemodified = 0;
 
     /**

@@ -43,6 +43,11 @@ class course_module_viewed extends \core\event\course_module_viewed {
         $this->data['objecttable'] = 'debate';
     }
 
+    /**
+     * This is used when restoring course logs where it is required that we map the objectid to it's new value in the new course.
+     *
+     * @return string[]
+     */
     public static function get_objectid_mapping() {
         return array('db' => 'debate', 'restore' => 'debate');
     }

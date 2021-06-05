@@ -34,11 +34,23 @@ use table_sql;
 
 /**
  * Class debate_teams_table.
+ *
  * An extension of your regular Moodle table.
  */
 class debate_teams_table extends table_sql {
 
+    /**
+     * Search string.
+     *
+     * @var string
+     */
     public $search = '';
+
+    /**
+     * Course module id.
+     *
+     * @var int
+     */
     public $cmid = 0;
 
     /**

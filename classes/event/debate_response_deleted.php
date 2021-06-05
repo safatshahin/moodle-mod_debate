@@ -62,10 +62,21 @@ class debate_response_deleted extends \core\event\course_module_viewed {
         return get_string('event_response_deleted', 'mod_debate');
     }
 
+    /**
+     * This is used when restoring course logs where it is required that we map the objectid to it's new value in the new course.
+     *
+     * @return string[]
+     */
     public static function get_objectid_mapping() {
         return array('db' => 'debate_response', 'restore' => 'debate_response');
     }
 
+    /**
+     * This is used when restoring course logs where it is required that we map the information in 'other'
+     * to it's new value in the new course.
+     *
+     * @return array
+     */
     public static function get_other_mapping() {
         $othermapped = array();
         $othermapped['relateduserid'] = array('db' => 'user', 'restore' => 'user');

@@ -203,6 +203,8 @@ class debate_data extends external_api {
     }
 
     /**
+     * Add debate response.
+     *
      * @param int $courseid
      * @param int $debateid
      * @param string $response

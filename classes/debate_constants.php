@@ -28,16 +28,39 @@ defined('MOODLE_INTERNAL') || die();
 
 /**
  * Class debate_constants.
+ *
  * A class to help with debate teams constants.
  */
 class debate_constants {
-    // Debate type.
+
+    /**
+     * Positive response value.
+     */
     const MOD_DEBATE_POSITIVE = 1;
+
+    /**
+     * Negative response value.
+     */
     const MOD_DEBATE_NEGATIVE = 0;
-    // Debate response type.
+
+    /**
+     * Unlimited response allowed from the debate.
+     */
     const MOD_DEBATE_RESPONSE_UNLIMITED = 0;
+
+    /**
+     * Only one response allowed in any one side.
+     */
     const MOD_DEBATE_RESPONSE_ONLY_ONE = 1;
+
+    /**
+     * Only one response allowed each side.
+     */
     const MOD_DEBATE_RENPONSE_ONE_PER_SECTIOM = 2;
+
+    /**
+     * Use debate teams to manage responses.
+     */
     const MOD_DEBATE_RESPONSE_USE_TEAMS = 3;
 
 }

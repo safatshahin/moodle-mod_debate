@@ -32,21 +32,82 @@ use mod_debate\event\debate_response_updated;
 use mod_debate\event\debate_response_deleted;
 use mod_debate\event\debate_response_error;
 
+/**
+ * Class debate_response
+ *
+ * @package mod_debate
+ * @copyright   2021 Safat Shahin <safatshahin@yahoo.com>
+ * @license     https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
 class debate_response {
+
+    /**
+     * Response id.
+     *
+     * @var int
+     */
     public $id;
+
+    /**
+     * Course id.
+     *
+     * @var int
+     */
     public $courseid;
+
+    /**
+     * Debate id.
+     *
+     * @var int
+     */
     public $debateid;
+
+    /**
+     * User id.
+     *
+     * @var int
+     */
     public $userid;
+
+    /**
+     * Response from the user.
+     *
+     * @var string
+     */
     public $response;
+
+    /**
+     * Type of response, positive/negative.
+     *
+     * @var int
+     */
     public $responsetype;
+
+    /**
+     * Time response created.
+     *
+     * @var int
+     */
     public $timecreated = 0;
+
+    /**
+     * Time response modified.
+     *
+     * @var int
+     */
     public $timemodified = 0;
+
+    /**
+     * Course module id.
+     *
+     * @var int
+     */
     public $cmid;
 
     /**
      * debate_response constructor.
      * Builds object if $id provided.
-     * @param $id
+     * @param int $id
      */
     public function __construct(int $id = 0) {
         if (!empty($id)) {

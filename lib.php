@@ -46,7 +46,7 @@ function debate_supports($feature) {
  * Implementation of the function for printing the form elements that control
  * whether the course reset functionality affects the debate response.
  *
- * @param $mform the course reset form that is being built.
+ * @param moodleform $mform the course reset form that is being built.
  */
 function debate_reset_course_form_definition($mform) {
     $mform->addElement('header', 'debateheader', get_string('modulenameplural', 'mod_debate'));
@@ -58,6 +58,8 @@ function debate_reset_course_form_definition($mform) {
 
 /**
  * Course reset form defaults.
+ *
+ * @param object $course
  * @return array the defaults.
  */
 function debate_reset_course_form_defaults($course) {
@@ -69,7 +71,8 @@ function debate_reset_course_form_defaults($course) {
 
 /**
  * This function is used by the reset_course_userdata function in moodlelib.
- * @param $data
+ *
+ * @param stdClass $data
  * @return array status array
  */
 function debate_reset_userdata($data) {
@@ -220,10 +223,10 @@ function debate_delete_instance($id) {
  * @package     mod_debate
  * @category    files
  *
- * @param stdClass $course.
- * @param stdClass $cm.
- * @param stdClass $context.
- * @return string[].
+ * @param stdClass $course
+ * @param stdClass $cm
+ * @param stdClass $context
+ * @return string[]
  */
 function debate_get_file_areas($course, $cm, $context) {
     return array();
@@ -235,16 +238,16 @@ function debate_get_file_areas($course, $cm, $context) {
  * @package     mod_debate
  * @category    files
  *
- * @param file_browser $browser.
- * @param array $areas.
- * @param stdClass $course.
- * @param stdClass $cm.
- * @param stdClass $context.
- * @param string $filearea.
- * @param int $itemid.
- * @param string $filepath.
- * @param string $filename.
- * @return file_info Instance or null if not found.
+ * @param file_browser $browser
+ * @param array $areas
+ * @param stdClass $course
+ * @param stdClass $cm
+ * @param stdClass $context
+ * @param string $filearea
+ * @param int $itemid
+ * @param string $filepath
+ * @param string $filename
+ * @return file_info Instance or null if not found
  */
 function debate_get_file_info($browser, $areas, $course, $cm, $context, $filearea, $itemid, $filepath, $filename) {
     return null;

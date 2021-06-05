@@ -38,7 +38,6 @@ use moodleform;
  *
  * An extension of your usual Moodle form.
  */
-
 class debate_teams_form extends moodleform {
 
     /**

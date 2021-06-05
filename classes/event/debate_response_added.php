@@ -62,6 +62,11 @@ class debate_response_added extends \core\event\course_module_viewed {
         return get_string('event_response_added', 'mod_debate');
     }
 
+    /**
+     * This is used when restoring course logs where it is required that we map the objectid to it's new value in the new course.
+     *
+     * @return string[]
+     */
     public static function get_objectid_mapping() {
         return array('db' => 'debate_response', 'restore' => 'debate_response');
     }
