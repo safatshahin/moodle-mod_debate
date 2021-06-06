@@ -18,7 +18,7 @@
  * Manage teams table of mod_debate.
  *
  * @package     mod_debate
- * @copyright   2021 Safat Shahin <safatshahin@gmail.com>
+ * @copyright   2021 Safat Shahin <safatshahin@yahoo.com>
  * @license     https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
@@ -34,21 +34,34 @@ use table_sql;
 
 /**
  * Class debate_teams_table.
+ *
  * An extension of your regular Moodle table.
  */
 class debate_teams_table extends table_sql {
 
+    /**
+     * Search string.
+     *
+     * @var string
+     */
     public $search = '';
+
+    /**
+     * Course module id.
+     *
+     * @var int
+     */
     public $cmid = 0;
 
     /**
      * debate_teams_table constructor.
      * Sets the SQL for the table and the pagination.
-     * @param $uniqueid
-     * @param $response
-     * @param $debateid
+     * @param string $uniqueid
+     * @param int $response
+     * @param int $debateid
+     * @param int $cmid
      */
-    public function __construct($uniqueid, $response, $debateid, $cmid) {
+    public function __construct(string $uniqueid, int $response, int $debateid, int $cmid) {
         global $PAGE;
         $this->cmid = $cmid;
         parent::__construct($uniqueid);
@@ -56,10 +69,10 @@ class debate_teams_table extends table_sql {
         $columns = array('id', 'name', 'active', 'timemodified', 'actions');
         $headers = array(
             get_string('id', 'mod_debate'),
-            get_string('name','mod_debate'),
-            get_string('status','mod_debate'),
+            get_string('name', 'mod_debate'),
+            get_string('status', 'mod_debate'),
             get_string('timemodified', 'mod_debate'),
-            get_string('actions','mod_debate')
+            get_string('actions', 'mod_debate')
         );
         $this->no_sorting('actions');
         $this->no_sorting('samplerequest');
@@ -81,38 +94,45 @@ class debate_teams_table extends table_sql {
     }
 
     /**
-     * @param $values
+     * Name column.
+     *
+     * @param \stdClass $values
      * @return string
      */
-    public function col_name($values) {
-        $urlparams = array('id' => $values->id, 'sesskey' => sesskey());
+    public function col_name(\stdClass $values): string {
+        $urlparams = array('id' => $values->id, 'cmid' => $this->cmid,
+                'response' => $values->responsetype, 'sesskey' => sesskey());
         $editurl = new moodle_url('/mod/debate/debate_teams_form_page.php', $urlparams);
-        return '<a href = "' . $editurl . '">' . $values->name . '</a>';
+        return \html_writer::tag('a', $values->name, array('href' => $editurl));
     }
 
     /**
-     * @param $values
+     * Active/inactive column.
+     *
+     * @param \stdClass $values
      * @return string
      */
-    public function col_active($values) {
+    public function col_active(\stdClass $values): string {
         $status = get_string('active', 'mod_debate');
-        $css = 'success';
+        $css = 'text-success';
         if (!$values->active) {
             $status = get_string('inactive', 'mod_debate');
-            $css = 'danger';
+            $css = 'text-danger';
         }
-        return '<div class = "text-' . $css . '"><i class = "fa fa-circle"></i>' . $status . '</div>';
+        $icon = \html_writer::tag('i', '', array('class' => 'fa fa-circle'));
+        return \html_writer::tag('div', $icon . ' ' . $status, array('class' => $css));
     }
 
     /**
-     * convert invalid to '-'
-     * @param $values
+     * convert invalid to '-'.
+     *
+     * @param \stdClass $values
      * @return string
      */
-    public function col_timemodified($values) {
+    public function col_timemodified(\stdClass $values): string {
         if (!empty($values->timemodified)) {
-            $dt = new DateTime("@$values->timemodified");  // convert UNIX timestamp to PHP DateTime
-            $result = $dt->format('d/m/Y H:i:s'); // output = 2017-01-01 00:00:00
+            $dt = new DateTime("@$values->timemodified");  // Convert UNIX timestamp to PHP DateTime.
+            $result = $dt->format('d/m/Y H:i:s'); // Output = 2017-01-01 00:00:00.
         } else {
             $result = '-';
         }
@@ -120,10 +140,12 @@ class debate_teams_table extends table_sql {
     }
 
     /**
-     * @param $values
+     * Action column.
+     *
+     * @param \stdClass $values
      * @return string Renderer template
      */
-    public function col_actions($values) {
+    public function col_actions(\stdClass $values): string {
         global $PAGE;
 
         $urlparams = array('id' => $values->id, 'response' => $values->responsetype, 'cmid' => $this->cmid, 'sesskey' => sesskey());
@@ -140,7 +162,6 @@ class debate_teams_table extends table_sql {
             $toggleicon = 'fa fa-eye-slash';
         }
 
-        $renderer = $PAGE->get_renderer('mod_debate');
         $params = array(
             'id' => $values->id,
             'buttons' => array(
@@ -162,7 +183,7 @@ class debate_teams_table extends table_sql {
             )
         );
 
-        return $renderer->render_action_buttons($params);
+        return $PAGE->get_renderer('mod_debate')->render_action_buttons($params);
     }
 
     /**
@@ -170,13 +191,13 @@ class debate_teams_table extends table_sql {
      *
      * @return string
      */
-    public function export_for_template() {
-
+    public function export_for_template(): string {
         ob_start();
         $this->out(20, true);
         $tablehtml = ob_get_contents();
         ob_end_clean();
-
         return $tablehtml;
     }
+
 }
+

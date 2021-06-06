@@ -18,7 +18,7 @@
  * Manage teams form of mod_debate.
  *
  * @package     mod_debate
- * @copyright   2021 Safat Shahin <safatshahin@gmail.com>
+ * @copyright   2021 Safat Shahin <safatshahin@yahoo.com>
  * @license     https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
@@ -35,16 +35,16 @@ use moodleform;
 
 /**
  * Class debate_teams_form.
+ *
  * An extension of your usual Moodle form.
  */
-
 class debate_teams_form extends moodleform {
 
     /**
      * Defines the custom structure_form.
      */
     public function definition() {
-        global $DB;
+        global $DB, $PAGE;
         $mform = $this->_form;
         $data = $this->_customdata['data'];
         $courseid = $this->_customdata['courseid'];
@@ -62,25 +62,28 @@ class debate_teams_form extends moodleform {
         $mform->addElement('hidden', 'responsetype');
         $mform->setType('responsetype', PARAM_INT);
 
-        $mform->addElement('text', 'name', get_string('name','mod_debate'));
+        $mform->addElement('text', 'name', get_string('name', 'mod_debate'));
         $mform->addRule('name', get_string('required'), 'required', null, 'client');
-        $mform->addRule('name',get_string('maximum_character_255', 'mod_debate'), 'maxlength', 255, 'client');
+        $mform->addRule('name', get_string('maximum_character_255', 'mod_debate'), 'maxlength',
+                255, 'client');
         $mform->setType('name', PARAM_TEXT);
 
-        $mform->addElement('text', 'responseallowed', get_string('responseallowed','mod_debate'));
+        $mform->addElement('text', 'responseallowed', get_string('responseallowed', 'mod_debate'));
         $mform->addRule('responseallowed', get_string('required'), 'required', null, 'client');
-        $mform->addRule('responseallowed',get_string('maximum_character_2', 'mod_debate'), 'maxlength', 2, 'client');
+        $mform->addRule('responseallowed', get_string('maximum_character_2', 'mod_debate'),
+                'maxlength', 2, 'client');
         $mform->setType('responseallowed', PARAM_TEXT);
 
         $options = array(
             'multiple' => true
         );
         $groups = $DB->get_records('groups', array('courseid' => (int)$courseid));
-        $course_groups = array();
+        $coursegroups = array();
         foreach ($groups as $group) {
-            $course_groups[$group->id] = $group->name;
+            $coursegroups[$group->id] = $group->name;
         }
-        $mform->addElement('autocomplete', 'groupselection', get_string('groupselection', 'mod_debate'), $course_groups, $options);
+        $mform->addElement('autocomplete', 'groupselection', get_string('groupselection', 'mod_debate'),
+                $coursegroups, $options);
         $mform->addRule('groupselection', get_string('required'), 'required', null, 'client');
         $mform->setDefault('groupselection', 0);
 
@@ -97,13 +100,10 @@ class debate_teams_form extends moodleform {
 
         $this->add_action_buttons(false);
 
-        $cancelhtml  = '<div class="row" style="margin-left: 1.5em">';
-        $cancelhtml .= '<div class="col-md-3 col-form-label d-flex pb-0 pr-md-0"></div>';
-        $cancelhtml .= '<div class="col-md-9 form-inline align-items-start felement">';
-        $cancelhtml .= '<a href='.$cancelurl.' class="btn btn-secondary" style="width: 8.2em">Cancel</a>';
-        $cancelhtml .= '</div></div>';
-        $mform->addElement('html', $cancelhtml);
+        $mform->addElement('html', $PAGE->get_renderer('mod_debate')->render_cancel_button($cancelurl));
 
         $this->set_data($data);
     }
+
 }
+

@@ -18,7 +18,7 @@
  * Define all the backup steps that will be used by the backup_debate_activity_task.
  *
  * @package     mod_debate
- * @copyright   2021 Safat Shahin <safatshahin@gmail.com>
+ * @copyright   2021 Safat Shahin <safatshahin@yahoo.com>
  * @license     https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
@@ -29,9 +29,12 @@ defined('MOODLE_INTERNAL') || die();
  */
 class backup_debate_activity_structure_step extends backup_activity_structure_step {
 
+    /**
+     * Backup structure definition.
+     */
     protected function define_structure() {
 
-        // To know if we are including userinfo
+        // To know if we are including userinfo.
         $userinfo = $this->get_setting_value('userinfo');
 
         // Define each element separated.
@@ -46,8 +49,8 @@ class backup_debate_activity_structure_step extends backup_activity_structure_st
                                                     'timecreated',
                                                     'timemodified'));
 
-        $debate_responses = new backup_nested_element('debate_responses');
-        $debate_response = new backup_nested_element('debate_response', array('id'),
+        $debateresponses = new backup_nested_element('debate_responses');
+        $debateresponse = new backup_nested_element('debate_response', array('id'),
                                                         array('courseid',
                                                             'debateid',
                                                             'cmid',
@@ -57,19 +60,19 @@ class backup_debate_activity_structure_step extends backup_activity_structure_st
                                                             'timecreated',
                                                             'timemodified'));
         // All the rest of elements only happen if we are including user info.
-        $debate->add_child($debate_responses);
-        $debate_responses->add_child($debate_response);
+        $debate->add_child($debateresponses);
+        $debateresponses->add_child($debateresponse);
         $debate->set_source_table('debate', array('id' => backup::VAR_ACTIVITYID));
 
         // All the rest of elements only happen if we are including user info.
         if ($userinfo) {
-            $debate_response->set_source_table('debate_response', array('debateid' => '../../id'));
+            $debateresponse->set_source_table('debate_response', array('debateid' => '../../id'));
         }
 
         // Define id annotations.
-        $debate_response->annotate_ids('user', 'userid');
+        $debateresponse->annotate_ids('user', 'userid');
 
-        // Define file annotations
+        // Define file annotations.
         $debate->annotate_files('mod_debate', 'intro', null); // This file areas haven't itemid.
 
         // Return the root element (debate), wrapped into standard activity structure.

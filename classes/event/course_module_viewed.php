@@ -18,7 +18,7 @@
  * The mod_debate course module viewed event.
  *
  * @package     mod_debate
- * @copyright   2021 Safat Shahin <safatshahin@gmail.com>
+ * @copyright   2021 Safat Shahin <safatshahin@yahoo.com>
  * @license     https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
@@ -29,7 +29,7 @@ defined('MOODLE_INTERNAL') || die();
  * The mod_debate course module viewed event class.
  *
  * @package     mod_debate
- * @copyright   2021 Safat Shahin <safatshahin@gmail.com>
+ * @copyright   2021 Safat Shahin <safatshahin@yahoo.com>
  * @license     https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class course_module_viewed extends \core\event\course_module_viewed {
@@ -43,6 +43,11 @@ class course_module_viewed extends \core\event\course_module_viewed {
         $this->data['objecttable'] = 'debate';
     }
 
+    /**
+     * This is used when restoring course logs where it is required that we map the objectid to it's new value in the new course.
+     *
+     * @return string[]
+     */
     public static function get_objectid_mapping() {
         return array('db' => 'debate', 'restore' => 'debate');
     }

@@ -18,7 +18,7 @@
  * The mod_debate response updated event.
  *
  * @package     mod_debate
- * @copyright   2021 Safat Shahin <safatshahin@gmail.com>
+ * @copyright   2021 Safat Shahin <safatshahin@yahoo.com>
  * @license     https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
@@ -29,7 +29,7 @@ defined('MOODLE_INTERNAL') || die();
  * The mod_debate response updated event class.
  *
  * @package     mod_debate
- * @copyright   2021 Safat Shahin <safatshahin@gmail.com>
+ * @copyright   2021 Safat Shahin <safatshahin@yahoo.com>
  * @license     https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class debate_response_updated extends \core\event\course_module_viewed {
@@ -49,8 +49,11 @@ class debate_response_updated extends \core\event\course_module_viewed {
      * @return string
      */
     public function get_description() {
-        return "The user with id '$this->userid' has updated a response with id '$this->objectid' in the debate with " .
-            "id '{$this->other['debateid']}'.";
+        $a = new \stdClass();
+        $a->userid = $this->userid;
+        $a->objectid = $this->objectid;
+        $a->debateid = $this->other['debateid'];
+        return get_string('event_response_updated_desc', 'mod_debate', $a);
     }
 
     /**
@@ -62,6 +65,11 @@ class debate_response_updated extends \core\event\course_module_viewed {
         return get_string('event_response_updated', 'mod_debate');
     }
 
+    /**
+     * This is used when restoring course logs where it is required that we map the objectid to it's new value in the new course.
+     *
+     * @return string[]
+     */
     public static function get_objectid_mapping() {
         return array('db' => 'debate_response', 'restore' => 'debate_response');
     }

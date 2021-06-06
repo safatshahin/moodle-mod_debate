@@ -18,12 +18,12 @@
  * Class for restore
  *
  * @package     mod_debate
- * @copyright   2021 Safat Shahin <safatshahin@gmail.com>
+ * @copyright   2021 Safat Shahin <safatshahin@yahoo.com>
  * @license     https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 defined('MOODLE_INTERNAL') || die();
-
+global $CFG;
 require_once($CFG->dirroot . '/mod/debate/backup/moodle2/restore_debate_stepslib.php');
 
 /**
@@ -34,14 +34,14 @@ class restore_debate_activity_task extends restore_activity_task {
     /**
      * Define (add) particular settings this activity can have.
      */
-    protected function define_my_settings() {
+    protected function define_my_settings(): void {
         // No particular settings for this activity.
     }
 
     /**
      * Define (add) particular steps this activity can have.
      */
-    protected function define_my_steps() {
+    protected function define_my_steps(): void {
         $this->add_step(new restore_debate_activity_structure_step('debate_structure', 'debate.xml'));
     }
 
@@ -49,7 +49,7 @@ class restore_debate_activity_task extends restore_activity_task {
      * Define the contents in the activity that must be
      * processed by the link decoder.
      */
-    static public function define_decode_contents() {
+    public static function define_decode_contents(): array {
         $contents = array();
 
         $contents[] = new restore_decode_content('debate', array('intro'), null);
@@ -61,7 +61,7 @@ class restore_debate_activity_task extends restore_activity_task {
      * Define the decoding rules for links belonging
      * to the activity to be executed by the link decoder.
      */
-    static public function define_decode_rules() {
+    public static function define_decode_rules(): array {
         $rules = array();
 
         $rules[] = new restore_decode_rule('DEBATEDEBATEBYID', '/mod/debate/debate.php?id=$1', 'course_module');
@@ -74,7 +74,7 @@ class restore_debate_activity_task extends restore_activity_task {
     /**
      * Define the restore log rules that will be applied.
      */
-    static public function define_restore_log_rules() {
+    public static function define_restore_log_rules(): array {
         $rules = array();
         $rules[] = new restore_log_rule('debate', 'view', 'view.php?id={course_module}', '{debate}');
         return $rules;
@@ -83,7 +83,7 @@ class restore_debate_activity_task extends restore_activity_task {
     /**
      * Define the restore log rules that will be applied.
      */
-    static public function define_restore_log_rules_for_course() {
+    public static function define_restore_log_rules_for_course(): array {
         $rules = array();
         $rules[] = new restore_log_rule('debate', 'view all', 'index.php?id={course}', null);
         return $rules;

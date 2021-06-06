@@ -17,37 +17,58 @@
 /**
  * Private debate module utility functions
  *
- * @package mod_debate
- * @copyright  2009 Petr Skoda (http://skodak.org)
+ * @package    mod_debate
+ * @copyright  2021 Safat Shahin <safatshahin@yahoo.com>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 defined('MOODLE_INTERNAL') || die;
+
 global $CFG;
 require_once($CFG->libdir.'/filelib.php');
 require_once($CFG->libdir.'/resourcelib.php');
 require_once($CFG->dirroot.'/mod/debate/lib.php');
 
-
 /**
  * File browsing support class
  */
 class debate_content_file_info extends file_info_stored {
+
+    /**
+     * Returns parent file_info instance.
+     *
+     * @return file_info|null
+     */
     public function get_parent() {
         if ($this->lf->get_filepath() === '/' and $this->lf->get_filename() === '.') {
             return $this->browser->get_file_info($this->context);
         }
         return parent::get_parent();
     }
+
+    /**
+     * Returns localised visible name.
+     *
+     * @return string
+     */
     public function get_visible_name() {
         if ($this->lf->get_filepath() === '/' and $this->lf->get_filename() === '.') {
             return $this->topvisiblename;
         }
         return parent::get_visible_name();
     }
+
 }
 
+/**
+ * Get editor options.
+ *
+ * @param context $context
+ * @return array
+ */
 function debate_get_editor_options($context) {
     global $CFG;
-    return array('subdirs'=>1, 'maxbytes'=>$CFG->maxbytes, 'maxfiles'=>-1, 'changeformat'=>1, 'context'=>$context, 'noclean'=>1, 'trusttext'=>0);
+    return array('subdirs' => 1, 'maxbytes' => $CFG->maxbytes, 'maxfiles' => -1, 'changeformat' => 1,
+            'context' => $context, 'noclean' => 1, 'trusttext' => 0);
 }
+

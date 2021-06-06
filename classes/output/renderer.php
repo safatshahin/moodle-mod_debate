@@ -18,7 +18,7 @@
  * Renderer for mod_debate.
  *
  * @package     mod_debate
- * @copyright   2021 Safat Shahin <safatshahin@gmail.com>
+ * @copyright   2021 Safat Shahin <safatshahin@yahoo.com>
  * @license     https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
@@ -27,82 +27,98 @@ namespace mod_debate\output;
 defined('MOODLE_INTERNAL') || die;
 
 use mod_debate;
-use moodle_exception;
+use setasign\Fpdi\Tfpdf\FpdfTpl;
 use stdClass;
 
+/**
+ * Class renderer.
+ *
+ * @package     mod_debate
+ * @copyright   2021 Safat Shahin <safatshahin@yahoo.com>
+ * @license     https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
 class renderer extends \plugin_renderer_base {
+
     /**
-     * Throws in a call to the JS for AJAX etc.
+     * Render debate view.
      *
-     * @return string html for the page
+     * @param stdClass $moduleinstance
+     * @return string Template
      */
-    public function __construct()
-    {
-        global $PAGE;
-        parent::__construct($PAGE, RENDERER_TARGET_GENERAL);
+    public function render_debate_view(stdClass $moduleinstance): string {
+        return $this->render_from_template('mod_debate/view', $moduleinstance);
     }
 
     /**
-     * @param $moduleinstance
+     * Render debate page.
+     *
+     * @param stdClass $moduleinstance
      * @return string Template
-     * @throws moodle_exception
      */
-    public function render_debate_view($moduleinstance) {
-        return parent::render_from_template('mod_debate/view', $moduleinstance);
+    public function render_debate_page(stdClass $moduleinstance): string {
+        return $this->render_from_template('mod_debate/debate', $moduleinstance);
     }
 
     /**
-     * @param $moduleinstance
+     * Render rebate teams page.
+     *
+     * @param stdClass $moduleinstance
      * @return string Template
-     * @throws moodle_exception
      */
-    public function render_debate_page($moduleinstance) {
-        return parent::render_from_template('mod_debate/debate', $moduleinstance);
+    public function render_debate_teams(stdClass $moduleinstance): string {
+        return $this->render_from_template('mod_debate/debate_teams', $moduleinstance);
     }
 
     /**
-     * @param $moduleinstance
-     * @return string Template
-     * @throws moodle_exception
-     */
-    public function render_debate_teams($moduleinstance) {
-        return parent::render_from_template('mod_debate/debate_teams', $moduleinstance);
-    }
-
-    /**
-     * @param $params
+     * Render action buttons.
+     *
+     * @param array $params
      * @return string Template
      */
-    public function render_action_buttons($params) {
-        global $OUTPUT;
+    public function render_action_buttons(array $params): string {
         $context = new stdClass();
         $context->id = $params['id'];
         $context->buttons = $params['buttons'];
-        return $OUTPUT->render_from_template('mod_debate/action_buttons', $context);
+        return $this->render_from_template('mod_debate/action_buttons', $context);
     }
 
     /**
-     * @param $params
+     * Render form page.
+     *
+     * @param array $params
      * @return string Template
      */
-    public function render_form_page($params) {
-        global $OUTPUT;
+    public function render_form_page(array $params): string {
         $context = new stdClass();
         $context->title = $params['title'];
         $context->formhtml = $params['formhtml'];
-        return $OUTPUT->render_from_template('mod_debate/debate_teams_form', $context);
+        return $this->render_from_template('mod_debate/debate_teams_form', $context);
     }
 
     /**
-     * @param $params
+     * Render teams table.
+     *
+     * @param array $params
      * @return string Template
      */
-    public function render_table_page($params) {
-        global $OUTPUT;
+    public function render_table_page(array $params): string {
         $context = new stdClass();
         $context->editurl = $params['editurl'];
         $context->tablehtml = $params['tablehtml'];
-        return $OUTPUT->render_from_template('mod_debate/debate_teams_table', $context);
+        return $this->render_from_template('mod_debate/debate_teams_table', $context);
+    }
+
+    /**
+     * Render cancel button in teams form.
+     *
+     * @param \moodle_url $cancelurl
+     * @return string
+     */
+    public function render_cancel_button(\moodle_url $cancelurl): string {
+        $data = new stdClass();
+        $data->cancelurl = $cancelurl;
+        return $this->render_from_template('mod_debate/cancel_button', $data);
     }
 
 }
+

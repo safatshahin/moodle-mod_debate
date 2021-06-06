@@ -19,7 +19,7 @@
  *
  * @package     mod_debate
  * @category    grade
- * @copyright   2021 Safat Shahin <safatshahin@gmail.com>
+ * @copyright   2021 Safat Shahin <safatshahin@yahoo.com>
  * @license     https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
@@ -28,11 +28,7 @@ require(__DIR__.'/../../config.php');
 // Course module ID.
 $id = required_param('id', PARAM_INT);
 
-// Item number may be != 0 for activities that allow more than one grade per user.
-$itemnumber = optional_param('itemnumber', 0, PARAM_INT);
-
-// Graded user ID (optional).
-$userid = optional_param('userid', 0, PARAM_INT);
+require_login();
 
 // In the simplest case just redirect to the view page.
 redirect('view.php?id='.$id);

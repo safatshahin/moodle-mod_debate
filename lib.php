@@ -18,7 +18,7 @@
  * Library of interface functions and constants.
  *
  * @package     mod_debate
- * @copyright   2021 Safat Shahin <safatshahin@gmail.com>
+ * @copyright   2021 Safat Shahin <safatshahin@yahoo.com>
  * @license     https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
@@ -32,12 +32,13 @@ defined('MOODLE_INTERNAL') || die();
  */
 function debate_supports($feature) {
     switch($feature) {
-        case FEATURE_MOD_INTRO:               return true;
-        case FEATURE_COMPLETION_TRACKS_VIEWS: return true;
-        case FEATURE_BACKUP_MOODLE2:          return true;
-        case FEATURE_SHOW_DESCRIPTION:        return true;
-
-        default: return null;
+        case FEATURE_BACKUP_MOODLE2:
+        case FEATURE_SHOW_DESCRIPTION:
+        case FEATURE_COMPLETION_TRACKS_VIEWS:
+        case FEATURE_MOD_INTRO:
+            return true;
+        default:
+            return null;
     }
 }
 
@@ -45,7 +46,7 @@ function debate_supports($feature) {
  * Implementation of the function for printing the form elements that control
  * whether the course reset functionality affects the debate response.
  *
- * @param $mform the course reset form that is being built.
+ * @param moodleform $mform the course reset form that is being built.
  */
 function debate_reset_course_form_definition($mform) {
     $mform->addElement('header', 'debateheader', get_string('modulenameplural', 'mod_debate'));
@@ -55,9 +56,10 @@ function debate_reset_course_form_definition($mform) {
         get_string('reset_debate_teams', 'mod_debate'));
 }
 
-
 /**
  * Course reset form defaults.
+ *
+ * @param object $course
  * @return array the defaults.
  */
 function debate_reset_course_form_defaults($course) {
@@ -69,7 +71,8 @@ function debate_reset_course_form_defaults($course) {
 
 /**
  * This function is used by the reset_course_userdata function in moodlelib.
- * @param $data
+ *
+ * @param stdClass $data
  * @return array status array
  */
 function debate_reset_userdata($data) {
@@ -105,7 +108,7 @@ function debate_reset_userdata($data) {
  * @return array
  */
 function debate_get_view_actions() {
-    return array('view','view all');
+    return array('view', 'view all');
 }
 
 /**
@@ -144,7 +147,7 @@ function debate_add_instance($moduleinstance, $mform = null) {
     $id = $DB->insert_record('debate', $moduleinstance);
     $moduleinstance->id = $id;
 
-    $DB->set_field('course_modules', 'instance', $id, array('id'=>$cmid));
+    $DB->set_field('course_modules', 'instance', $id, array('id' => $cmid));
 
     $completiontimeexpected = !empty($moduleinstance->completionexpected) ? $moduleinstance->completionexpected : null;
     \core_completion\api::update_completion_date_event($cmid, 'debate', $id, $completiontimeexpected);
@@ -187,19 +190,19 @@ function debate_update_instance($moduleinstance, $mform = null) {
 function debate_delete_instance($id) {
     global $DB;
 
-    if (!$debate = $DB->get_record('debate', array('id'=>$id))) {
+    if (!$debate = $DB->get_record('debate', array('id' => $id))) {
         return false;
     }
     if (!$cm = get_coursemodule_from_instance('debate', $debate->id)) {
         return false;
     }
-    if (!$course = $DB->get_record('course', array('id'=>$cm->course))) {
+    if (!$course = $DB->get_record('course', array('id' => $cm->course))) {
         return false;
     }
 
     $context = context_module::instance($cm->id);
 
-    // now get rid of all files
+    // Now get rid of all files.
     $fs = get_file_storage();
     $fs->delete_area_files($context->id);
 
@@ -220,10 +223,10 @@ function debate_delete_instance($id) {
  * @package     mod_debate
  * @category    files
  *
- * @param stdClass $course.
- * @param stdClass $cm.
- * @param stdClass $context.
- * @return string[].
+ * @param stdClass $course
+ * @param stdClass $cm
+ * @param stdClass $context
+ * @return string[]
  */
 function debate_get_file_areas($course, $cm, $context) {
     return array();
@@ -235,16 +238,16 @@ function debate_get_file_areas($course, $cm, $context) {
  * @package     mod_debate
  * @category    files
  *
- * @param file_browser $browser.
- * @param array $areas.
- * @param stdClass $course.
- * @param stdClass $cm.
- * @param stdClass $context.
- * @param string $filearea.
- * @param int $itemid.
- * @param string $filepath.
- * @param string $filename.
- * @return file_info Instance or null if not found.
+ * @param file_browser $browser
+ * @param array $areas
+ * @param stdClass $course
+ * @param stdClass $cm
+ * @param stdClass $context
+ * @param string $filearea
+ * @param int $itemid
+ * @param string $filepath
+ * @param string $filename
+ * @return file_info Instance or null if not found
  */
 function debate_get_file_info($browser, $areas, $course, $cm, $context, $filearea, $itemid, $filepath, $filename) {
     return null;
@@ -301,9 +304,10 @@ function debate_view($debate, $course, $cm, $context) {
     // Completion.
     $completion = new completion_info($course);
     $completion->set_module_viewed($cm);
-    $user_response_count = $DB->count_records_select('debate_response', 'debateid = :debateid AND courseid = :courseid AND userid = :userid',
+    $userresponsecount = $DB->count_records_select('debate_response',
+            'debateid = :debateid AND courseid = :courseid AND userid = :userid',
         array('debateid' => (int)$debate->id, 'courseid' => (int)$course->id, 'userid' => $USER->id), 'COUNT("id")');
-    if ($user_response_count >= (int)$debate->debateresponsecomcount) {
+    if ($userresponsecount >= (int)$debate->debateresponsecomcount) {
         $completion->update_state($cm, COMPLETION_COMPLETE, $USER->id);
     } else {
         $current = $completion->get_data($cm, false, $USER->id);

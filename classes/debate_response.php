@@ -18,7 +18,7 @@
  * Debate response class for mod_debate.
  *
  * @package     mod_debate
- * @copyright   2021 Safat Shahin <safatshahin@gmail.com>
+ * @copyright   2021 Safat Shahin <safatshahin@yahoo.com>
  * @license     https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
@@ -32,21 +32,82 @@ use mod_debate\event\debate_response_updated;
 use mod_debate\event\debate_response_deleted;
 use mod_debate\event\debate_response_error;
 
+/**
+ * Class debate_response
+ *
+ * @package mod_debate
+ * @copyright   2021 Safat Shahin <safatshahin@yahoo.com>
+ * @license     https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
 class debate_response {
+
+    /**
+     * Response id.
+     *
+     * @var int
+     */
     public $id;
+
+    /**
+     * Course id.
+     *
+     * @var int
+     */
     public $courseid;
+
+    /**
+     * Debate id.
+     *
+     * @var int
+     */
     public $debateid;
+
+    /**
+     * User id.
+     *
+     * @var int
+     */
     public $userid;
+
+    /**
+     * Response from the user.
+     *
+     * @var string
+     */
     public $response;
+
+    /**
+     * Type of response, positive/negative.
+     *
+     * @var int
+     */
     public $responsetype;
+
+    /**
+     * Time response created.
+     *
+     * @var int
+     */
     public $timecreated = 0;
+
+    /**
+     * Time response modified.
+     *
+     * @var int
+     */
     public $timemodified = 0;
+
+    /**
+     * Course module id.
+     *
+     * @var int
+     */
     public $cmid;
 
     /**
      * debate_response constructor.
      * Builds object if $id provided.
-     * @param $id
+     * @param int $id
      */
     public function __construct(int $id = 0) {
         if (!empty($id)) {
@@ -56,33 +117,35 @@ class debate_response {
 
     /**
      * Gets the specified debate_response and loads it into the object.
-     * @param $id
+     *
+     * @param int $id
      */
-    public function load_debate_response($id) {
+    public function load_debate_response(int $id): void {
         global $DB;
-        $debate_response = $DB->get_record('debate_response', array('id' => $id));
-        if (!empty($debate_response)) {
-            $this->id = $debate_response->id;
-            $this->courseid = $debate_response->courseid;
-            $this->debateid = $debate_response->debateid;
-            $this->userid = $debate_response->userid;
-            $this->response = $debate_response->response;
-            $this->responsetype = $debate_response->responsetype;
-            $this->timecreated = $debate_response->timecreated;
-            $this->timemodified = $debate_response->timemodified;
+        $debateresponse = $DB->get_record('debate_response', array('id' => $id));
+        if (!empty($debateresponse)) {
+            $this->id = $debateresponse->id;
+            $this->courseid = $debateresponse->courseid;
+            $this->debateid = $debateresponse->debateid;
+            $this->userid = $debateresponse->userid;
+            $this->response = $debateresponse->response;
+            $this->responsetype = $debateresponse->responsetype;
+            $this->timecreated = $debateresponse->timecreated;
+            $this->timemodified = $debateresponse->timemodified;
         }
     }
 
     /**
      * Constructs the actual debate_response object given either a $DB object or Moodle form data.
-     * @param $debate_response
+     *
+     * @param \stdClass $debateresponse
      */
-    public function construct_debate_response($debate_response) {
-        if (!empty($debate_response)) {
-            $this->courseid = $debate_response->courseid;
-            $this->debateid = $debate_response->debateid;
-            $this->response = $debate_response->response;
-            $this->responsetype = $debate_response->responsetype;
+    public function construct_debate_response(\stdClass $debateresponse): void {
+        if (!empty($debateresponse)) {
+            $this->courseid = $debateresponse->courseid;
+            $this->debateid = $debateresponse->debateid;
+            $this->response = $debateresponse->response;
+            $this->responsetype = $debateresponse->responsetype;
         }
     }
 
@@ -92,20 +155,20 @@ class debate_response {
      */
     public function delete(): bool {
         global $DB;
-        $delete_success = false;
+        $deletesuccess = false;
         if (!empty($this->id)) {
-            $delete_success = $DB->delete_records('debate_response', array('id' => $this->id));
-            if ($delete_success) {
-                $event_success = self::calculate_completion(true);
-                if ($event_success) {
+            $deletesuccess = $DB->delete_records('debate_response', array('id' => $this->id));
+            if ($deletesuccess) {
+                $eventsuccess = self::calculate_completion(true);
+                if ($eventsuccess) {
                     self::after_delete();
                 } else {
                     self::update_error();
                 }
-                $delete_success = $event_success;
+                $deletesuccess = $eventsuccess;
             }
         }
-        return $delete_success;
+        return $deletesuccess;
     }
 
     /**
@@ -114,34 +177,34 @@ class debate_response {
      */
     public function save(): bool {
         global $DB, $USER;
-        $save_success = false;
+        $savesuccess = false;
         if (!empty($this->id)) {
             $this->timemodified = time();
-            $save_success = $DB->update_record('debate_response', $this);
-            if($save_success) {
-                $event_success = self::calculate_completion();
-                if ($event_success) {
+            $savesuccess = $DB->update_record('debate_response', $this);
+            if ($savesuccess) {
+                $eventsuccess = self::calculate_completion();
+                if ($eventsuccess) {
                     self::after_update();
                 } else {
                     self::update_error();
                 }
-                $save_success = $event_success;
+                $savesuccess = $eventsuccess;
             }
         } else {
             $this->userid = $USER->id;
             $this->timecreated = time();
             $this->id = $DB->insert_record('debate_response', $this);
             if (!empty($this->id)) {
-                $event_success = self::calculate_completion();
-                if ($event_success) {
+                $eventsuccess = self::calculate_completion();
+                if ($eventsuccess) {
                     self::after_create();
                 } else {
                     self::update_error();
                 }
-                $save_success = $event_success;
+                $savesuccess = $eventsuccess;
             }
         }
-        return $save_success;
+        return $savesuccess;
     }
 
     /**
@@ -154,31 +217,31 @@ class debate_response {
         $result = false;
         $debate = $DB->get_record('debate', array('id' => (int)$this->debateid), '*', MUST_EXIST);
         $course = $DB->get_record('course', array('id' => (int)$this->courseid), '*', MUST_EXIST);
-        $course_module = get_coursemodule_from_instance('debate', $debate->id, $course->id, false, MUST_EXIST);
-        if ($course_module) {
-            $this->cmid = $course_module->id;
-            $user_response_count = $DB->count_records_select('debate_response',
+        $coursemodule = get_coursemodule_from_instance('debate', $debate->id, $course->id, false, MUST_EXIST);
+        if ($coursemodule) {
+            $this->cmid = $coursemodule->id;
+            $userresponsecount = $DB->count_records_select('debate_response',
                 'debateid = :debateid AND courseid = :courseid AND userid = :userid',
                 array('debateid' => (int)$debate->id, 'courseid' => (int)$course->id, 'userid' => $this->userid), 'COUNT("id")');
             $completion = new \completion_info($course);
             if ($delete) {
-                if ($completion->is_enabled($course_module) == COMPLETION_TRACKING_AUTOMATIC &&
+                if ($completion->is_enabled($coursemodule) == COMPLETION_TRACKING_AUTOMATIC &&
                     (int)$debate->debateresponsecomcount > 0) {
-                    if ($user_response_count >= (int)$debate->debateresponsecomcount) {
-                        $completion->update_state($course_module, COMPLETION_COMPLETE, $this->userid);
+                    if ($userresponsecount >= (int)$debate->debateresponsecomcount) {
+                        $completion->update_state($coursemodule, COMPLETION_COMPLETE, $this->userid);
                     } else {
-                        $current = $completion->get_data($course_module, false, $this->userid);
+                        $current = $completion->get_data($coursemodule, false, $this->userid);
                         $current->completionstate = COMPLETION_INCOMPLETE;
                         $current->timemodified    = time();
                         $current->overrideby      = null;
-                        $completion->internal_set_data($course_module, $current);
+                        $completion->internal_set_data($coursemodule, $current);
                     }
                 }
             } else {
-                if ($completion->is_enabled($course_module) == COMPLETION_TRACKING_AUTOMATIC
+                if ($completion->is_enabled($coursemodule) == COMPLETION_TRACKING_AUTOMATIC
                     && (int)$debate->debateresponsecomcount > 0 &&
-                    $user_response_count >= (int)$debate->debateresponsecomcount) {
-                    $completion->update_state($course_module, COMPLETION_COMPLETE, $this->userid);
+                        $userresponsecount >= (int)$debate->debateresponsecomcount) {
+                    $completion->update_state($coursemodule, COMPLETION_COMPLETE, $this->userid);
                 }
             }
             $result = true;
@@ -190,7 +253,7 @@ class debate_response {
     /**
      * create event for debate_response.
      */
-    public function after_create() {
+    public function after_create(): void {
         global $USER;
         $event = debate_response_added::create(
             array(
@@ -208,7 +271,7 @@ class debate_response {
     /**
      * update event for debate_response.
      */
-    public function after_update() {
+    public function after_update(): void {
         global $USER;
         $event = debate_response_updated::create(
             array(
@@ -226,7 +289,7 @@ class debate_response {
     /**
      * delete event for debate_response.
      */
-    public function after_delete() {
+    public function after_delete(): void {
         global $USER;
         $event = debate_response_deleted::create(
             array(
@@ -244,7 +307,7 @@ class debate_response {
     /**
      * error event for debate_response.
      */
-    public function update_error() {
+    public function update_error(): void {
         global $USER;
         $event = debate_response_error::create(
             array(
@@ -256,53 +319,54 @@ class debate_response {
 
     /**
      * find matching responses for debate_response.
-     * @param $params
+     *
+     * @param array $params
      * @return array
      */
-    public static function find_matching_response($params): array {
+    public static function find_matching_response(array $params): array {
         global $DB;
         $datas = $DB->get_records('debate_response', array('courseid' => $params['courseid'],
             'debateid' => $params['debateid'], 'responsetype' => $params['responsetype']), '', 'response');
 
-        $exclude_words = array('i','a','about','an','and','are','as','at','be','by','com','de','en','for',
-            'from','how','in','is','it','la','of','on','or','that','the','this','to','was','what','when','where',
-            'who','will','with','und','the','www', "such", "have", "then");
+        $excludewords = array('i', 'a', 'about', 'an', 'and', 'are', 'as', 'at', 'be', 'by', 'com', 'de', 'en', 'for',
+                              'from', 'how', 'in', 'is', 'it', 'la', 'of', 'on', 'or', 'that', 'the', 'this', 'to', 'was',
+                              'what', 'when', 'where', 'who', 'will', 'with', 'und', 'the', 'www', "such", "have", "then");
 
-        $clean_response = preg_replace('/\s\s+/i', '', $params['response']);
-        $clean_response = trim($clean_response);
-        $clean_response = preg_replace('/[^a-zA-Z0-9 -]/', '', $clean_response);
-        $clean_response = strtolower($clean_response);
+        $cleanresponse = preg_replace('/\s\s+/i', '', $params['response']);
+        $cleanresponse = trim($cleanresponse);
+        $cleanresponse = preg_replace('/[^a-zA-Z0-9 -]/', '', $cleanresponse);
+        $cleanresponse = strtolower($cleanresponse);
 
-        //all the words from typed response
-        preg_match_all('/\b.*?\b/i', $clean_response, $response_words);
-        $response_words = $response_words[0];
+        // All the words from typed response.
+        preg_match_all('/\b.*?\b/i', $cleanresponse, $responsewords);
+        $responsewords = $responsewords[0];
 
-        //remove invalid words
-        foreach ($response_words as $key => $word) {
-            if ( $word == '' || in_array(strtolower($word), $exclude_words) || strlen($word) <= 2 ) {
-                unset($response_words[$key]);
+        // Remove invalid words.
+        foreach ($responsewords as $key => $word) {
+            if ( $word == '' || in_array(strtolower($word), $excludewords) || strlen($word) <= 2 ) {
+                unset($responsewords[$key]);
             }
         }
 
-        $response_word_counter = count($response_words);
+        $responsewordcounter = count($responsewords);
         if (!empty($datas)) {
             foreach ($datas as $key => $data) {
-                $data_counter = 0;
-                foreach ($response_words as $response_word) {
-                    if (strpos($data->response, $response_word) == false) {
-                        $data_counter++;
+                $datacounter = 0;
+                foreach ($responsewords as $responseword) {
+                    if (strpos($data->response, $responseword) == false) {
+                        $datacounter++;
                     }
                 }
-                if ($data_counter == $response_word_counter) {
+                if ($datacounter == $responsewordcounter) {
                     unset($datas[$key]);
                 }
             }
         }
-        $final_data = array();
+        $finaldata = array();
         foreach ($datas as $dt) {
-            $final_data[] = $dt;
+            $finaldata[] = $dt;
         }
-        return $final_data;
+        return $finaldata;
     }
 
 }
