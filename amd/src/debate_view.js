@@ -16,7 +16,7 @@ define(['jquery', 'core/ajax', 'core/str', 'core/config', 'core/notification', '
                 var responseType = 0;
                 var responseId = '';
                 var responseTextID = '';
-                var id = null;
+                var id = 0;
                 var elementid = '';
                 var elementidContainer = '';
                 var editID = '';
@@ -44,10 +44,10 @@ define(['jquery', 'core/ajax', 'core/str', 'core/config', 'core/notification', '
                             var responseAjax = AJAX.call([{
                                 methodname: 'mod_debate_find_debate_respose',
                                 args: {
-                                    courseid: courseID,
-                                    debateid: debateID,
+                                    courseid: parseInt(courseID),
+                                    debateid: parseInt(debateID),
                                     response: userResponsetext,
-                                    responsetype: responseType
+                                    responsetype: parseInt(responseType)
                                 }
                             }]);
                             responseAjax[0].done(function (found) {
@@ -127,9 +127,9 @@ define(['jquery', 'core/ajax', 'core/str', 'core/config', 'core/notification', '
                         var allocationAjax = AJAX.call([{
                             methodname: 'mod_debate_check_response_allocation',
                             args: {
-                                debateid: debateID,
+                                debateid: parseInt(debateID),
                                 attribute: 'positive',
-                                userid: userID
+                                userid: parseInt(userID)
                             }
                         }]);
                         allocationAjax[0].done(function (output) {
@@ -142,7 +142,7 @@ define(['jquery', 'core/ajax', 'core/str', 'core/config', 'core/notification', '
                                 deleteID = 'mod-debate-positive-delete';
                                 $(responseTextID).val('');
                                 $(responseId).css('display', 'block');
-                                id = null;
+                                id = 0;
                             } else {
                                 notification.addNotification({
                                     message: output.message,
@@ -160,9 +160,9 @@ define(['jquery', 'core/ajax', 'core/str', 'core/config', 'core/notification', '
                         var allocationAjax = AJAX.call([{
                             methodname: 'mod_debate_check_response_allocation',
                             args: {
-                                debateid: debateID,
+                                debateid: parseInt(debateID),
                                 attribute: 'negative',
-                                userid: userID
+                                userid: parseInt(userID)
                             }
                         }]);
                         allocationAjax[0].done(function (output) {
@@ -175,7 +175,7 @@ define(['jquery', 'core/ajax', 'core/str', 'core/config', 'core/notification', '
                                 deleteID = 'mod-debate-negative-delete';
                                 $(responseTextID).val('');
                                 $(responseId).css('display', 'block');
-                                id = null;
+                                id = 0;
                             } else {
                                 notification.addNotification({
                                     message: output.message,
@@ -201,11 +201,11 @@ define(['jquery', 'core/ajax', 'core/str', 'core/config', 'core/notification', '
                         var responseCall = AJAX.call([{
                             methodname: 'mod_debate_add_debate_respose',
                             args: {
-                                courseid: courseID,
-                                debateid: debateID,
+                                courseid: parseInt(courseID),
+                                debateid: parseInt(debateID),
                                 response: userResponse,
-                                responsetype: responseType,
-                                id: id
+                                responsetype: parseInt(responseType),
+                                id: parseInt(id)
                             }
                         }]);
                         responseCall[0].done(function (output) {
@@ -213,7 +213,7 @@ define(['jquery', 'core/ajax', 'core/str', 'core/config', 'core/notification', '
                                 $(responseId).css('display', 'none');
                                 $("div").remove(".mod-debate-find-response");
                                 $(elementidContainer).remove();
-                                if (id === null && $.isNumeric(output.id)) {
+                                if (id === 0 && $.isNumeric(output.id)) {
                                     id = output.id;
                                 }
                                 var outputContext = {
@@ -232,7 +232,7 @@ define(['jquery', 'core/ajax', 'core/str', 'core/config', 'core/notification', '
                                 templates.render('mod_debate/debate_response_output', outputContext).then(function (html, js) {
                                     var outputResponse = $(responseId);
                                     outputResponse.after(html);
-                                    id = null;
+                                    id = 0;
                                     $("div").remove(".mod-debate-find-response");
                                     elementidContainer = '';
                                     elementid = '';
@@ -256,9 +256,9 @@ define(['jquery', 'core/ajax', 'core/str', 'core/config', 'core/notification', '
                         var responseAjax = AJAX.call([{
                             methodname: 'mod_debate_delete_debate_respose',
                             args: {
-                                courseid: courseID,
-                                debateid: debateID,
-                                id: id
+                                courseid: parseInt(courseID),
+                                debateid: parseInt(debateID),
+                                id: parseInt(id)
                             }
                         }]);
                         responseAjax[0].done(function (deleted) {
