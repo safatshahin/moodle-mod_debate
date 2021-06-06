@@ -52,7 +52,7 @@ class debate_teams {
      *
      * @var int
      */
-    public $active;
+    public $active = 1;
 
     /**
      * debate_teams constructor.

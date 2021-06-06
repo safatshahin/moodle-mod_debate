@@ -80,7 +80,7 @@ class debate_teams_page {
      *
      * @var int
      */
-    public $active;
+    public $active = 1;
 
     /**
      * Time of team created.
