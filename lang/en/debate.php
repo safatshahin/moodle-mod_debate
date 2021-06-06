@@ -99,9 +99,13 @@ $string['privacy:metadata:debate_response'] = 'Information about the response of
 
 // Events.
 $string['event_response_added'] = 'Debate response added';
+$string['event_response_added_desc'] = 'The user with id "{$a->userid}" has added a response with id "{$a->objectid}" in the debate with id "{$a->debateid}"';
 $string['event_response_updated'] = 'Debate response updated';
+$string['event_response_updated_desc'] = 'The user with id {$a->userid} has updated the response with id {$a->objectid} in the debate with id {$a->debateid}';
 $string['event_response_error'] = 'Error from debate response';
+$string['event_response_error_desc'] = 'There was an error occurred for user with id {$a->userid} while trying to update a debate response';
 $string['event_response_deleted'] = 'Debate response deleted';
+$string['event_response_deleted_desc'] = 'The user with id {$a->userid} has deleted the response with id {$a->objectid} in the debate with id {$a->debateid}';
 
 // Teams.
 $string['pros_user_count'] = 'Positive user count';

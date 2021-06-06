@@ -49,8 +49,11 @@ class debate_response_updated extends \core\event\course_module_viewed {
      * @return string
      */
     public function get_description() {
-        return "The user with id '$this->userid' has updated a response with id '$this->objectid' in the debate with " .
-            "id '{$this->other['debateid']}'.";
+        $a = new \stdClass();
+        $a->userid = $this->userid;
+        $a->objectid = $this->objectid;
+        $a->debateid = $this->other['debateid'];
+        return get_string('event_response_updated_desc', 'mod_debate', $a);
     }
 
     /**
