@@ -146,3 +146,6 @@ $string['groupselection'] = 'Selects groups';
 $string['edit_negative_team'] = 'Edit negative team';
 $string['edit_positive_team'] = 'Edit positive team';
 $string['cancel_team_form'] = 'Cancel';
+
+// Search.
+$string['search:activity'] = 'Debate - activity information';
