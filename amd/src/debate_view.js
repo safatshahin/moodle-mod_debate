@@ -39,32 +39,47 @@ define(['jquery', 'core/ajax', 'core/str', 'core/config', 'core/notification', '
                 $(".mod-debate-response-input").keyup(function () {
                     delay(function () {
                         $("div").remove(".mod-debate-find-response");
+                        $("div").remove(".mod-debate-sentiment-container");
                         var userResponsetext = $(responseTextID).val();
                         if (userResponsetext.length > 0) {
-                            var responseAjax = AJAX.call([{
-                                methodname: 'mod_debate_find_debate_respose',
-                                args: {
-                                    courseid: parseInt(courseID),
-                                    debateid: parseInt(debateID),
-                                    response: userResponsetext,
-                                    responsetype: parseInt(responseType)
-                                }
-                            }]);
-                            responseAjax[0].done(function (found) {
-                                if (found.result) {
-                                    var getResponses = JSON.parse(found.data);
-                                    var context = {
-                                        found_response: getResponses
-                                    };
-                                    if ($('#mod-debate-insert-postive-response').is(":visible")
-                                        || $('#mod-debate-insert-negative-response').is(":visible")) {
-                                        templates.render('mod_debate/debate_find_response', context).then(function (html, js) {
-                                            var debateResponse = $(responseId);
-                                            debateResponse.after(html);
-                                        }).fail(notification.exception);
-                                    }
-                                }
-                            }).fail(notification.exception);
+                            toxicity.load(0.9).then(model => {
+                                model.classify(userResponsetext).then(predictions => {
+                                    var responseAjax = AJAX.call([{
+                                        methodname: 'mod_debate_find_debate_respose',
+                                        args: {
+                                            courseid: parseInt(courseID),
+                                            debateid: parseInt(debateID),
+                                            response: userResponsetext,
+                                            responsetype: parseInt(responseType),
+                                            sentiment: JSON.stringify(predictions)
+                                        }
+                                    }]);
+                                    responseAjax[0].done(function (found) {
+                                        if (found.result) {
+                                            var getResponses = JSON.parse(found.data);
+                                            var sentiment = JSON.parse(found.sentiment);
+                                            var sentimentContext = {
+                                                found_sentiment: sentiment,
+                                            };
+                                            var context = {
+                                                found_response: getResponses,
+                                            };
+                                            if ($('#mod-debate-insert-postive-response').is(":visible")
+                                                || $('#mod-debate-insert-negative-response').is(":visible")) {
+                                                templates.render('mod_debate/debate_find_response', context).then(function (html, js) {
+                                                    var debateResponse = $(responseId);
+                                                    debateResponse.after(html);
+                                                }).fail(notification.exception);
+                                                templates.render('mod_debate/debate_sentiment', sentimentContext).then(function (html, js) {
+                                                    var debateResponse = $(responseId);
+                                                    debateResponse.after(html);
+                                                }).fail(notification.exception);
+                                            }
+                                        }
+                                    }).fail(notification.exception);
+                                });
+                            });
+
                         }
                     }, 700);
                 });
@@ -192,10 +207,12 @@ define(['jquery', 'core/ajax', 'core/str', 'core/config', 'core/notification', '
                     $(responseId).css('display', 'none');
                     $(elementidContainer).css('display', 'block');
                     $("div").remove(".mod-debate-find-response");
+                    $("div").remove(".mod-debate-sentiment-container");
                 });
                 // UPDATE OR SAVE NEW OR EDITED RESPONSE
                 $(document).on('click', '#mod-debate-update-response', function () {
                     $("div").remove(".mod-debate-find-response");
+                    $("div").remove(".mod-debate-sentiment-container");
                     var userResponse = $(responseTextID).val();
                     if (userResponse.length > 0) {
                         var responseCall = AJAX.call([{
@@ -212,6 +229,7 @@ define(['jquery', 'core/ajax', 'core/str', 'core/config', 'core/notification', '
                             if (output.result) {
                                 $(responseId).css('display', 'none');
                                 $("div").remove(".mod-debate-find-response");
+                                $("div").remove(".mod-debate-sentiment-container");
                                 $(elementidContainer).remove();
                                 if (id === 0 && $.isNumeric(output.id)) {
                                     id = output.id;
@@ -234,6 +252,7 @@ define(['jquery', 'core/ajax', 'core/str', 'core/config', 'core/notification', '
                                     outputResponse.after(html);
                                     id = 0;
                                     $("div").remove(".mod-debate-find-response");
+                                    $("div").remove(".mod-debate-sentiment-container");
                                     elementidContainer = '';
                                     elementid = '';
                                 }).fail(notification.exception);
@@ -241,6 +260,7 @@ define(['jquery', 'core/ajax', 'core/str', 'core/config', 'core/notification', '
                                 debateView.renderNotification(2, 'error');
                             }
                             $("div").remove(".mod-debate-find-response");
+                            $("div").remove(".mod-debate-sentiment-container");
                         }).fail(notification.exception);
                     } else {
                         debateView.renderNotification(1, 'info');

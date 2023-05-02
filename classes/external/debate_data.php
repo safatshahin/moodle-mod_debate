@@ -326,7 +326,8 @@ class debate_data extends external_api {
                 'courseid' => new external_value(PARAM_INT, '', 1),
                 'debateid' => new external_value(PARAM_INT, '', 1),
                 'response' => new external_value(PARAM_RAW, '', 1),
-                'responsetype' => new external_value(PARAM_INT, '', 1)
+                'responsetype' => new external_value(PARAM_INT, '', 1),
+                'sentiment' => new external_value(PARAM_RAW, '', 1),
             )
         );
     }
@@ -349,7 +350,8 @@ class debate_data extends external_api {
         return new external_single_structure(
             array(
                 'result' => new external_value(PARAM_BOOL, 'Status true or false'),
-                'data' => new external_value(PARAM_TEXT, 'Matching data')
+                'data' => new external_value(PARAM_TEXT, 'Matching data'),
+                'sentiment' => new external_value(PARAM_TEXT, 'Sentiment data')
             )
         );
     }
@@ -363,20 +365,49 @@ class debate_data extends external_api {
      * @param int $responsetype
      * @return array
      */
-    public static function find_debate_respose(int $courseid, int $debateid, string $response, int $responsetype): array {
+    public static function find_debate_respose(int $courseid, int $debateid, string $response, int $responsetype, string $sentiments): array {
         $params = self::validate_parameters(
             self::find_debate_respose_parameters(),
             array(
                 'courseid' => $courseid,
                 'debateid' => $debateid,
                 'response' => $response,
-                'responsetype' => $responsetype
+                'responsetype' => $responsetype,
+                'sentiment' => $sentiments,
             )
         );
+
+        $sentimentresponse = [];
+
+        // Sentiment analysis.
+        $sentiments = json_decode($sentiments);
+        foreach ($sentiments as $sentiment) {
+            $results = $sentiment->results;
+            foreach ($results as $result) {
+                if ($result->match) {
+                    $data = new stdClass();
+                    $data->sentiment = get_string($sentiment->label, 'mod_debate');
+                    $sentimentresponse [] = $data;
+                }
+            }
+        }
+
         $result = array(
             'result' => true,
-            'data' => null
+            'data' => null,
+            'sentiment' => json_encode($sentimentresponse)
         );
+
+        /*
+         * [{"label":"identity_attack","results":[{"probabilities":{"0":0.96781021356582642,"1":0.032189793884754181},"match":false}]},
+         * {"label":"insult","results":[{"probabilities":{"0":0.052625525742769241,"1":0.94737452268600464},"match":true}]},
+         * {"label":"obscene","results":[{"probabilities":{"0":0.40184497833251953,"1":0.59815496206283569},"match":null}]},
+         * {"label":"severe_toxicity","results":[{"probabilities":{"0":0.99823951721191406,"1":0.0017605222528800368},"match":false}]},
+         * {"label":"sexual_explicit","results":[{"probabilities":{"0":0.80438029766082764,"1":0.19561971724033356},"match":null}]},
+         * {"label":"threat","results":[{"probabilities":{"0":0.94552105665206909,"1":0.054478902369737625},"match":false}]},
+         * {"label":"toxicity","results":[{"probabilities":{"0":0.02452419325709343,"1":0.97547584772109985},"match":true}]}] debate_view.js:60:52
+
+         * */
 
         $result['data'] = json_encode(debate_response::find_matching_response($params));
         return $result;

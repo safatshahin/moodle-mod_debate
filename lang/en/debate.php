@@ -149,3 +149,13 @@ $string['cancel_team_form'] = 'Cancel';
 
 // Search.
 $string['search:activity'] = 'Debate - activity information';
+
+// Sentiment.
+$string['good_response'] = 'Your response is good and appropriate';
+$string['identity_attack'] = 'Your response is showing an identiy attack';
+$string['insult'] = 'Your response is showing an insult';
+$string['obscene'] = 'Your response is showing an obscene';
+$string['severe_toxicity'] = 'Your response is showing a severe toxicity';
+$string['sexual_explicit'] = 'Your response is showing a sexual explicit';
+$string['threat'] = 'Your response is showing a threat';
+$string['toxicity'] = 'Your response is showing a toxicity';
